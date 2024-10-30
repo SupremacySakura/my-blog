@@ -67,7 +67,7 @@ const tabBarList: iTabBarItem[] = [
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 
   .leftSection {
     font-size: 24px;
