@@ -1,7 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
+//导入接口
+import { getPoetry } from '@/services/apis/poetry'
+const handleGetPoetry =async ()=>{
+  const res = await getPoetry()
+  if(+res.data.code===200){
+    poetryList.value = res.data.data
+    poetryList.value.forEach((item)=>{
+      if(!item.photo){
+        item.photo = test1
+      }
+    })
+  }
+  console.log(poetryList.value)
+}
 //定义是个类型接口
 interface iPoetryItem {
   id: number,
@@ -11,7 +25,7 @@ interface iPoetryItem {
   photo: string,
 }
 //诗歌数组
-const poetryList: iPoetryItem[] = [
+const poetryList= ref<iPoetryItem[]>([
   {
     id: 0,
     title: '静夜思',
@@ -19,7 +33,7 @@ const poetryList: iPoetryItem[] = [
     author:'李白',
     photo: test1,
   },
-]
+])
 const dialogVisible = ref(false)
 const nowPoetry = ref<iPoetryItem>(
   {
@@ -31,8 +45,12 @@ const nowPoetry = ref<iPoetryItem>(
   },
 )
 const handleOpen = (item: iPoetryItem) => {
+  nowPoetry.value = item
   dialogVisible.value = true
 }
+onMounted(()=>{
+  handleGetPoetry()
+})
 </script>
 
 <template>
