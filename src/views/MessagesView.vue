@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, useTemplateRef, watchEffect } from 'vue'
+import { ref, onMounted, useTemplateRef, watchEffect,nextTick } from 'vue'
 import background from '@/assets/messageBackground.jpeg'
 import user from '@/assets/user.png'
 import { random } from '@/utils'
@@ -39,9 +39,21 @@ watchEffect(() => {
       message.style.backgroundColor = 'rgba(62,62,63,0.5)'
       message.style.width = '200px'
       message.style.borderRadius = '50px'
-      message.style.right = '200px'
+      message.style.right = '-200px'
       message.style.top = `${random(0,670)}px`
-      
+      const animateMessage = ()=>{
+        message.animate([
+          { transform: 'translateX(0)' }, // 起始状态
+          { transform: 'translateX(-1480px)' } // 结束状态
+        ], {
+          duration: random(6000,10000),
+          iterations: 1 // 无限循环
+        }).onfinish = ()=>{
+          message.style.top = `${random(0, 670)}px`
+          animateMessage()
+        }
+      }
+      animateMessage()
       const userHeadPortrait = document.createElement('img')
       userHeadPortrait.src = item.userHeadPortrait
       userHeadPortrait.width = 50
@@ -62,6 +74,7 @@ watchEffect(() => {
 
 
       board.value?.appendChild(message)
+      nextTick()
     })
   } else {
 
@@ -227,7 +240,13 @@ onMounted(() => {
     }
   }
 }
-.move{
+.moveDiv{
+    width: 200px;
+    border-radius: 50px;
+    display: flex;
+    position: absolute;
+    z-index: 1;
+    background-color: rgba(62, 62, 63, 0.5);
     animation: move 5s linear infinite;
       /* 调用动画 */
 }
