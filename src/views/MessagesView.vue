@@ -3,7 +3,9 @@ import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
 import background from '@/assets/messageBackground.jpeg'
 import user from '@/assets/user.png'
 import { random } from '@/utils'
-import { getMessages } from '@/services/apis/messages'
+import { getMessages,postMessages } from '@/services/apis/messages'
+import { ElMessage } from 'element-plus'
+import dayjs from 'dayjs'
 //定义评论类型接口
 interface iMessageItem {
   id: number,
@@ -35,7 +37,7 @@ const messagesList = ref<iMessageItem[]>([
 /**
  * 获取留言数据,并赋值给messagesList
  */
-const handleGetMessages = async()=>{
+const handleGetMessages = async () => {
   const res = await getMessages()
   if (+res.data.code === 200) {
     messagesList.value = res.data.data
@@ -45,6 +47,56 @@ const handleGetMessages = async()=>{
       }
     })
   }
+}
+const dialogVisible = ref(false)
+//发布评论信息
+const userHeadPortrait = ref('')
+const content = ref('')
+const name = ref('')
+const address = ref('')
+/**
+ * 打开基本信息填写面板
+ */
+const handleOpen = () =>{
+  if(content.value){
+    dialogVisible.value = true
+  }else{
+    ElMessage.error('评论不能为空')
+  }
+}
+const handleChooseUserHeadPortrait = (event:any) => {
+  const file = event.target.files[0]
+  if(file && file.type.startsWith('image/')){
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if(e.target!=null){
+        userHeadPortrait.value = e.target.result as string
+      }
+    }
+    reader.readAsDataURL(file)
+  }else{
+    ElMessage.error('请选择一张图片')
+  }
+}
+const handlePublish =async () => {
+  const time = dayjs().format('YYYY-MM-DD HH:mm:ss') // 自定义时间格式
+  const params = {
+    userHeadPortrait:userHeadPortrait.value,
+    name:name.value,
+    content:content.value,
+    time:time,
+    address:address.value
+  }
+ const res =await postMessages(params)
+ if(res.data.code === 200){
+   ElMessage({
+     message: '发布成功',
+     type: 'success',
+   })
+ }else{
+   ElMessage.error('发布失败')
+ }
+ dialogVisible.value = false
 }
 const board = useTemplateRef('board')
 watchEffect(() => {
@@ -118,9 +170,9 @@ onMounted(() => {
       <div>
         <h1>留下你的评论</h1>
       </div>
-      <textarea name="messages" placeholder="请输入你的留言"></textarea>
+      <textarea name="messages" placeholder="请输入你的留言" v-model.trim="content"></textarea>
       <div>
-        <button>发表</button>
+        <button @click="handleOpen()">发表</button>
       </div>
     </section>
 
@@ -142,6 +194,42 @@ onMounted(() => {
         </section>
       </div>
     </section>
+
+    <el-dialog v-model="dialogVisible" width="500">
+      <section class="dialogBox">
+        <h4>基本信息填写</h4>
+        <div class="topDiv">
+          <div class="user">
+            <label for="choose">
+              <img :src="userHeadPortrait" alt="" v-if="!!userHeadPortrait">
+              <div class="addUser" v-else>
+                <input type="file" accept="image/*" @change="(e) => handleChooseUserHeadPortrait(e)" id="choose"
+                  :style="{ display: 'none' }">
+                +
+              </div>
+            </label>
+          </div>
+          <div class="name">
+            <span>昵称</span>
+            <input type="text" v-model="name">
+          </div>
+        </div>
+        <div class="bottomDiv">
+          <div>
+            <span>联系地址</span>
+          </div>
+          <input type="text" v-model="address">
+        </div>
+      </section>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="handlePublish()">提交</el-button>
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="userHeadPortrait = user">使用默认头像</el-button>
+          <el-button @click="userHeadPortrait = ''">删除头像</el-button>
+        </div>
+      </template>
+    </el-dialog>
 
   </div>
 </template>
@@ -254,10 +342,12 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        div{
+
+        div {
           display: flex;
           justify-content: space-between;
         }
+
         address,
         time {
           font-size: 12px;
@@ -266,30 +356,81 @@ onMounted(() => {
       }
     }
   }
-}
 
-.moveDiv {
-  width: 200px;
-  border-radius: 50px;
-  display: flex;
-  position: absolute;
-  z-index: 1;
-  background-color: rgba(62, 62, 63, 0.5);
-  animation: move 5s linear infinite;
-  /* 调用动画 */
-}
-
-@keyframes move {
-  0% {
-    transform: translateX(0px);
+  .custom-class {
+    background-color: aqua;
   }
 
-  50% {
-    transform: translateX(-500px);
-  }
+  .dialogBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
 
-  100% {
-    transform: translateX(-1480px);
+    .topDiv {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .user {
+        width: 85px;
+        height: 85px;
+        border-radius: 85px;
+        border: 5px solid black;
+        label{
+          display: block;
+          width: 100%;
+          height: 100%;
+          border-radius: 85px;
+        }
+        div,
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 85px;
+        }
+
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      .name {
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        margin-left: 10px;
+
+        input {
+          width: 200px;
+          height: 30px;
+          outline: none;
+
+        }
+      }
+    }
+
+    .bottomDiv {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      div{
+        width: 300px;
+      }
+      input {
+        width: 300px;
+        height: 30px;
+        outline: none;
+      }
+    }
   }
 }
 </style>
