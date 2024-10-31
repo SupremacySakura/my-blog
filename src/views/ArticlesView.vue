@@ -3,6 +3,10 @@ import { onMounted, ref,useTemplateRef,watchEffect,nextTick } from 'vue'
 import test1 from '@/assets/test1.jpg'
 import user from '@/assets/user.png'
 import { getArticles } from '@/services/apis/articles'
+import {
+  CloseBold
+} from '@element-plus/icons-vue'
+import { marked } from 'marked'
 //创建文章类
 interface iArticleItem {
   id: number,
@@ -32,6 +36,23 @@ const handleGetArticles =async ()=>{
     })
   }
 }
+//右侧展示文章数据
+const articleItem = ref<iArticleItem>()
+const articleMD = useTemplateRef('articleMD')
+watchEffect(async()=>{
+  if(articleMD.value){
+    const htmlContent =await marked(articleItem.value?.article as string)
+    articleMD.value.innerHTML = htmlContent
+  }else{
+
+  }
+})
+const handleChooseArticle = (item:iArticleItem)=>{
+  articleItem.value = item
+}
+const handleClose = ()=>{
+  articleItem.value = undefined
+}
 onMounted(async()=>{
  await handleGetArticles()
 console.log(articlesList.value)
@@ -40,19 +61,30 @@ console.log(articlesList.value)
 
 <template>
   <div class="articlesBox">
-    <section class="card" v-for="item of articlesList" :key="item.id" ref="cardList">
-      <div class="image">
-        <img :src="item.cover" alt="">
-      </div>
-      <div class="info">
-        <h2>{{ item.head }}</h2>
-        <span class="abstract">{{ item.digest }}</span>
-        <div class="author">
-          <img :src="user" alt="">
-          <span>{{ item.name }}</span>
-          <time>{{ item.time }}</time>
+
+    <section>
+      <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)">
+        <div class="image">
+          <img :src="item.cover" alt="">
         </div>
+        <div class="info">
+          <h2>{{ item.head }}</h2>
+          <span class="abstract">{{ item.digest }}</span>
+          <div class="author">
+            <img :src="user" alt="">
+            <span>{{ item.name }}</span>
+            <time>{{ item.time }}</time>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="articleBoard" v-if="articleItem">
+      <div class="close">
+        <el-button type="danger" :icon="CloseBold" circle @click="handleClose"/>
       </div>
+      <h2>{{ articleItem.head }}</h2>
+      <p ref="articleMD"></p>
     </section>
   </div>
 </template>
@@ -68,7 +100,6 @@ console.log(articlesList.value)
   margin-bottom: 60px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
 
   .card {
     width: 700px;
@@ -133,6 +164,28 @@ console.log(articlesList.value)
           font-size: 12px;
         }
       }
+    }
+  }
+  .articleBoard{
+    flex-grow: 1;
+    min-height: 100vh;
+    margin-right:10px;
+    margin-left: 40px;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .close{
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      font-size: 20px;
+    }
+    p{
+      width: 100%;
     }
   }
 }
