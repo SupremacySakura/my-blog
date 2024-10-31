@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, useTemplateRef, watchEffect,nextTick } from 'vue'
+import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
 import background from '@/assets/messageBackground.jpeg'
 import user from '@/assets/user.png'
 import { random } from '@/utils'
+import { getMessages } from '@/services/apis/messages'
 //定义评论类型接口
 interface iMessageItem {
   id: number,
@@ -10,24 +11,41 @@ interface iMessageItem {
   name: string,
   content: string,
   time: string,
+  address: string,
 }
 //定义评论数组
 const messagesList = ref<iMessageItem[]>([
-  {
-    id: 0,
-    userHeadPortrait: user,
-    name: '余心知秋',
-    content: '测试1',
-    time: '2024-10-30 20:58:30'
-  },
-  {
-    id: 1,
-    userHeadPortrait: user,
-    name: '余心知秋',
-    content: '测试2',
-    time: '2024-10-30 21:08:30'
-  },
+  // {
+  //   id: 0,
+  //   userHeadPortrait: user,
+  //   name: '余心知秋',
+  //   content: '测试1',
+  //   time: '2024/10/30 20:58:30',
+  //   address: '2712794459(qq)',
+  // },
+  // {
+  //   id: 1,
+  //   userHeadPortrait: user,
+  //   name: '余心知秋',
+  //   content: '测试2',
+  //   time: '2024/10/30 21:08:30',
+  //   address: '2712794459(qq)',
+  // },
 ])
+/**
+ * 获取留言数据,并赋值给messagesList
+ */
+const handleGetMessages = async()=>{
+  const res = await getMessages()
+  if (+res.data.code === 200) {
+    messagesList.value = res.data.data
+    messagesList.value.forEach((item) => {
+      if (!item.userHeadPortrait) {
+        item.userHeadPortrait = user
+      }
+    })
+  }
+}
 const board = useTemplateRef('board')
 watchEffect(() => {
   if (board.value) {
@@ -40,15 +58,15 @@ watchEffect(() => {
       message.style.width = '200px'
       message.style.borderRadius = '50px'
       message.style.right = '-200px'
-      message.style.top = `${random(0,670)}px`
-      const animateMessage = ()=>{
+      message.style.top = `${random(0, 670)}px`
+      const animateMessage = () => {
         message.animate([
           { transform: 'translateX(0)' }, // 起始状态
           { transform: 'translateX(-1480px)' } // 结束状态
         ], {
-          duration: random(6000,10000),
+          duration: random(6000, 10000),
           iterations: 1 // 无限循环
-        }).onfinish = ()=>{
+        }).onfinish = () => {
           message.style.top = `${random(0, 670)}px`
           animateMessage()
         }
@@ -81,6 +99,7 @@ watchEffect(() => {
   }
 })
 onMounted(() => {
+  handleGetMessages()
 })
 </script>
 
@@ -116,7 +135,10 @@ onMounted(() => {
         <section class="rightSection">
           <h4>{{ item.name }}</h4>
           <p>{{ item.content }}</p>
-          <time>{{ item.time }}</time>
+          <div>
+            <time>{{ item.time }}</time>
+            <address>{{ item.address }}</address>
+          </div>
         </section>
       </div>
     </section>
@@ -147,6 +169,7 @@ onMounted(() => {
     color: white;
     margin-bottom: 10px;
     overflow: hidden;
+
     img {
       width: 100%;
       height: 100%;
@@ -231,7 +254,11 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-
+        div{
+          display: flex;
+          justify-content: space-between;
+        }
+        address,
         time {
           font-size: 12px;
           color: rgb(166.2, 168.6, 173.4);
@@ -240,24 +267,28 @@ onMounted(() => {
     }
   }
 }
-.moveDiv{
-    width: 200px;
-    border-radius: 50px;
-    display: flex;
-    position: absolute;
-    z-index: 1;
-    background-color: rgba(62, 62, 63, 0.5);
-    animation: move 5s linear infinite;
-      /* 调用动画 */
+
+.moveDiv {
+  width: 200px;
+  border-radius: 50px;
+  display: flex;
+  position: absolute;
+  z-index: 1;
+  background-color: rgba(62, 62, 63, 0.5);
+  animation: move 5s linear infinite;
+  /* 调用动画 */
 }
-@keyframes move{
-  0%{
+
+@keyframes move {
+  0% {
     transform: translateX(0px);
   }
-  50%{
+
+  50% {
     transform: translateX(-500px);
   }
-  100%{
+
+  100% {
     transform: translateX(-1480px);
   }
 }

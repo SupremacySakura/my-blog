@@ -4,6 +4,9 @@ import { ref,onMounted } from 'vue'
 import test1 from '@/assets/test1.jpg'
 //导入接口
 import { getPoetry } from '@/services/apis/poetry'
+/**
+ * 获取诗歌列表,并给poetryList赋值
+ */
 const handleGetPoetry =async ()=>{
   const res = await getPoetry()
   if(+res.data.code===200){
@@ -14,7 +17,6 @@ const handleGetPoetry =async ()=>{
       }
     })
   }
-  console.log(poetryList.value)
 }
 //定义是个类型接口
 interface iPoetryItem {
