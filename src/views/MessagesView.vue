@@ -6,7 +6,9 @@ import { random } from '@/utils'
 import { getMessages, postMessages } from '@/services/apis/messages'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
-import { isTemplateExpression } from 'typescript'
+import { useMessagesStore } from '@/stores/messages'
+import { storeToRefs } from 'pinia'
+const { _userHeadPortrait,_name,_address,_setInfo } = useMessagesStore()
 //定义评论类型接口
 interface iMessageItem {
   id: number,
@@ -17,24 +19,7 @@ interface iMessageItem {
   address: string,
 }
 //定义评论数组
-const messagesList = ref<iMessageItem[]>([
-  // {
-  //   id: 0,
-  //   userHeadPortrait: user,
-  //   name: '余心知秋',
-  //   content: '测试1',
-  //   time: '2024/10/30 20:58:30',
-  //   address: '2712794459(qq)',
-  // },
-  // {
-  //   id: 1,
-  //   userHeadPortrait: user,
-  //   name: '余心知秋',
-  //   content: '测试2',
-  //   time: '2024/10/30 21:08:30',
-  //   address: '2712794459(qq)',
-  // },
-])
+const messagesList = ref<iMessageItem[]>([])
 /**
  * 获取留言数据,并赋值给messagesList
  */
@@ -51,10 +36,10 @@ const handleGetMessages = async () => {
 }
 const dialogVisible = ref(false)
 //发布评论信息
-const userHeadPortrait = ref('')
+const userHeadPortrait = ref(_userHeadPortrait)
 const content = ref('')
-const name = ref('')
-const address = ref('')
+const name = ref(_name)
+const address = ref(_address)
 /**
  * 打开基本信息填写面板
  */
@@ -95,6 +80,10 @@ const handlePublish = async () => {
     time: time,
     address: address.value
   }
+  if(!name){
+    ElMessage.error('请填写你的昵称')
+    return
+  }
   const res = await postMessages(params)
   if (res.data.code === 200) {
     ElMessage({
@@ -105,10 +94,14 @@ const handlePublish = async () => {
     ElMessage.error('发布失败')
   }
   dialogVisible.value = false
+  content.value = ''
+  handleGetMessages()
+  _setInfo(userHeadPortrait.value,name.value,address.value)
 }
 const board = useTemplateRef('board')
 
 const showList = useTemplateRef("showList")
+//监听留言,添加动画
 watchEffect(() => {
   if (showList.value) {
     console.log(showList.value)
