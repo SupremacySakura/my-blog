@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
+import { ref, onMounted, useTemplateRef, watchEffect, nextTick, watch } from 'vue'
 import background from '@/assets/messageBackground.jpeg'
 import user from '@/assets/user.png'
 import { random } from '@/utils'
@@ -8,7 +8,7 @@ import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
 import { useMessagesStore } from '@/stores/messages'
 import { storeToRefs } from 'pinia'
-const { _userHeadPortrait,_name,_address,_setInfo } = useMessagesStore()
+const { _userHeadPortrait, _name, _address, _setInfo } = useMessagesStore()
 //定义评论类型接口
 interface iMessageItem {
   id: number,
@@ -32,6 +32,7 @@ const handleGetMessages = async () => {
         item.userHeadPortrait = user
       }
     })
+    count.value++
   }
 }
 const dialogVisible = ref(false)
@@ -80,7 +81,7 @@ const handlePublish = async () => {
     time: time,
     address: address.value
   }
-  if(!name){
+  if (!name) {
     ElMessage.error('请填写你的昵称')
     return
   }
@@ -96,30 +97,38 @@ const handlePublish = async () => {
   dialogVisible.value = false
   content.value = ''
   handleGetMessages()
-  _setInfo(userHeadPortrait.value,name.value,address.value)
+  _setInfo(userHeadPortrait.value, name.value, address.value)
 }
 const board = useTemplateRef('board')
 
 const showList = useTemplateRef("showList")
-//监听留言,添加动画
+// 监听留言,添加动画
+const count = ref(0)
 watchEffect(() => {
+  count.value
   if (showList.value) {
-    console.log(showList.value)
-    showList.value.map((item) => {
-      item.style.top = `${random(0, 670)}px`
-      const animateMessage = () => {
-        item.animate([
-          { transform: 'translateX(0)' }, // 起始状态
-          { transform: 'translateX(-1480px)' } // 结束状态
-        ], {
-          duration: random(6000, 12000),
-          iterations: 1 // 无限循环
-        }).onfinish = () => {
-          item.style.top = `${random(0, 670)}px`
-          animateMessage()
-        }
+    nextTick(() => {
+      if (showList.value) {
+        showList.value.map((item, index) => {
+          if (item.getAnimations().length === 0) {
+            item.style.top = `${random(0, 670)}px`
+            const animateMessage = () => {
+              item.animate([
+                { transform: 'translateX(0)' }, // 起始状态
+                { transform: 'translateX(-1480px)' } // 结束状态
+              ], {
+                duration: random(6000, 12000),
+                iterations: 1 // 无限循环
+              }).onfinish = () => {
+                item.style.top = `${random(0, 670)}px`
+                animateMessage()
+              }
+            }
+            animateMessage()
+          }
+        })
       }
-      animateMessage()
+
     })
   } else {
 
@@ -142,7 +151,7 @@ onMounted(() => {
         <h1>留言板</h1>
         <h4>欢迎留言,你可以在这里畅所欲言</h4>
       </div>
-      <div class="showItem" v-for="item of messagesList" ref="showList">
+      <div class="showItem" v-for="item of messagesList" ref="showList" :key="item.id">
         <img :src="item.userHeadPortrait" alt="" @error="onError(item)">
         <span class="name">{{ item.name }}:</span>
         <span class="content">{{ item.content }}</span>
