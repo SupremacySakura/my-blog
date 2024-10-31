@@ -3,9 +3,10 @@ import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
 import background from '@/assets/messageBackground.jpeg'
 import user from '@/assets/user.png'
 import { random } from '@/utils'
-import { getMessages,postMessages } from '@/services/apis/messages'
+import { getMessages, postMessages } from '@/services/apis/messages'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
+import { isTemplateExpression } from 'typescript'
 //定义评论类型接口
 interface iMessageItem {
   id: number,
@@ -57,99 +58,83 @@ const address = ref('')
 /**
  * 打开基本信息填写面板
  */
-const handleOpen = () =>{
-  if(content.value){
+const handleOpen = () => {
+  if (content.value) {
     dialogVisible.value = true
-  }else{
+  } else {
     ElMessage.error('评论不能为空')
   }
 }
-const handleChooseUserHeadPortrait = (event:any) => {
+/**
+ * 选择头像
+ * @param event 
+ */
+const handleChooseUserHeadPortrait = (event: any) => {
   const file = event.target.files[0]
-  if(file && file.type.startsWith('image/')){
+  if (file && file.type.startsWith('image/')) {
     const reader = new FileReader()
     reader.onload = (e) => {
-      if(e.target!=null){
+      if (e.target != null) {
         userHeadPortrait.value = e.target.result as string
       }
     }
     reader.readAsDataURL(file)
-  }else{
+  } else {
     ElMessage.error('请选择一张图片')
   }
 }
-const handlePublish =async () => {
+/**
+ * 发布留言
+ */
+const handlePublish = async () => {
   const time = dayjs().format('YYYY-MM-DD HH:mm:ss') // 自定义时间格式
   const params = {
-    userHeadPortrait:userHeadPortrait.value,
-    name:name.value,
-    content:content.value,
-    time:time,
-    address:address.value
+    userHeadPortrait: userHeadPortrait.value,
+    name: name.value,
+    content: content.value,
+    time: time,
+    address: address.value
   }
- const res =await postMessages(params)
- if(res.data.code === 200){
-   ElMessage({
-     message: '发布成功',
-     type: 'success',
-   })
- }else{
-   ElMessage.error('发布失败')
- }
- dialogVisible.value = false
+  const res = await postMessages(params)
+  if (res.data.code === 200) {
+    ElMessage({
+      message: '发布成功',
+      type: 'success',
+    })
+  } else {
+    ElMessage.error('发布失败')
+  }
+  dialogVisible.value = false
 }
 const board = useTemplateRef('board')
+
+const showList = useTemplateRef("showList")
 watchEffect(() => {
-  if (board.value) {
-    messagesList.value.map((item) => {
-      const message = document.createElement('div')
-      message.style.display = 'flex'
-      message.style.position = 'absolute'
-      message.style.zIndex = '1'
-      message.style.backgroundColor = 'rgba(62,62,63,0.5)'
-      message.style.width = '200px'
-      message.style.borderRadius = '50px'
-      message.style.right = '-200px'
-      message.style.top = `${random(0, 670)}px`
+  if (showList.value) {
+    console.log(showList.value)
+    showList.value.map((item) => {
+      item.style.top = `${random(0, 670)}px`
       const animateMessage = () => {
-        message.animate([
+        item.animate([
           { transform: 'translateX(0)' }, // 起始状态
           { transform: 'translateX(-1480px)' } // 结束状态
         ], {
-          duration: random(6000, 10000),
+          duration: random(6000, 12000),
           iterations: 1 // 无限循环
         }).onfinish = () => {
-          message.style.top = `${random(0, 670)}px`
+          item.style.top = `${random(0, 670)}px`
           animateMessage()
         }
       }
       animateMessage()
-      const userHeadPortrait = document.createElement('img')
-      userHeadPortrait.src = item.userHeadPortrait
-      userHeadPortrait.width = 50
-      userHeadPortrait.height = 50
-      userHeadPortrait.style.borderRadius = '50px'
-      message.appendChild(userHeadPortrait)
-
-      const name = document.createElement('span')
-      name.innerText = item.name + ':'
-      name.style.fontWeight = '600'
-      name.style.lineHeight = '50px'
-      message.appendChild(name)
-
-      const content = document.createElement('span')
-      content.innerText = item.content
-      content.style.lineHeight = '50px'
-      message.appendChild(content)
-
-
-      board.value?.appendChild(message)
-      nextTick()
     })
   } else {
 
   }
 })
+const onError = (item: iMessageItem) => {
+  item.userHeadPortrait = user
+}
 onMounted(() => {
   handleGetMessages()
 })
@@ -159,10 +144,15 @@ onMounted(() => {
   <div class="messagesBox">
 
     <section class="board" ref="board">
-      <img :src="background" alt="">
-      <div>
+      <img :src="background" alt="" class="backgroundImage">
+      <div class="boardDiv">
         <h1>留言板</h1>
         <h4>欢迎留言,你可以在这里畅所欲言</h4>
+      </div>
+      <div class="showItem" v-for="item of messagesList" ref="showList">
+        <img :src="item.userHeadPortrait" alt="" @error="onError(item)">
+        <span class="name">{{ item.name }}:</span>
+        <span class="content">{{ item.content }}</span>
       </div>
     </section>
 
@@ -182,7 +172,7 @@ onMounted(() => {
       </div>
       <div class="messagesItem" v-for="item of messagesList" :key="item.id">
         <section class="leftSection">
-          <img :src="item.userHeadPortrait" alt="">
+          <img :src="item.userHeadPortrait" alt="" @error="onError(item)">
         </section>
         <section class="rightSection">
           <h4>{{ item.name }}</h4>
@@ -258,7 +248,7 @@ onMounted(() => {
     margin-bottom: 10px;
     overflow: hidden;
 
-    img {
+    .backgroundImage {
       width: 100%;
       height: 100%;
       position: absolute;
@@ -266,7 +256,7 @@ onMounted(() => {
       z-index: 0;
     }
 
-    div {
+    .boardDiv {
       width: 100%;
       height: 100%;
       display: flex;
@@ -275,6 +265,33 @@ onMounted(() => {
       justify-content: center;
       position: absolute;
       z-index: 1;
+    }
+
+    .showItem {
+      width: 200px;
+      height: 50px;
+      border-radius: 50px;
+      display: flex;
+      position: absolute;
+      z-index: 1;
+      background-color: rgba(62, 62, 63, 0.5);
+      right: -200px;
+
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+      }
+
+      .name {
+        font-weight: 500px;
+        line-height: 50px;
+      }
+
+      .content {
+
+        line-height: 50px;
+      }
     }
   }
 
@@ -334,6 +351,7 @@ onMounted(() => {
         img {
           width: 50px;
           height: 50px;
+          border-radius: 50px;
         }
       }
 
@@ -379,12 +397,14 @@ onMounted(() => {
         height: 85px;
         border-radius: 85px;
         border: 5px solid black;
-        label{
+
+        label {
           display: block;
           width: 100%;
           height: 100%;
           border-radius: 85px;
         }
+
         div,
         img {
           width: 100%;
@@ -422,9 +442,11 @@ onMounted(() => {
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
-      div{
+
+      div {
         width: 300px;
       }
+
       input {
         width: 300px;
         height: 30px;
