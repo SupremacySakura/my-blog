@@ -4,6 +4,21 @@ import yxzq from '../../public/yxzq.jpg'
 import vueBG from '../../public/vue.jpg'
 import vueIcon from '../../public/favicon.ico'
 import { throttle } from 'lodash'
+import { getMoments } from '@/services/apis/moments'
+/**
+ * 获取朋友圈列表,并给poetryList赋值
+ */
+const handleGetMoments = async () => {
+  const res = await getMoments()
+  if (+res.data.code === 200) {
+    momentsList.value = res.data.data
+    momentsList.value.forEach((item) => {
+      if (!item.userHeadPortrait) {
+        item.userHeadPortrait = yxzq
+      }
+    })
+  }
+}
 //定义朋友圈接口
 interface iMomentItem {
   id: number,
@@ -169,6 +184,7 @@ const newWaterFall = ()=>{
   }
 }
 onMounted(()=>{
+  handleGetMoments()
   newWaterFall()
   window.addEventListener('resize',throttle(()=>{newWaterFall()},1000))
 })
