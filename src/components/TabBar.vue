@@ -20,7 +20,7 @@ const tabBarList: iTabBarItem[] = [
   },
   {
     id: 2,
-    text: '朋友圈',
+    text: '分享',
     path: '/moments'
   },
   {

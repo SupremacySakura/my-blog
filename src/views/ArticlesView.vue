@@ -55,7 +55,7 @@ const handleClose = () => {
 }
 onMounted(async () => {
   await handleGetArticles()
-  console.log(articlesList.value)
+ articleItem.value = articlesList.value[0]
 })
 </script>
 
@@ -63,7 +63,7 @@ onMounted(async () => {
   <div class="articlesBox">
 
     <section class="leftSection">
-      <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)">
+      <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)" :class="{active:articleItem?.id===item.id}">
         <div class="image">
           <img :src="item.cover" alt="">
         </div>
@@ -107,6 +107,11 @@ onMounted(async () => {
     width: 900px;
     height: 90%;
     overflow-y: auto;
+    background-color: rgba(102.2, 177.4, 255,0.1);
+    box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
+        /* 上侧阴影 */
+        inset 0px -4px 8px rgba(255, 255, 255, 0.5);
+      /* 下侧高光 */
     scrollbar-width: none;
       /* Firefox */
       -ms-overflow-style: none;
@@ -136,7 +141,6 @@ onMounted(async () => {
       &:hover {
         transform: scale(1.1);
       }
-
       .image {
         width: 400px;
         height: 100%;
@@ -181,6 +185,9 @@ onMounted(async () => {
           }
         }
       }
+    }
+    .active{
+      transform: scale(1.1);
     }
   }
 
