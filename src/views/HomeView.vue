@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { nextTick, ref, useTemplateRef } from 'vue'
+import { onUnmounted, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import yxzq from '../../public/yxzq.jpg'
+import { getArticlesNum } from '@/services/apis/articles'
+import { getTime,getPeople } from '@/services/apis/asset'
+
 const homeBox = useTemplateRef('homeBox')
 const myBox = useTemplateRef('myBox')
 /**
@@ -49,6 +52,66 @@ const handleStop = () => {
     boxDown(myBox.value)
   }
 }
+const getANum = async () => {
+  const res = await getArticlesNum()
+  if (res.data.code === 200) {
+    articlesNum.value = res.data.data
+  }
+}
+const time = ref('')
+const daysDiff = ref(0)
+const hoursDiff = ref(0)
+const minutesDiff = ref(0)
+const secondsDiff = ref(0)
+const people = ref(0)
+const getUsingTime = async () => {
+  const res = await getTime()
+  if (res.data.code === 200) {
+    time.value = res.data.data
+    const startDate = new Date(time.value + 'Z')
+    const endDate = new Date()
+    // 计算时间间隔（以毫秒为单位）
+    const timeDiff = endDate.getTime() - startDate.getTime()
+    secondsDiff.value = Math.floor(timeDiff / 1000)
+    minutesDiff.value = Math.floor(secondsDiff.value / 60)
+    secondsDiff.value = Math.floor(secondsDiff.value % 60)
+    hoursDiff.value = Math.floor(minutesDiff.value / 60)
+    minutesDiff.value = Math.floor(minutesDiff.value % 60)
+    daysDiff.value = Math.floor(hoursDiff.value / 24)
+    hoursDiff.value = Math.floor(hoursDiff.value % 24)
+  }
+}
+const getPeopleTimes = async()=>{
+  const res = await getPeople()
+  if (res.data.code === 200) {
+   people.value = res.data.data
+  }
+}
+const articlesNum = ref(0)
+let intervalId: number
+onMounted(async () => {
+  await getANum()
+  await getUsingTime()
+  intervalId =  setInterval(()=>{
+    secondsDiff.value+=1
+    if(secondsDiff.value>=60){
+      minutesDiff.value+=1
+      secondsDiff.value-=60
+      if(minutesDiff.value>=60){
+        hoursDiff.value+=1
+        minutesDiff.value-=60
+        if(hoursDiff.value>=24){
+          daysDiff.value+=1
+          hoursDiff.value-=24
+        }
+      }
+    }
+  },1000)
+  await getPeopleTimes()
+})
+onUnmounted(()=>{
+  clearInterval(intervalId)
+})
 </script>
 
 <template>
@@ -75,15 +138,15 @@ const handleStop = () => {
           <section class="info">
             <div class="number">
               <h4>发表文章数量:</h4>
-              <span>30</span>
+              <span>{{ articlesNum }}</span>
             </div>
             <div>
               <h4>本站运行时间</h4>
-              <time>10h30min20s</time>
+              <time>{{daysDiff+'day'+hoursDiff+'hour'+minutesDiff+'min'+secondsDiff+'s'}}</time>
             </div>
             <div>
               <h4>访客数量</h4>
-              <span>5</span>
+              <span>{{ people }}</span>
             </div>
           </section>
         </div>
@@ -215,6 +278,9 @@ const handleStop = () => {
             flex-direction: column;
             padding: 10px;
             justify-content: space-around;
+            time{
+              white-space: wrap;
+            }
           }
         }
       }

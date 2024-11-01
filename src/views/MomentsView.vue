@@ -3,6 +3,12 @@ import { onMounted, ref, useTemplateRef,nextTick, onUnmounted } from 'vue'
 import yxzq from '../../public/yxzq.jpg'
 import vueBG from '../../public/vue.jpg'
 import vueIcon from '../../public/favicon.ico'
+import reactIcon from '../../public/favicon2.ico'
+import reactBG from '../../public/React.jpg'
+import elementPlusBG from '../../public/ElementPlus.jpg'
+import elementPlusIcon from '../../public/element-plus.png'
+import nodejsBG from '../../public/Nodejs.jpg'
+import nodejsIcon from '../../public/nodejs.png'
 import { throttle } from 'lodash'
 import { getMoments } from '@/services/apis/moments'
 /**
@@ -29,50 +35,7 @@ interface iMomentItem {
 
 }
 //朋友圈数组
-const momentsList = ref<iMomentItem[]>([
-  {
-    id: 1,
-    time: '2024-11-1 12:32:20',
-    userHeadPortrait: yxzq,
-    name: '余心知秋',
-    content: '测试111111111111111111111'
-  },
-  {
-    id: 2,
-    time: '2024-11-1 12:32:20',
-    userHeadPortrait: yxzq,
-    name: '余心知秋',
-    content: '测试111111111111111111111'
-  },
-  {
-    id: 3,
-    time: '2024-11-1 12:32:20',
-    userHeadPortrait: yxzq,
-    name: '余心知秋',
-    content: '测试111111111111111111111'
-  },
-  {
-    id: 4,
-    time: '2024-11-1 12:32:20',
-    userHeadPortrait: yxzq,
-    name: '余心知秋',
-    content: '测试111111111111111111111'
-  },
-  {
-    id: 5,
-    time: '2024-11-1 12:32:20',
-    userHeadPortrait: yxzq,
-    name: '余心知秋',
-    content: '测试111111111111111111111'
-  },
-  {
-    id: 6,
-    time: '2024-11-1 12:32:20',
-    userHeadPortrait: yxzq,
-    name: '余心知秋',
-    content: '测试111111111111111111111'
-  },
-])
+const momentsList = ref<iMomentItem[]>([])
 //技术栈类型接口
 interface iWaterFall {
   id: number,
@@ -94,27 +57,27 @@ const waterFallList = ref<iWaterFall[]>([
   },
   {
     id:2,
-    photo: vueBG,
+    photo: reactBG,
     text: 'React',
     src: 'https://zh-hans.react.dev/',
-    height: 250,
-    icon: vueIcon,
+    height: 255,
+    icon: reactIcon,
   },
   {
     id: 3,
-    photo: vueBG,
+    photo: nodejsBG,
     text: 'Nodejs',
     src: 'https://nodejs.cn/',
-    height: 250,
-    icon: vueIcon,
+    height: 212.5,
+    icon: nodejsIcon,
   },
   {
     id:4,
-    photo: vueBG,
+    photo: elementPlusBG,
     text: 'ElementPlus',
     src: 'https://element-plus.org/zh-CN/guide/design.html',
-    height: 250,
-    icon: vueIcon,
+    height: 212.5,
+    icon: elementPlusIcon,
   }
 ])
 const handleOpen = (src: string) => {
