@@ -10,6 +10,8 @@ import { getArticles } from '@/services/apis/articles'
 import {
   CloseBold
 } from '@element-plus/icons-vue'
+//导入ElementPlus相关组件
+import { ElImage } from 'element-plus'
 //导入处理md文档的库
 import { marked } from 'marked'
 //创建文章类
@@ -84,7 +86,7 @@ onMounted(async () => {
       <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)"
         :class="{ active: articleItem?.id === item.id }">
         <div class="image">
-          <img :src="item.cover" alt="">
+          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy></el-image>
         </div>
         <div class="info">
           <h2>{{ item.head }}</h2>
@@ -176,7 +178,7 @@ onMounted(async () => {
           display: none;
         }
         overflow: hidden;
-        img {
+        .cover {
           width: 100%;
           height: 100%;
           border-radius: 8px;

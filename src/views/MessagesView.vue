@@ -9,7 +9,7 @@ import { random } from '@/utils'
 //导入留言相关API
 import { getMessages, postMessages } from '@/services/apis/messages'
 //导入ElementPlus组件
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElImage } from 'element-plus'
 //导入dayjs库
 import dayjs from 'dayjs'
 //导入留言仓库
@@ -163,7 +163,8 @@ onMounted(() => {
         <h4>欢迎留言,你可以在这里畅所欲言</h4>
       </div>
       <div class="showItem" v-for="item of messagesList" ref="showList" :key="item.id">
-        <img :src="item.userHeadPortrait" alt="" @error="onError(item)">
+        <el-image :src="item.userHeadPortrait" alt="头像" class="custom-image" fit="cover" lazy
+          @error="onError(item)"></el-image>
         <span class="name">{{ item.name }}:</span>
         <span class="content">{{ item.content }}</span>
       </div>
@@ -185,7 +186,8 @@ onMounted(() => {
       </div>
       <div class="messagesItem" v-for="item of messagesList" :key="item.id">
         <section class="leftSection">
-          <img :src="item.userHeadPortrait" alt="" @error="onError(item)">
+          <el-image :src="item.userHeadPortrait" alt="头像" class="custom-image" fit="cover" lazy
+            @error="onError(item)"></el-image>
         </section>
         <section class="rightSection">
           <h4>{{ item.name }}</h4>
@@ -289,7 +291,7 @@ onMounted(() => {
       background-color: rgba(62, 62, 63, 0.5);
       right: -200px;
 
-      img {
+      .custom-image {
         width: 50px;
         height: 50px;
         border-radius: 50px;
@@ -360,10 +362,10 @@ onMounted(() => {
         width: 50px;
         height: 100%;
 
-        img {
+        .custom-image {
           width: 50px;
           height: 50px;
-          border-radius: 50px;
+          border-radius: 25px;
         }
       }
 

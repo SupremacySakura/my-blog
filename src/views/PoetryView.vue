@@ -3,6 +3,8 @@
 import { ref, onMounted } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
+//导入ElementPlus相关组件
+import { ElImage } from 'element-plus'
 //导入接口
 import { getPoetry } from '@/services/apis/poetry'
 /**
@@ -67,13 +69,13 @@ onMounted(() => {
   <div class="poetryBox">
     <!-- 诗歌列表 -->
     <section v-for="item of poetryList" :key="item.id" class="card" @click="handleOpen(item)">
-      <img :src="item.photo" alt="">
+      <el-image :src="item.photo" alt="封面" class="cover" fit="cover" lazy></el-image>
       <span>{{ item.title }}</span>
     </section>
     <!-- 诗歌展示弹窗 -->
     <el-dialog v-model="dialogVisible" width="500">
       <section class="dialogBox">
-        <img :src="nowPoetry.photo" alt="">
+        <el-image :src="nowPoetry.photo" alt="封面" class="cover" fit="cover" lazy></el-image>
         <h4>{{ nowPoetry.title }}</h4>
         <span>{{ nowPoetry.author }}</span>
         <span>{{ nowPoetry.text }}</span>
@@ -108,7 +110,7 @@ onMounted(() => {
     flex-direction: column;
     margin-bottom: 10px;
 
-    img {
+    .cover {
       width: 320px;
       height: 200px;
       border-radius: 5px;
@@ -123,7 +125,7 @@ onMounted(() => {
   .dialogBox {
     width: 400px;
 
-    img {
+    .cover {
       width: 320px;
       height: 200px;
     }

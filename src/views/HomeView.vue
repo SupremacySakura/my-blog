@@ -7,6 +7,8 @@ import yxzq from '../../public/yxzq.jpg'
 import { getArticlesNum } from '@/services/apis/articles'
 //导入网站相关API
 import { getTime, getPeople } from '@/services/apis/asset'
+//导入ElementPlus相关组件
+import { ElImage } from 'element-plus'
 //开始前页面dom
 const homeBox = useTemplateRef('homeBox')
 //开始后页面dom
@@ -159,7 +161,8 @@ onUnmounted(() => {
           <!-- 个人信息 -->
           <section class="user">
             <div>
-              <img :src="yxzq" alt="">
+              <el-image :src="yxzq" alt="头像" class="custom-image" fit="cover" :preview-src-list="[yxzq]"
+                hide-on-click-modal />
               <span>余心知秋</span>
               <p>耗尽</p>
               <span>全栈工程师(主前端)</span>
@@ -268,10 +271,22 @@ onUnmounted(() => {
             /* 下侧高光 */
           }
 
-          img {
+          .custom-image {
             width: 80px;
             height: 80px;
-            border-radius: 80px;
+            border-radius: 40px;
+            overflow: hidden;
+            padding: 0;
+
+            ::v-deep(.el-image__inner) {
+              /* 设置内部图片为圆形 */
+              border-radius: 50%;
+              width: 100%;
+              /* 确保图片充满整个容器 */
+              height: 100%;
+              object-fit: cover;
+              /* 图片适应容器 */
+            }
           }
 
           p {

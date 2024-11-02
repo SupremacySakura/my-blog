@@ -11,6 +11,8 @@ import elementPlusBG from '../../public/ElementPlus.jpg'
 import elementPlusIcon from '../../public/element-plus.png'
 import nodejsBG from '../../public/Nodejs.jpg'
 import nodejsIcon from '../../public/nodejs.png'
+//导入ElementPlus相关组件
+import { ElImage } from 'element-plus'
 //导入lodash相关API
 import { throttle } from 'lodash'
 //导入moments相关API
@@ -180,7 +182,7 @@ onMounted(() => {
         <div class="moment">
           <section>
             <div>
-              <img :src="item.userHeadPortrait" alt="">
+              <el-image :src="item.userHeadPortrait" alt="头像" class="custom-image" fit="cover" lazy></el-image>
               <span>{{ item.name }}</span>
             </div>
             <div>
@@ -197,8 +199,8 @@ onMounted(() => {
       <div class="box" ref="waterFallBox">
         <div v-for="item of waterFallList" :key="item.id" class="waterFallItem" :style="{ height: item.height + 'px' }"
           @click="handleOpen(item.src)" ref="waterFallItems">
-          <img :src="item.photo" alt="" class="background">
-          <img :src="item.icon" alt="" class="icon">
+          <el-image :src="item.photo" alt="背景" class="background" fit="cover" lazy></el-image>
+          <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy></el-image>
           <span>{{ item.text }}</span>
         </div>
       </div>
@@ -296,11 +298,10 @@ onMounted(() => {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
-
-            img {
-              width: 50px;
-              height: 50px;
-              border-radius: 50px;
+            .custom-image{
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
             }
           }
 
