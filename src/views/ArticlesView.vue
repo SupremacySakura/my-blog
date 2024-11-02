@@ -125,6 +125,7 @@ onMounted(async () => {
   .leftSection {
     padding-top: 20px;
     padding-left: 40px;
+    min-width: 400px;
     width: 900px;
     height: 90%;
     overflow-y: auto;
@@ -144,7 +145,9 @@ onMounted(async () => {
     }
 
     .card {
-      width: 700px;
+      // width: 700px;
+      min-width: 300px;
+      width: 78%;
       height: 200px;
       border-radius: 8px;
       background-color: aliceblue;
@@ -169,7 +172,10 @@ onMounted(async () => {
         width: 400px;
         height: 100%;
         border-radius: 8px;
-
+        @media (max-width:1300px) {
+          display: none;
+        }
+        overflow: hidden;
         img {
           width: 100%;
           height: 100%;
@@ -217,6 +223,7 @@ onMounted(async () => {
   }
 
   .articleBoard {
+    min-width: 350px;
     flex-grow: 1;
     height: 90%;
     box-sizing: border-box;
