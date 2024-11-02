@@ -1,10 +1,15 @@
 <script setup lang="ts">
+//导入Vue相关API
 import { onUnmounted, nextTick, onMounted, ref, useTemplateRef } from 'vue'
+//导入测试图片
 import yxzq from '../../public/yxzq.jpg'
+//导入文章相关API
 import { getArticlesNum } from '@/services/apis/articles'
-import { getTime,getPeople } from '@/services/apis/asset'
-
+//导入网站相关API
+import { getTime, getPeople } from '@/services/apis/asset'
+//开始前页面dom
 const homeBox = useTemplateRef('homeBox')
+//开始后页面dom
 const myBox = useTemplateRef('myBox')
 /**
  * dom上移100vh
@@ -38,6 +43,9 @@ const boxDown = (dom: HTMLElement) => {
   }
   animateBox()
 }
+/**
+ * 开始,进入开始后页面
+ */
 const handleStart = () => {
   //上移
   if (homeBox.value && myBox.value) {
@@ -45,6 +53,9 @@ const handleStart = () => {
     boxUp(myBox.value)
   }
 }
+/**
+ * 结束,进入开始前页面
+ */
 const handleStop = () => {
   //下移
   if (homeBox.value && myBox.value) {
@@ -52,18 +63,27 @@ const handleStop = () => {
     boxDown(myBox.value)
   }
 }
+/**
+ * 从后端获取文章数,赋值给articlesNum
+ */
 const getANum = async () => {
   const res = await getArticlesNum()
   if (res.data.code === 200) {
     articlesNum.value = res.data.data
   }
 }
+//起始时间
 const time = ref('')
+//时间间隔
 const daysDiff = ref(0)
 const hoursDiff = ref(0)
 const minutesDiff = ref(0)
 const secondsDiff = ref(0)
+//访客人数
 const people = ref(0)
+/**
+ * 获取起始时间与当前时间,计算出时间间隔并赋值
+ */
 const getUsingTime = async () => {
   const res = await getTime()
   if (res.data.code === 200) {
@@ -81,41 +101,50 @@ const getUsingTime = async () => {
     hoursDiff.value = Math.floor(hoursDiff.value % 24)
   }
 }
-const getPeopleTimes = async()=>{
+/**
+ * 获取访客人数,赋值给people
+ */
+const getPeopleTimes = async () => {
   const res = await getPeople()
   if (res.data.code === 200) {
-   people.value = res.data.data
+    people.value = res.data.data
   }
 }
+//发布文章数量
 const articlesNum = ref(0)
+//计算时间定时器
 let intervalId: number
 onMounted(async () => {
+  //初始化
   await getANum()
   await getUsingTime()
-  intervalId =  setInterval(()=>{
-    secondsDiff.value+=1
-    if(secondsDiff.value>=60){
-      minutesDiff.value+=1
-      secondsDiff.value-=60
-      if(minutesDiff.value>=60){
-        hoursDiff.value+=1
-        minutesDiff.value-=60
-        if(hoursDiff.value>=24){
-          daysDiff.value+=1
-          hoursDiff.value-=24
+  //开启定时器计算时间间隔
+  intervalId = setInterval(() => {
+    secondsDiff.value += 1
+    if (secondsDiff.value >= 60) {
+      minutesDiff.value += 1
+      secondsDiff.value -= 60
+      if (minutesDiff.value >= 60) {
+        hoursDiff.value += 1
+        minutesDiff.value -= 60
+        if (hoursDiff.value >= 24) {
+          daysDiff.value += 1
+          hoursDiff.value -= 24
         }
       }
     }
-  },1000)
+  }, 1000)
   await getPeopleTimes()
 })
-onUnmounted(()=>{
+onUnmounted(() => {
+  //页面销毁清楚定时器
   clearInterval(intervalId)
 })
 </script>
 
 <template>
   <div class="box">
+    <!-- 开始前页面 -->
     <div class="homeBox" ref="homeBox">
       <section class="topSection">
         <h1>这是我的个人工作空间</h1>
@@ -123,9 +152,11 @@ onUnmounted(()=>{
         <button @click="handleStart()" class="changeButton">开始</button>
       </section>
     </div>
+    <!-- 开始后页面 -->
     <div class="myBox" ref="myBox">
       <section class="bottomSection">
         <div class="about">
+          <!-- 个人信息 -->
           <section class="user">
             <div>
               <img :src="yxzq" alt="">
@@ -135,6 +166,7 @@ onUnmounted(()=>{
               <address>2712794459@qq.com</address>
             </div>
           </section>
+          <!-- 网站相关信息 -->
           <section class="info">
             <div class="number">
               <h4>发表文章数量:</h4>
@@ -142,13 +174,14 @@ onUnmounted(()=>{
             </div>
             <div>
               <h4>本站运行时间</h4>
-              <time>{{daysDiff+'day'+hoursDiff+'hour'+minutesDiff+'min'+secondsDiff+'s'}}</time>
+              <time>{{ daysDiff + 'day' + hoursDiff + 'hour' + minutesDiff + 'min' + secondsDiff + 's' }}</time>
             </div>
             <div>
               <h4>访客数量</h4>
               <span>{{ people }}</span>
             </div>
           </section>
+
         </div>
         <button @click="handleStop()" class="changeButton">返回</button>
       </section>
@@ -278,7 +311,8 @@ onUnmounted(()=>{
             flex-direction: column;
             padding: 10px;
             justify-content: space-around;
-            time{
+
+            time {
               white-space: wrap;
             }
           }

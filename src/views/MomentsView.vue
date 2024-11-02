@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef,nextTick, onUnmounted } from 'vue'
+//导入Vue相关API
+import { onMounted, ref, useTemplateRef, nextTick, onUnmounted } from 'vue'
+//导入图片
 import yxzq from '../../public/yxzq.jpg'
 import vueBG from '../../public/vue.jpg'
 import vueIcon from '../../public/favicon.ico'
@@ -9,7 +11,9 @@ import elementPlusBG from '../../public/ElementPlus.jpg'
 import elementPlusIcon from '../../public/element-plus.png'
 import nodejsBG from '../../public/Nodejs.jpg'
 import nodejsIcon from '../../public/nodejs.png'
+//导入lodash相关API
 import { throttle } from 'lodash'
+//导入moments相关API
 import { getMoments } from '@/services/apis/moments'
 /**
  * 获取朋友圈列表,并给poetryList赋值
@@ -45,7 +49,7 @@ interface iWaterFall {
   height: number,
   icon: string,
 }
-//数据数组
+//技术栈数据数组
 const waterFallList = ref<iWaterFall[]>([
   {
     id: 1,
@@ -56,7 +60,7 @@ const waterFallList = ref<iWaterFall[]>([
     icon: vueIcon,
   },
   {
-    id:2,
+    id: 2,
     photo: reactBG,
     text: 'React',
     src: 'https://zh-hans.react.dev/',
@@ -72,7 +76,7 @@ const waterFallList = ref<iWaterFall[]>([
     icon: nodejsIcon,
   },
   {
-    id:4,
+    id: 4,
     photo: elementPlusBG,
     text: 'ElementPlus',
     src: 'https://element-plus.org/zh-CN/guide/design.html',
@@ -80,6 +84,10 @@ const waterFallList = ref<iWaterFall[]>([
     icon: elementPlusIcon,
   }
 ])
+/**
+ * 新开窗口打开目标网址
+ * @param src 网址
+ */
 const handleOpen = (src: string) => {
   window.open(src, '_blank');
 
@@ -107,10 +115,10 @@ const margin = ref(0)
 const getRowAndMargin = (item: HTMLElement, width: number) => {
   const itemWidth = item.offsetWidth
   let rows = Math.floor(itemWidth / width)
-  if(rows>waterFallList.value.length){
+  if (rows > waterFallList.value.length) {
     rows = waterFallList.value.length
-    const  margin = (itemWidth - rows*width)/(rows+1)
-    return [rows,margin]
+    const margin = (itemWidth - rows * width) / (rows + 1)
+    return [rows, margin]
   }
   const margin = itemWidth % width / (rows + 1)
   return [rows, margin]
@@ -127,35 +135,36 @@ const setPosition = (children: HTMLElement[], maginLeft: number, width: number, 
     const child = item
     //寻找到高度最小的一项,项这一项添加
     const minItem = rowsList.value.reduce((min, current) => current.height < min.height ? current : min, rowsList.value[0])
-    child.style.left = `${maginLeft * (minItem.id + 1) + width * (minItem.id-1)}px`
+    child.style.left = `${maginLeft * (minItem.id + 1) + width * (minItem.id - 1)}px`
     child.style.top = `${minItem.height}px`
-    rowsList.value[rowsList.value.findIndex(item=>item.id===minItem.id)].height+=child.offsetHeight+marginTop
+    rowsList.value[rowsList.value.findIndex(item => item.id === minItem.id)].height += child.offsetHeight + marginTop
   })
 }
-const newWaterFall = ()=>{
-  if(waterFallBox.value&&waterFallItems.value){
+const newWaterFall = () => {
+  if (waterFallBox.value && waterFallItems.value) {
     const children = waterFallItems.value
-    nextTick(()=>{
-      [rows.value,margin.value] = getRowAndMargin(waterFallBox.value as HTMLDivElement,170)
-      rowsList.value = [] 
-      for(let i =1;i<=rows.value;i++){
-        rowsList.value.push({id:i,height:0})
+    nextTick(() => {
+      [rows.value, margin.value] = getRowAndMargin(waterFallBox.value as HTMLDivElement, 170)
+      rowsList.value = []
+      for (let i = 1; i <= rows.value; i++) {
+        rowsList.value.push({ id: i, height: 0 })
       }
-      setPosition(children,margin.value,170,10)
+      setPosition(children, margin.value, 170, 10)
       console.log(rowsList.value)
     })
   }
 }
-onMounted(()=>{
+onMounted(() => {
+  //初始化
   handleGetMoments()
   newWaterFall()
-  window.addEventListener('resize',throttle(()=>{newWaterFall()},1000))
+  window.addEventListener('resize', throttle(() => { newWaterFall() }, 1000))
 })
 </script>
 
 <template>
   <div class="momentsBox">
-
+    <!-- 朋友圈 -->
     <section class="leftSection">
 
       <div class="card" v-for="item of momentsList" :key="item.id">
@@ -182,7 +191,7 @@ onMounted(()=>{
       </div>
 
     </section>
-
+    <!-- 技术栈展示 -->
     <section class="rightSection">
       <h2>相关技术栈</h2>
       <div class="box" ref="waterFallBox">
@@ -321,6 +330,7 @@ onMounted(()=>{
       width: 100%;
       height: 100%;
       position: relative;
+
       .waterFallItem {
         width: 170px;
         position: absolute;

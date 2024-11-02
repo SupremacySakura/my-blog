@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref,onMounted } from 'vue'
+//导入Vue相关API
+import { ref, onMounted } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
 //导入接口
@@ -7,12 +8,12 @@ import { getPoetry } from '@/services/apis/poetry'
 /**
  * 获取诗歌列表,并给poetryList赋值
  */
-const handleGetPoetry =async ()=>{
+const handleGetPoetry = async () => {
   const res = await getPoetry()
-  if(+res.data.code===200){
+  if (+res.data.code === 200) {
     poetryList.value = res.data.data
-    poetryList.value.forEach((item)=>{
-      if(!item.photo){
+    poetryList.value.forEach((item) => {
+      if (!item.photo) {
         item.photo = test1
       }
     })
@@ -23,46 +24,53 @@ interface iPoetryItem {
   id: number,
   title: string,
   text: string,
-  author:string,
+  author: string,
   photo: string,
 }
 //诗歌数组
-const poetryList= ref<iPoetryItem[]>([
+const poetryList = ref<iPoetryItem[]>([
   {
     id: 0,
     title: '静夜思',
     text: '',
-    author:'李白',
+    author: '李白',
     photo: test1,
   },
 ])
+//控制诗歌显示隐藏
 const dialogVisible = ref(false)
+//选中诗歌
 const nowPoetry = ref<iPoetryItem>(
   {
     id: 0,
     title: '静夜思',
-    text: '床前明月光,疑是地上霜。举头望明月,低头思故乡。',
-    author:'李白',
+    text: '',
+    author: '李白',
     photo: test1,
   },
 )
+/**
+ * 打开所选诗歌
+ * @param item 接收诗歌项
+ */
 const handleOpen = (item: iPoetryItem) => {
   nowPoetry.value = item
   dialogVisible.value = true
 }
-onMounted(()=>{
+onMounted(() => {
+  //初始化
   handleGetPoetry()
 })
 </script>
 
 <template>
   <div class="poetryBox">
-
+    <!-- 诗歌列表 -->
     <section v-for="item of poetryList" :key="item.id" class="card" @click="handleOpen(item)">
       <img :src="item.photo" alt="">
       <span>{{ item.title }}</span>
     </section>
-
+    <!-- 诗歌展示弹窗 -->
     <el-dialog v-model="dialogVisible" width="500">
       <section class="dialogBox">
         <img :src="nowPoetry.photo" alt="">
@@ -111,13 +119,16 @@ onMounted(()=>{
       margin-top: 5px;
     }
   }
-  .dialogBox{
+
+  .dialogBox {
     width: 400px;
-    img{
+
+    img {
       width: 320px;
       height: 200px;
     }
-    span{
+
+    span {
       display: block;
     }
   }

@@ -5,11 +5,11 @@ export const useMessagesStore = defineStore('messages', () => {
   const _userHeadPortrait = ref('')
   const _name = ref('')
   const _address = ref('')
-  const _setInfo = (userHeadPortrait:string,name:string,address?:string) =>{
+  const _setInfo = (userHeadPortrait: string, name: string, address?: string) => {
     _userHeadPortrait.value = userHeadPortrait
     _name.value = name
-    if(address){
-      _address.value =address
+    if (address) {
+      _address.value = address
     }
   }
   return {
@@ -18,6 +18,6 @@ export const useMessagesStore = defineStore('messages', () => {
     _address,
     _setInfo,
   }
-},{
-  persist:true
+}, {
+  persist: true
 })

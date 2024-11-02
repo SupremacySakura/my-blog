@@ -1,11 +1,16 @@
 <script setup lang="ts">
+//导入Vue相关API
 import { onMounted, ref, useTemplateRef, watchEffect, nextTick } from 'vue'
+//导入测试图片
 import test1 from '@/assets/test1.jpg'
 import user from '@/assets/user.png'
+//导入文章相关API
 import { getArticles } from '@/services/apis/articles'
+//导入ElementPlus图标
 import {
   CloseBold
 } from '@element-plus/icons-vue'
+//导入处理md文档的库
 import { marked } from 'marked'
 //创建文章类
 interface iArticleItem {
@@ -18,6 +23,7 @@ interface iArticleItem {
   time: string,
   cover: string
 }
+//文章数组
 const articlesList = ref<iArticleItem[]>([])
 /**
  * 获取文章数据
@@ -26,6 +32,7 @@ const handleGetArticles = async () => {
   const res = await getArticles()
   if (+res.data.code === 200) {
     articlesList.value = res.data.data
+    //处理空图片
     articlesList.value.forEach((item) => {
       if (!item.userHeadPortrait) {
         item.userHeadPortrait = user
@@ -37,8 +44,11 @@ const handleGetArticles = async () => {
   }
 }
 //右侧展示文章数据
+//选中文章
 const articleItem = ref<iArticleItem>()
+//展示文章dom
 const articleMD = useTemplateRef('articleMD')
+//监听文章dom,将选中文章挂载在上面
 watchEffect(async () => {
   if (articleMD.value) {
     const htmlContent = await marked(articleItem.value?.article as string)
@@ -47,23 +57,32 @@ watchEffect(async () => {
 
   }
 })
+/**
+ * 选中一篇文章
+ * @param item 文章类
+ */
 const handleChooseArticle = (item: iArticleItem) => {
   articleItem.value = item
 }
+/**
+ * 清空选中文章
+ */
 const handleClose = () => {
   articleItem.value = undefined
 }
 onMounted(async () => {
+  //初始化
   await handleGetArticles()
- articleItem.value = articlesList.value[0]
+  articleItem.value = articlesList.value[0]
 })
 </script>
 
 <template>
   <div class="articlesBox">
-
+    <!-- 左边文章列表展示 -->
     <section class="leftSection">
-      <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)" :class="{active:articleItem?.id===item.id}">
+      <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)"
+        :class="{ active: articleItem?.id === item.id }">
         <div class="image">
           <img :src="item.cover" alt="">
         </div>
@@ -78,7 +97,7 @@ onMounted(async () => {
         </div>
       </section>
     </section>
-
+    <!-- 选中文章展示 -->
     <section class="articleBoard" v-if="articleItem">
       <div class="close">
         <el-button type="danger" :icon="CloseBold" circle @click="handleClose" />
@@ -86,6 +105,7 @@ onMounted(async () => {
       <h2>{{ articleItem.head }}</h2>
       <p ref="articleMD"></p>
     </section>
+
   </div>
 </template>
 
@@ -101,25 +121,28 @@ onMounted(async () => {
   box-sizing: border-box;
   display: flex;
   overflow: hidden;
+
   .leftSection {
     padding-top: 20px;
     padding-left: 40px;
     width: 900px;
     height: 90%;
     overflow-y: auto;
-    background-color: rgba(102.2, 177.4, 255,0.1);
+    background-color: rgba(102.2, 177.4, 255, 0.1);
     box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
-        /* 上侧阴影 */
-        inset 0px -4px 8px rgba(255, 255, 255, 0.5);
-      /* 下侧高光 */
+      /* 上侧阴影 */
+      inset 0px -4px 8px rgba(255, 255, 255, 0.5);
+    /* 下侧高光 */
     scrollbar-width: none;
-      /* Firefox */
-      -ms-overflow-style: none;
-      /* IE 和 Edge */
-      &::-webkit-scrollbar {
-          display: none;
-          /* Chrome、Safari、Edge */
-        }
+    /* Firefox */
+    -ms-overflow-style: none;
+
+    /* IE 和 Edge */
+    &::-webkit-scrollbar {
+      display: none;
+      /* Chrome、Safari、Edge */
+    }
+
     .card {
       width: 700px;
       height: 200px;
@@ -141,6 +164,7 @@ onMounted(async () => {
       &:hover {
         transform: scale(1.1);
       }
+
       .image {
         width: 400px;
         height: 100%;
@@ -186,7 +210,8 @@ onMounted(async () => {
         }
       }
     }
-    .active{
+
+    .active {
       transform: scale(1.1);
     }
   }
@@ -205,15 +230,16 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     overflow: auto;
-      scrollbar-width: none;
-        /* Firefox */
-        -ms-overflow-style: none;
-      
-        /* IE 和 Edge */
-        &::-webkit-scrollbar {
-          display: none;
-          /* Chrome、Safari、Edge */
-        }
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+
+    /* IE 和 Edge */
+    &::-webkit-scrollbar {
+      display: none;
+      /* Chrome、Safari、Edge */
+    }
+
     .close {
       width: 100%;
       display: flex;

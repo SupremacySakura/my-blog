@@ -1,13 +1,19 @@
 <script setup lang="ts">
+//导入Vue相关API
 import { ref, onMounted, useTemplateRef, watchEffect, nextTick, watch } from 'vue'
+//导入测试图片
 import background from '@/assets/messageBackground.jpeg'
 import user from '@/assets/user.png'
+//导入工具函数
 import { random } from '@/utils'
+//导入留言相关API
 import { getMessages, postMessages } from '@/services/apis/messages'
+//导入ElementPlus组件
 import { ElMessage } from 'element-plus'
+//导入dayjs库
 import dayjs from 'dayjs'
+//导入留言仓库
 import { useMessagesStore } from '@/stores/messages'
-import { storeToRefs } from 'pinia'
 const { _userHeadPortrait, _name, _address, _setInfo } = useMessagesStore()
 //定义评论类型接口
 interface iMessageItem {
@@ -35,6 +41,7 @@ const handleGetMessages = async () => {
     count.value++
   }
 }
+//发布留言弹窗控制
 const dialogVisible = ref(false)
 //发布评论信息
 const userHeadPortrait = ref(_userHeadPortrait)
@@ -99,10 +106,12 @@ const handlePublish = async () => {
   handleGetMessages()
   _setInfo(userHeadPortrait.value, name.value, address.value)
 }
+//留言板dom
 const board = useTemplateRef('board')
-
+//留言板弹幕dom
 const showList = useTemplateRef("showList")
 // 监听留言,添加动画
+//手动监听控制器
 const count = ref(0)
 watchEffect(() => {
   count.value
@@ -134,17 +143,19 @@ watchEffect(() => {
 
   }
 })
+//处理错误图片
 const onError = (item: iMessageItem) => {
   item.userHeadPortrait = user
 }
 onMounted(() => {
+  //初始化
   handleGetMessages()
 })
 </script>
 
 <template>
   <div class="messagesBox">
-
+    <!-- 上部留言板 -->
     <section class="board" ref="board">
       <img :src="background" alt="" class="backgroundImage">
       <div class="boardDiv">
@@ -157,7 +168,7 @@ onMounted(() => {
         <span class="content">{{ item.content }}</span>
       </div>
     </section>
-
+    <!-- 评论区 -->
     <section class="messagesPublish">
       <div>
         <h1>留下你的评论</h1>
@@ -167,7 +178,7 @@ onMounted(() => {
         <button @click="handleOpen()">发表</button>
       </div>
     </section>
-
+    <!-- 评论区展示 -->
     <section class="messagesShow">
       <div class="showTop">
         <h4>评论数量:{{ messagesList.length }}</h4>
@@ -186,7 +197,7 @@ onMounted(() => {
         </section>
       </div>
     </section>
-
+    <!-- 发表评论弹窗 -->
     <el-dialog v-model="dialogVisible" width="500">
       <section class="dialogBox">
         <h4>基本信息填写</h4>

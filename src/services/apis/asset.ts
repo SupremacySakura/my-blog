@@ -4,10 +4,10 @@ const getTime = () => {
   return http.get('/asset/time')
 }
 
-const getPeople = ()=>{
+const getPeople = () => {
   return http.get('/asset/people')
 }
-const visit = ()=>{
+const visit = () => {
   return http.post('/asset/get')
 }
 export {
