@@ -12,7 +12,7 @@ import elementPlusIcon from '../../public/element-plus.png'
 import nodejsBG from '../../public/Nodejs.jpg'
 import nodejsIcon from '../../public/nodejs.png'
 //导入ElementPlus相关组件
-import { ElImage } from 'element-plus'
+import { ElImage, ElLoading } from 'element-plus'
 //导入lodash相关API
 import { throttle } from 'lodash'
 //导入moments相关API
@@ -156,12 +156,26 @@ const newWaterFall = () => {
     })
   }
 }
-onMounted(() => {
+onMounted(async () => {
   //初始化
-  handleGetMoments()
+  const options = {
+    lock: true, // 锁定屏幕，禁止操作
+    text: '正在加载...',
+    spinner: 'el-icon-loading',
+    background: 'rgba(255, 255, 255, 1)',
+  }
+  const loadingInstance = ElLoading.service(options)
+
+  await handleGetMoments()
   newWaterFall()
   window.addEventListener('resize', throttle(() => { newWaterFall() }, 1000))
+  nextTick(() => {
+    setTimeout(() => {
+      loadingInstance.close()
+    }, 0)
+  })
 })
+
 </script>
 
 <template>
@@ -298,10 +312,11 @@ onMounted(() => {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
-            .custom-image{
-                width: 50px;
-                height: 50px;
-                border-radius: 25px;
+
+            .custom-image {
+              width: 50px;
+              height: 50px;
+              border-radius: 25px;
             }
           }
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
 //导入ElementPlus相关组件
-import { ElImage } from 'element-plus'
+import { ElImage, ElLoading } from 'element-plus'
 //导入接口
 import { getPoetry } from '@/services/apis/poetry'
 /**
@@ -59,9 +59,21 @@ const handleOpen = (item: iPoetryItem) => {
   nowPoetry.value = item
   dialogVisible.value = true
 }
-onMounted(() => {
+onMounted(async () => {
+  const options = {
+    lock: true, // 锁定屏幕，禁止操作
+    text: '正在加载...',
+    spinner: 'el-icon-loading',
+    background: 'rgba(255, 255, 255, 1)',
+  }
+  const loadingInstance = ElLoading.service(options)
   //初始化
-  handleGetPoetry()
+  await handleGetPoetry()
+  nextTick(() => {
+    setTimeout(() => {
+      loadingInstance.close()
+    }, 0)
+  })
 })
 </script>
 

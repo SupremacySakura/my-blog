@@ -8,7 +8,7 @@ import { getArticlesNum } from '@/services/apis/articles'
 //导入网站相关API
 import { getTime, getPeople } from '@/services/apis/asset'
 //导入ElementPlus相关组件
-import { ElImage } from 'element-plus'
+import { ElImage, ElLoading } from 'element-plus'
 //开始前页面dom
 const homeBox = useTemplateRef('homeBox')
 //开始后页面dom
@@ -118,6 +118,14 @@ const articlesNum = ref(0)
 let intervalId: number
 onMounted(async () => {
   //初始化
+  const options = {
+    lock: true, // 锁定屏幕，禁止操作
+    text: '正在加载...',
+    spinner: 'el-icon-loading',
+    background: 'rgba(255, 255, 255, 1)',
+  }
+  const loadingInstance = ElLoading.service(options)
+  //初始化
   await getANum()
   await getUsingTime()
   //开启定时器计算时间间隔
@@ -137,6 +145,11 @@ onMounted(async () => {
     }
   }, 1000)
   await getPeopleTimes()
+  nextTick(() => {
+    setTimeout(() => {
+      loadingInstance.close()
+    }, 0)
+  })
 })
 onUnmounted(() => {
   //页面销毁清楚定时器

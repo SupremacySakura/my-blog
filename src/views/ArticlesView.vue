@@ -11,7 +11,7 @@ import {
   CloseBold
 } from '@element-plus/icons-vue'
 //导入ElementPlus相关组件
-import { ElImage } from 'element-plus'
+import { ElImage, ElLoading } from 'element-plus'
 //导入处理md文档的库
 import { marked } from 'marked'
 //创建文章类
@@ -74,8 +74,21 @@ const handleClose = () => {
 }
 onMounted(async () => {
   //初始化
+  const options = {
+    lock: true, // 锁定屏幕，禁止操作
+    text: '正在加载...',
+    spinner: 'el-icon-loading',
+    background: 'rgba(255, 255, 255, 1)',
+  }
+  const loadingInstance = ElLoading.service(options)
+  //初始化
   await handleGetArticles()
   articleItem.value = articlesList.value[0]
+  nextTick(() => {
+    setTimeout(() => {
+      loadingInstance.close()
+    }, 0)
+  })
 })
 </script>
 
@@ -174,10 +187,13 @@ onMounted(async () => {
         width: 400px;
         height: 100%;
         border-radius: 8px;
+
         @media (max-width:1300px) {
           display: none;
         }
+
         overflow: hidden;
+
         .cover {
           width: 100%;
           height: 100%;

@@ -9,7 +9,7 @@ import { random } from '@/utils'
 //导入留言相关API
 import { getMessages, postMessages } from '@/services/apis/messages'
 //导入ElementPlus组件
-import { ElMessage, ElImage } from 'element-plus'
+import { ElMessage, ElImage, ElLoading } from 'element-plus'
 //导入dayjs库
 import dayjs from 'dayjs'
 //导入留言仓库
@@ -147,9 +147,21 @@ watchEffect(() => {
 const onError = (item: iMessageItem) => {
   item.userHeadPortrait = user
 }
-onMounted(() => {
+onMounted(async () => {
+  const options = {
+    lock: true, // 锁定屏幕，禁止操作
+    text: '正在加载...',
+    spinner: 'el-icon-loading',
+    background: 'rgba(255, 255, 255, 1)',
+  }
+  const loadingInstance = ElLoading.service(options)
   //初始化
-  handleGetMessages()
+  await handleGetMessages()
+  nextTick(() => {
+    setTimeout(() => {
+      loadingInstance.close()
+    }, 0)
+  })
 })
 </script>
 
