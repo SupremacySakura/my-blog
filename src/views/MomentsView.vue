@@ -421,7 +421,7 @@ onMounted(async () => {
         justify-content: space-around;
         align-items: center;
         transform: scale(1.0);
-        transition: all 0.5s ease-in;
+        transition: all 0.5s ease;
         &:hover{
           cursor: pointer;
           transform: scale(1.1);
