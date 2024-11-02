@@ -420,8 +420,12 @@ onMounted(async () => {
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
+        transform: scale(1.0);
+        transition: all 0.5s ease-in;
         &:hover{
           cursor: pointer;
+          transform: scale(1.1);
+          z-index: 1;
         }
         .background {
           width: 100%;

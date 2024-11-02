@@ -139,7 +139,8 @@ onMounted(async () => {
 
   .leftSection {
     padding-top: 20px;
-    padding-left: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
     min-width: 400px;
     width: 900px;
     height: 90%;
@@ -166,6 +167,7 @@ onMounted(async () => {
       height: 200px;
       border-radius: 8px;
       background-color: aliceblue;
+      margin: 0 auto;
       display: flex;
       overflow: hidden;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2),
@@ -207,9 +209,8 @@ onMounted(async () => {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        box-sizing: border-box;
+        // box-sizing: border-box;
         padding: 10px;
-
         .abstract {
           width: 100%;
           overflow: hidden;
