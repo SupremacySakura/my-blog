@@ -92,17 +92,26 @@ const handlePublish = async () => {
     ElMessage.error('请填写你的昵称')
     return
   }
+  const options = {
+    lock: true, // 锁定屏幕，禁止操作
+    text: '正在发布...',
+    spinner: 'el-icon-loading',
+    background: 'rgba(255, 255, 255, 1)',
+  }
+  const loadingInstance = ElLoading.service(options)
+  dialogVisible.value = false
+  content.value = ''
   const res = await postMessages(params)
   if (res.data.code === 200) {
+    loadingInstance.close()
     ElMessage({
       message: '发布成功',
       type: 'success',
     })
   } else {
+    loadingInstance.close()
     ElMessage.error('发布失败')
   }
-  dialogVisible.value = false
-  content.value = ''
   handleGetMessages()
   _setInfo(userHeadPortrait.value, name.value, address.value)
 }
