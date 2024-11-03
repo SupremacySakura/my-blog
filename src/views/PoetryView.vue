@@ -59,6 +59,9 @@ const handleOpen = (item: iPoetryItem) => {
   nowPoetry.value = item
   dialogVisible.value = true
 }
+const onError = (item:iPoetryItem) =>{
+  item.photo = test1
+}
 onMounted(async () => {
   const options = {
     lock: true, // 锁定屏幕，禁止操作
@@ -81,7 +84,7 @@ onMounted(async () => {
   <div class="poetryBox">
     <!-- 诗歌列表 -->
     <section v-for="item of poetryList" :key="item.id" class="card" @click="handleOpen(item)">
-      <el-image :src="item.photo" alt="封面" class="cover" fit="cover" lazy></el-image>
+      <el-image :src="item.photo" alt="封面" class="cover" fit="cover" lazy @error="onError(item)"></el-image>
       <span>{{ item.title }}</span>
     </section>
     <!-- 诗歌展示弹窗 -->

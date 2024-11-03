@@ -88,7 +88,7 @@ const handlePublish = async () => {
     time: time,
     address: address.value
   }
-  if (!name) {
+  if (!name.value) {
     ElMessage.error('请填写你的昵称')
     return
   }
@@ -236,13 +236,13 @@ onMounted(async () => {
             </label>
           </div>
           <div class="name">
-            <span>昵称</span>
+            <span>昵称(必填)</span>
             <input type="text" v-model="name">
           </div>
         </div>
         <div class="bottomDiv">
           <div>
-            <span>联系地址</span>
+            <span>联系地址(选填)</span>
           </div>
           <input type="text" v-model="address">
         </div>

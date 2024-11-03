@@ -72,6 +72,9 @@ const handleChooseArticle = (item: iArticleItem) => {
 const handleClose = () => {
   articleItem.value = undefined
 }
+const onError = (item:iArticleItem) => {
+  item.cover = test1
+}
 onMounted(async () => {
   //初始化
   const options = {
@@ -99,7 +102,7 @@ onMounted(async () => {
       <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)"
         :class="{ active: articleItem?.id === item.id }">
         <div class="image">
-          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy></el-image>
+          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item)"></el-image>
         </div>
         <div class="info">
           <h2>{{ item.head }}</h2>
