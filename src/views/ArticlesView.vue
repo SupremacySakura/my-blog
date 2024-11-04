@@ -4,6 +4,7 @@ import { onMounted, ref, useTemplateRef, watchEffect, nextTick } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
 import user from '@/assets/user.png'
+import yxzq from '../../public/yxzq.jpg'
 //导入文章相关API
 import { getArticles } from '@/services/apis/articles'
 //导入ElementPlus图标
@@ -14,6 +15,11 @@ import {
 import { ElImage, ElLoading } from 'element-plus'
 //导入处理md文档的库
 import { marked } from 'marked'
+import VueMarkdown from 'vue-markdown-render'
+import MarkdownItHighlight from 'markdown-it-highlightjs'
+import 'highlight.js/styles/atom-one-dark.css' // 导入高亮样式
+// 插件数组
+const plugins = [MarkdownItHighlight]
 //创建文章类
 interface iArticleItem {
   id: number,
@@ -37,7 +43,7 @@ const handleGetArticles = async () => {
     //处理空图片
     articlesList.value.forEach((item) => {
       if (!item.userHeadPortrait) {
-        item.userHeadPortrait = user
+        item.userHeadPortrait = yxzq
       }
       if (!item.cover) {
         item.cover = test1
@@ -48,16 +54,14 @@ const handleGetArticles = async () => {
 //右侧展示文章数据
 //选中文章
 const articleItem = ref<iArticleItem>()
-//展示文章dom
-const articleMD = useTemplateRef('articleMD')
+
+//文章内容
+const source = ref('')
+
 //监听文章dom,将选中文章挂载在上面
 watchEffect(async () => {
-  if (articleMD.value) {
-    const htmlContent = await marked(articleItem.value?.article as string)
-    articleMD.value.innerHTML = htmlContent
-  } else {
-
-  }
+    const htmlContent = articleItem.value?.article as string
+    source.value = htmlContent
 })
 /**
  * 选中一篇文章
@@ -72,8 +76,9 @@ const handleChooseArticle = (item: iArticleItem) => {
 const handleClose = () => {
   articleItem.value = undefined
 }
-const onError = (item:iArticleItem) => {
+const onError = (item: iArticleItem) => {
   item.cover = test1
+  item.userHeadPortrait = yxzq
 }
 onMounted(async () => {
   //初始化
@@ -104,11 +109,12 @@ onMounted(async () => {
         <div class="image">
           <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item)"></el-image>
         </div>
+        <div class="shade"></div>
         <div class="info">
           <h2>{{ item.head }}</h2>
           <span class="abstract">{{ item.digest }}</span>
           <div class="author">
-            <img :src="user" alt="">
+            <img :src="item.userHeadPortrait" alt="">
             <span>{{ item.name }}</span>
             <time>{{ item.time }}</time>
           </div>
@@ -121,7 +127,7 @@ onMounted(async () => {
         <el-button type="danger" :icon="CloseBold" circle @click="handleClose" />
       </div>
       <h2>{{ articleItem.head }}</h2>
-      <p ref="articleMD"></p>
+      <vue-markdown :source="source" :plugins="plugins" />
     </section>
 
   </div>
@@ -142,10 +148,9 @@ onMounted(async () => {
 
   .leftSection {
     padding-top: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    min-width: 400px;
-    width: 900px;
+    padding-left: 10px;
+    padding-right: 10px;
+    min-width: 600px;
     height: 90%;
     overflow-y: auto;
     background-color: rgba(102.2, 177.4, 255, 0.1);
@@ -164,7 +169,6 @@ onMounted(async () => {
     }
 
     .card {
-      // width: 700px;
       min-width: 300px;
       width: 78%;
       height: 200px;
@@ -182,21 +186,18 @@ onMounted(async () => {
       /* 远处阴影 */
       transform: scale(1);
       transition: transform 0.8s ease;
-      margin-bottom: 20px;
-
+      margin-bottom: 30px;
+      position: relative;
       &:hover {
         transform: scale(1.1);
       }
 
       .image {
-        width: 400px;
+        width: 100%;
         height: 100%;
         border-radius: 8px;
-
-        @media (max-width:1300px) {
-          display: none;
-        }
-
+        position: absolute;
+        z-index: 0;
         overflow: hidden;
 
         .cover {
@@ -205,15 +206,24 @@ onMounted(async () => {
           border-radius: 8px;
         }
       }
-
+      .shade{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 1;
+        background-color: rgba(0,0,0,0.1);
+      }
       .info {
-        width: 300px;
+        width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
         // box-sizing: border-box;
         padding: 10px;
+        position: absolute;
+        z-index: 1;
+        color: white;
         .abstract {
           width: 100%;
           overflow: hidden;
@@ -245,7 +255,7 @@ onMounted(async () => {
   }
 
   .articleBoard {
-    min-width: 350px;
+    min-width: 550px;
     flex-grow: 1;
     height: 90%;
     box-sizing: border-box;

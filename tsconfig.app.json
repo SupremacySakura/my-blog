@@ -3,7 +3,9 @@
   "include": [
     "env.d.ts",
     "src/**/*",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "src/types/**/*", // 包含自定义类型声明
+    "src/**/*.d.ts", // 确保包含自定义的 .d.ts 文件
   ],
   "exclude": [
     "src/**/__tests__/*"
