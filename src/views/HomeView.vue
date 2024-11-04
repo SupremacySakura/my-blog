@@ -2,7 +2,7 @@
 //导入Vue相关API
 import { onUnmounted, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 //导入测试图片
-import yxzq from '../../public/yxzq.jpg'
+import yxzq from '@/assets/yxzq.jpg'
 //导入文章相关API
 import { getArticlesNum } from '@/services/apis/articles'
 //导入网站相关API

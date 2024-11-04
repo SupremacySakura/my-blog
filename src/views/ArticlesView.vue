@@ -3,7 +3,7 @@
 import { onMounted, ref, watchEffect, nextTick } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
-import yxzq from '../../public/yxzq.jpg'
+import yxzq from '@/assets/yxzq.jpg'
 //导入文章相关API
 import { getArticles } from '@/services/apis/articles'
 //导入ElementPlus图标
