@@ -1,9 +1,8 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onMounted, ref, useTemplateRef, watchEffect, nextTick } from 'vue'
+import { onMounted, ref, watchEffect, nextTick } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
-import user from '@/assets/user.png'
 import yxzq from '../../public/yxzq.jpg'
 //导入文章相关API
 import { getArticles } from '@/services/apis/articles'
@@ -14,11 +13,10 @@ import {
 //导入ElementPlus相关组件
 import { ElImage, ElLoading } from 'element-plus'
 //导入处理md文档的库
-import { marked } from 'marked'
 import VueMarkdown from 'vue-markdown-render'
 import MarkdownItHighlight from 'markdown-it-highlightjs'
 import 'highlight.js/styles/atom-one-dark.css' // 导入高亮样式
-// 插件数组
+
 const plugins = [MarkdownItHighlight]
 //创建文章类
 interface iArticleItem {
@@ -60,8 +58,8 @@ const source = ref('')
 
 //监听文章dom,将选中文章挂载在上面
 watchEffect(async () => {
-    const htmlContent = articleItem.value?.article as string
-    source.value = htmlContent
+  const htmlContent = articleItem.value?.article as string
+  source.value = htmlContent
 })
 /**
  * 选中一篇文章
@@ -127,7 +125,7 @@ onMounted(async () => {
         <el-button type="danger" :icon="CloseBold" circle @click="handleClose" />
       </div>
       <h2>{{ articleItem.head }}</h2>
-      <vue-markdown :source="source" :plugins="plugins" />
+      <vue-markdown :source="source" :plugins="plugins"></vue-markdown>
     </section>
 
   </div>
@@ -188,6 +186,7 @@ onMounted(async () => {
       transition: transform 0.8s ease;
       margin-bottom: 30px;
       position: relative;
+
       &:hover {
         transform: scale(1.1);
       }
@@ -206,13 +205,15 @@ onMounted(async () => {
           border-radius: 8px;
         }
       }
-      .shade{
+
+      .shade {
         width: 100%;
         height: 100%;
         position: absolute;
         z-index: 1;
-        background-color: rgba(0,0,0,0.1);
+        background-color: rgba(0, 0, 0, 0.1);
       }
+
       .info {
         width: 100%;
         height: 100%;
@@ -224,6 +225,7 @@ onMounted(async () => {
         position: absolute;
         z-index: 1;
         color: white;
+
         .abstract {
           width: 100%;
           overflow: hidden;
