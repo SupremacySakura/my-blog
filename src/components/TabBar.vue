@@ -61,7 +61,7 @@ const tabBarList: iTabBarItem[] = [
   width: 100%;
   min-width: 750px;
   height: 80px;
-  background-color: rgba(20, 20, 20, 0.1);
+  background-color: #f7f7f7;
   display: flex;
   align-items: center;
   justify-content: space-between;

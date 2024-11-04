@@ -159,7 +159,7 @@ const onError = (item: iMessageItem) => {
 onMounted(async () => {
   const options = {
     lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...',
+    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
     spinner: 'el-icon-loading',
     background: 'rgba(255, 255, 255, 1)',
   }
@@ -377,7 +377,7 @@ onMounted(async () => {
       margin-bottom: 10px;
       border: 1px solid rgba(0, 0, 0, 0.5);
       border-radius: 10px;
-      background-color: #f7f7f7;
+      background-color: #424243;
 
       .leftSection {
         width: 50px;
@@ -410,16 +410,11 @@ onMounted(async () => {
     }
   }
 
-  .custom-class {
-    background-color: aqua;
-  }
-
   .dialogBox {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
-
     .topDiv {
       width: 100%;
       height: 100px;

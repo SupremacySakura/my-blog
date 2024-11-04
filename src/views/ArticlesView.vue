@@ -82,7 +82,7 @@ onMounted(async () => {
   //初始化
   const options = {
     lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...',
+    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
     spinner: 'el-icon-loading',
     background: 'rgba(255, 255, 255, 1)',
   }
@@ -151,7 +151,7 @@ onMounted(async () => {
     min-width: 600px;
     height: 90%;
     overflow-y: auto;
-    background-color: rgba(102.2, 177.4, 255, 0.1);
+    background-color: rgb(102.2, 177.4, 255);
     box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
       /* 上侧阴影 */
       inset 0px -4px 8px rgba(255, 255, 255, 0.5);
@@ -265,7 +265,9 @@ onMounted(async () => {
     margin-left: 40px;
     margin-top: 10px;
     padding: 15px;
-    background-color: #f7f7f7;
+    background-color: #424243;
+    border: 1px solid #636466;
+    color: white;
     border-radius: 10px;
     display: flex;
     flex-direction: column;

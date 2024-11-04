@@ -17,11 +17,11 @@
   justify-content: center;
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 0.5);
-  background-color: #303030;
+  background-color: #f7f7f7;
   position: fixed;
   bottom: 0;
   span {
-    color: white;
+    color: black;
   }
 }
 </style>

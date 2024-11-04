@@ -152,7 +152,7 @@ onMounted(async () => {
   //初始化
   const options = {
     lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...',
+    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
     spinner: 'el-icon-loading',
     background: 'rgba(255, 255, 255, 1)',
   }
@@ -306,12 +306,12 @@ onUnmounted(() => {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            border: 1px solid black;
+            border: 1px solid rgb(50.8, 116.6, 184.5);
             margin-right: 10px;
             border-radius: 10px;
             padding: 10px;
             box-sizing: border-box;
-            background-color: aliceblue;
+            background-color: rgb(102.2, 177.4, 255);
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
               /* 上侧阴影 */
               inset 0px -4px 8px rgba(255, 255, 255, 0.5);
@@ -324,7 +324,7 @@ onUnmounted(() => {
             border-radius: 40px;
             overflow: hidden;
             padding: 0;
-
+            border:1px solid rgb(50.8, 116.6, 184.5);
             ::v-deep(.el-image__inner) {
               /* 设置内部图片为圆形 */
               border-radius: 50%;

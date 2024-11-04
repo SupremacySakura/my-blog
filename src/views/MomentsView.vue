@@ -220,7 +220,7 @@ onMounted(async () => {
   //初始化
   const options = {
     lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...',
+    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
     spinner: 'el-icon-loading',
     background: 'rgba(255, 255, 255, 1)',
   }
@@ -274,6 +274,7 @@ onMounted(async () => {
         <div v-for="item of waterFallList" :key="item.id" class="waterFallItem" :style="{ height: item.height + 'px' }"
           @click="handleOpen(item.src)" ref="waterFallItems">
           <el-image :src="item.photo" alt="背景" class="background" fit="cover" lazy></el-image>
+          <div class="shade"></div>
           <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy></el-image>
           <span>{{ item.text }}</span>
           <el-tooltip class="box-item" effect="dark" placement="top-start">
@@ -306,7 +307,7 @@ onMounted(async () => {
     height: 90%;
     box-sizing: border-box;
     margin-bottom: 40px;
-    background-color: aliceblue;
+    background-color: rgb(102.2, 177.4, 255);
     overflow-y: auto;
     box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
       /* 上侧阴影 */
@@ -433,7 +434,13 @@ onMounted(async () => {
           position: absolute;
           z-index: -1;
         }
-
+        .shade{
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: -1;
+          background-color: rgba(0, 0, 0, 0.4);
+        }
         span {
           color: white;
         }
