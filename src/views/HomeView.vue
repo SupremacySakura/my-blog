@@ -9,6 +9,8 @@ import { getArticlesNum } from '@/services/apis/articles'
 import { getTime, getPeople } from '@/services/apis/asset'
 //导入ElementPlus相关组件
 import { ElImage, ElLoading } from 'element-plus'
+//导入lodash相关API
+import { throttle } from 'lodash'
 //开始前页面dom
 const homeBox = useTemplateRef('homeBox')
 //开始后页面dom
@@ -21,7 +23,7 @@ const boxUp = (dom: HTMLElement) => {
   const animateBox = () => {
     dom.animate([
       { transform: 'translateY(0)' }, // 起始状态
-      { transform: 'translateY(-100vh)' } // 结束状态
+      { transform: 'translateY(-101vh)' } // 结束状态
     ], {
       duration: 1000,
       fill: 'forwards'
@@ -36,7 +38,7 @@ const boxUp = (dom: HTMLElement) => {
 const boxDown = (dom: HTMLElement) => {
   const animateBox = () => {
     dom.animate([
-      { transform: 'translateY(-100vh)' }, // 起始状态
+      { transform: 'translateY(-101vh)' }, // 起始状态
       { transform: 'translateY(0)' } // 结束状态
     ], {
       duration: 1000,
@@ -53,6 +55,7 @@ const handleStart = () => {
   if (homeBox.value && myBox.value) {
     boxUp(homeBox.value)
     boxUp(myBox.value)
+    pageStart.value = true
   }
 }
 /**
@@ -63,6 +66,7 @@ const handleStop = () => {
   if (homeBox.value && myBox.value) {
     boxDown(homeBox.value)
     boxDown(myBox.value)
+    pageStart.value = false
   }
 }
 /**
@@ -116,6 +120,34 @@ const getPeopleTimes = async () => {
 const articlesNum = ref(0)
 //计算时间定时器
 let intervalId: number
+
+// 上一个滚动位置
+const lastScrollY = ref(0)
+// 当前滚动方向
+const scrollDirection = ref('')
+//当前处于页面
+const pageStart = ref(false)
+const handleScroll = () => {
+  const currentScrollY = window.scrollY; // 当前滚动位置
+
+  // 判断滚动方向
+  if (currentScrollY > lastScrollY.value) {
+    scrollDirection.value = 'down';
+  } else if (currentScrollY < lastScrollY.value) {
+    scrollDirection.value = 'up';
+  }
+
+  lastScrollY.value = currentScrollY; // 更新上一个滚动位置
+  if(scrollDirection.value==='down'&&pageStart.value===false){
+    handleStart()
+  }else if(scrollDirection.value==='up'&&pageStart.value===true){
+    handleStop()
+  }else{
+    return
+  }
+}
+// 使用 throttle 创建节流函数
+const throttledScroll =throttle(handleScroll, 1000)
 onMounted(async () => {
   //初始化
   const options = {
@@ -150,10 +182,12 @@ onMounted(async () => {
       loadingInstance.close()
     }, 0)
   })
+  window.addEventListener('scroll',throttledScroll)
 })
 onUnmounted(() => {
   //页面销毁清楚定时器
   clearInterval(intervalId)
+  window.removeEventListener('scroll', throttledScroll)
 })
 </script>
 
@@ -208,7 +242,7 @@ onUnmounted(() => {
 <style lang="less" scoped>
 .box {
   width: 100%;
-  height: 100vh;
+  height: 101vh;
   overflow: hidden;
 
   .homeBox {
