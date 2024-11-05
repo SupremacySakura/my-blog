@@ -17,11 +17,17 @@ export const useAssetStore = defineStore('asset', () => {
     spinner: 'el-icon-loading',
     background: 'rgba(255, 255, 255, 1)',
   })
+  const _pageStart = ref(false)
+  const _setPageStart = (boolen: boolean) =>{
+    _pageStart.value = boolen
+  }
   return {
     _isVisit,
     _setIsVisit,
     _options,
     _optionsWhite,
+    _pageStart,
+    _setPageStart,
   }
 }, {
   persist: true

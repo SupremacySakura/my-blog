@@ -15,13 +15,24 @@ import TabBar from './components/TabBar.vue'
   margin: 0;
   /* 去默认内边距 */
   padding: 0;
+
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+
+  /* IE 和 Edge */
+  &::-webkit-scrollbar {
+    display: none;
+    /* Chrome、Safari、Edge */
+  }
 }
 
 ul {
   /* 去掉点 */
   list-style: none;
 }
-.app{
+
+.app {
   width: 100%;
 }
 </style>

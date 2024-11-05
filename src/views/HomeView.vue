@@ -8,12 +8,15 @@ import backgroundImg from '@/assets/backgroundImg.jpg'
 import { getArticlesNum } from '@/services/apis/articles'
 //导入网站相关API
 import { getTime, getPeople } from '@/services/apis/asset'
-import { getMyInformation,getMyLabels } from '@/services/apis/my'
+import { getMyInformation, getMyLabels } from '@/services/apis/my'
 //导入ElementPlus相关组件
 import { ElImage, ElLoading } from 'element-plus'
+import { storeToRefs } from 'pinia'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
-const { _options, _optionsWhite } = useAssetStore()
+const { _options, _optionsWhite, _setPageStart } = useAssetStore()
+const assetStore = useAssetStore()
+const { _pageStart } = storeToRefs(assetStore)
 //导入处理markdown的库
 import { marked } from 'marked'
 marked.setOptions({
@@ -31,7 +34,7 @@ const handleStart = () => {
   const loadingInstance = ElLoading.service(_optionsWhite)
   nextTick(() => {
     setTimeout(() => {
-      pageStart.value = true
+      _setPageStart(true)
       loadingInstance.close()
     }, 500)
   })
@@ -44,7 +47,7 @@ const handleStop = () => {
 
   nextTick(() => {
     setTimeout(() => {
-      pageStart.value = false
+      _setPageStart(false)
       loadingInstance.close()
     }, 500)
   })
@@ -100,9 +103,6 @@ const getPeopleTimes = async () => {
 const articlesNum = ref(0)
 //计算时间定时器
 let intervalId: number
-
-//当前处于页面
-const pageStart = ref(true)
 //主页文章
 const homeArticleHTML = ref('')
 const homeArticle = useTemplateRef('homeArticle')
@@ -120,29 +120,29 @@ watchEffect(() => {
 })
 //定义标签接口
 interface iLabel {
-  id:number,
-  text:string,
-  color:string,
-  backgroundColor:string,
+  id: number,
+  text: string,
+  color: string,
+  backgroundColor: string,
 }
 const labelList = ref<iLabel[]>([])
 /**
  * 获取个人标签
  */
-const handleGetMyLabels =async () =>{
+const handleGetMyLabels = async () => {
   const res = await getMyLabels()
   if (res.data.code === 200) {
-   labelList.value = res.data.data
+    labelList.value = res.data.data
   }
 }
 //定义个人信息接口
 interface iInformation {
-  id:number,
-  content:string,
-  name:string,
-  introduce:string,
-  identity:string,
-  address:string,
+  id: number,
+  content: string,
+  name: string,
+  introduce: string,
+  identity: string,
+  address: string,
 }
 const myInformation = ref<iInformation>()
 onMounted(async () => {
@@ -184,9 +184,9 @@ onUnmounted(() => {
 
 <template>
   <div class="box">
-    <img :src="backgroundImg" alt="" class="background-img" v-show="!pageStart">
+    <img :src="backgroundImg" alt="" class="background-img" v-show="!_pageStart">
     <!-- 开始前页面 -->
-    <div class="homeBox" ref="homeBox" v-show="!pageStart">
+    <div class="homeBox" ref="homeBox" v-show="!_pageStart">
       <section class="topSection">
         <h1>这是我的个人博客</h1>
         <span>极简主义 实用主义</span>
@@ -194,10 +194,11 @@ onUnmounted(() => {
       </section>
     </div>
     <!-- 开始后页面 -->
-    <div class="myBox" ref="myBox" v-show="pageStart">
+    <div class="myBox" ref="myBox" v-show="_pageStart">
       <section class="label">
         <ul>
-          <li v-for="item of labelList" :key="item.id" :style="{color:item.color,backgroundColor:item.backgroundColor}">{{ item.text }}</li>
+          <li v-for="item of labelList" :key="item.id" :style="{ color: item.color, backgroundColor: item.backgroundColor }">
+            {{ item.text }}</li>
         </ul>
       </section>
       <!-- 左边文章 -->
@@ -213,10 +214,10 @@ onUnmounted(() => {
             <div>
               <el-image :src="yxzq" alt="头像" class="custom-image" fit="cover" :preview-src-list="[yxzq]"
                 hide-on-click-modal />
-              <span>{{ myInformation?.name||'余心知秋' }}</span>
-              <p>{{ myInformation?.introduce||'耗尽' }}</p>
-              <span>{{ myInformation?.identity||'前端工程师' }}</span>
-              <address>{{ myInformation?.address||'2712794459@qq.com' }}</address>
+              <span>{{ myInformation?.name || '余心知秋' }}</span>
+              <p>{{ myInformation?.introduce || '耗尽' }}</p>
+              <span>{{ myInformation?.identity || '前端工程师' }}</span>
+              <address>{{ myInformation?.address || '2712794459@qq.com' }}</address>
             </div>
           </section>
           <!-- 网站相关信息 -->

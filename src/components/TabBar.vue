@@ -3,6 +3,12 @@
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
+import { storeToRefs } from 'pinia'
+//导入asset仓库
+import { useAssetStore } from '@/stores/asset'
+const { _setPageStart } = useAssetStore()
+const assetStore = useAssetStore()
+const { _pageStart } = storeToRefs(assetStore)
 //路由接口
 interface iTabBarItem {
   id: number,
@@ -14,6 +20,11 @@ interface iTabBarItem {
  * @param item 接收一个iTabBarItem类型
  */
 const gotoPage = (item: iTabBarItem) => {
+  if (item.path !== '/home'&&item.path!=='/poetry'){
+    _setPageStart(true)
+  }else{
+    _setPageStart(false)
+  }
   router.push(item.path)
 }
 //导航栏数组
@@ -47,7 +58,7 @@ const tabBarList: iTabBarItem[] = [
 </script>
 
 <template>
-  <div class="tabBarBox">
+  <div class="tabBarBox" :class="{'first-page':_pageStart,'other-page':!_pageStart}">
     <section class="leftSection">
       <span>余心知秋的博客</span>
     </section>
@@ -65,7 +76,6 @@ const tabBarList: iTabBarItem[] = [
   width: 100%;
   min-width: 750px;
   height: 80px;
-  background-color: rgba(255, 255, 255, 1);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);/* 添加阴影 */
   display: flex;
   align-items: center;
@@ -102,5 +112,11 @@ const tabBarList: iTabBarItem[] = [
       }
     }
   }
+}
+.first-page{
+  background-color: rgba(255, 255, 255, 1);
+}
+.other-page{
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>
