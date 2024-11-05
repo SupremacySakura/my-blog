@@ -11,6 +11,9 @@ import { getTime, getPeople } from '@/services/apis/asset'
 import { ElImage, ElLoading } from 'element-plus'
 //导入lodash相关API
 import { throttle } from 'lodash'
+//导入asset仓库
+import { useAssetStore } from '@/stores/asset'
+const {_options} = useAssetStore()
 //开始前页面dom
 const homeBox = useTemplateRef('homeBox')
 //开始后页面dom
@@ -150,13 +153,7 @@ const handleScroll = () => {
 const throttledScroll = throttle(handleScroll, 1000)
 onMounted(async () => {
   //初始化
-  const options = {
-    lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
-    spinner: 'el-icon-loading',
-    background: 'rgba(255, 255, 255, 1)',
-  }
-  const loadingInstance = ElLoading.service(options)
+  const loadingInstance = ElLoading.service(_options)
   //初始化
   await getANum()
   await getUsingTime()

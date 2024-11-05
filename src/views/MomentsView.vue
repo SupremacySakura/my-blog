@@ -25,6 +25,9 @@ import typescriptIcon from '@/assets/typescript.png'
 import { ElImage, ElLoading, ElTooltip } from 'element-plus'
 //导入lodash相关API
 import { throttle } from 'lodash'
+//导入asset仓库
+import { useAssetStore } from '@/stores/asset'
+const { _options } = useAssetStore()
 //导入moments相关API
 import { getMoments } from '@/services/apis/moments'
 /**
@@ -218,13 +221,7 @@ const newWaterFall = () => {
 }
 onMounted(async () => {
   //初始化
-  const options = {
-    lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
-    spinner: 'el-icon-loading',
-    background: 'rgba(255, 255, 255, 1)',
-  }
-  const loadingInstance = ElLoading.service(options)
+  const loadingInstance = ElLoading.service(_options)
 
   await handleGetMoments()
   newWaterFall()

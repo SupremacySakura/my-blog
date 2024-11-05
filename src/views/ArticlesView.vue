@@ -16,8 +16,10 @@ import { ElImage, ElLoading } from 'element-plus'
 import VueMarkdown from 'vue-markdown-render'
 import MarkdownItHighlight from 'markdown-it-highlightjs'
 import 'highlight.js/styles/atom-one-dark.css' // 导入高亮样式
-
 const plugins = [MarkdownItHighlight]
+//导入asset仓库
+import { useAssetStore } from '@/stores/asset'
+const { _options } = useAssetStore()
 //创建文章类
 interface iArticleItem {
   id: number,
@@ -80,13 +82,7 @@ const onError = (item: iArticleItem) => {
 }
 onMounted(async () => {
   //初始化
-  const options = {
-    lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
-    spinner: 'el-icon-loading',
-    background: 'rgba(255, 255, 255, 1)',
-  }
-  const loadingInstance = ElLoading.service(options)
+  const loadingInstance = ElLoading.service(_options)
   //初始化
   await handleGetArticles()
   articleItem.value = articlesList.value[0]

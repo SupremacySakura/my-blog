@@ -7,6 +7,9 @@ import test1 from '@/assets/test1.jpg'
 import { ElImage, ElLoading } from 'element-plus'
 //导入接口
 import { getPoetry } from '@/services/apis/poetry'
+//导入asset仓库
+import { useAssetStore } from '@/stores/asset'
+const { _options } = useAssetStore()
 /**
  * 获取诗歌列表,并给poetryList赋值
  */
@@ -63,13 +66,7 @@ const onError = (item: iPoetryItem) => {
   item.photo = test1
 }
 onMounted(async () => {
-  const options = {
-    lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
-    spinner: 'el-icon-loading',
-    background: 'rgba(255, 255, 255, 1)',
-  }
-  const loadingInstance = ElLoading.service(options)
+  const loadingInstance = ElLoading.service(_options)
   //初始化
   await handleGetPoetry()
   nextTick(() => {

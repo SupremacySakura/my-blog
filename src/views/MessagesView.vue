@@ -15,6 +15,9 @@ import dayjs from 'dayjs'
 //导入留言仓库
 import { useMessagesStore } from '@/stores/messages'
 const { _userHeadPortrait, _name, _address, _setInfo } = useMessagesStore()
+//导入asset仓库
+import { useAssetStore } from '@/stores/asset'
+const { _options } = useAssetStore()
 //定义评论类型接口
 interface iMessageItem {
   id: number,
@@ -92,13 +95,7 @@ const handlePublish = async () => {
     ElMessage.error('请填写你的昵称')
     return
   }
-  const options = {
-    lock: true, // 锁定屏幕，禁止操作
-    text: '正在发布...',
-    spinner: 'el-icon-loading',
-    background: 'rgba(255, 255, 255, 1)',
-  }
-  const loadingInstance = ElLoading.service(options)
+  const loadingInstance = ElLoading.service(_options)
   dialogVisible.value = false
   content.value = ''
   const res = await postMessages(params)
