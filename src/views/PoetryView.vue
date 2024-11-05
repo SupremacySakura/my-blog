@@ -3,6 +3,7 @@
 import { ref, onMounted, nextTick } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
+import backgroundImg from '@/assets/backgroundImg.jpg'
 //导入ElementPlus相关组件
 import { ElImage, ElLoading } from 'element-plus'
 //导入接口
@@ -79,6 +80,7 @@ onMounted(async () => {
 
 <template>
   <div class="poetryBox">
+    <img :src="backgroundImg" alt="" class="background-img">
     <!-- 诗歌列表 -->
     <section v-for="item of poetryList" :key="item.id" class="card" @click="handleOpen(item)">
       <el-image :src="item.photo" alt="封面" class="cover" fit="cover" lazy @error="onError(item)"></el-image>
@@ -116,13 +118,20 @@ onMounted(async () => {
   justify-content: space-between;
   align-content: flex-start;
   background-color: rgba(247, 247, 247, 1);
-
+  .background-img{
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 0;
+  }
   .card {
     width: 320px;
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
-
+    position: relative;
     .cover {
       width: 320px;
       height: 200px;

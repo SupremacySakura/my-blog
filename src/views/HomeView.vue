@@ -3,6 +3,7 @@
 import { onUnmounted, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 //导入测试图片
 import yxzq from '@/assets/yxzq.jpg'
+import backgroundImg from '@/assets/backgroundImg.jpg'
 //导入文章相关API
 import { getArticlesNum } from '@/services/apis/articles'
 //导入网站相关API
@@ -190,6 +191,7 @@ onUnmounted(() => {
 
 <template>
   <div class="box">
+    <img :src="backgroundImg" alt="" class="background-img">
     <!-- 开始前页面 -->
     <div class="homeBox" ref="homeBox">
       <section class="topSection">
@@ -242,7 +244,11 @@ onUnmounted(() => {
   height: 101vh;
   overflow: hidden;
   background-color: rgba(247, 247, 247, 1);
-
+  .background-img{
+    width: 100%;
+    height: 101vh;
+    position: absolute;
+  }
   .homeBox {
     width: 100%;
     min-width: 750px;
@@ -266,9 +272,11 @@ onUnmounted(() => {
 
       h1 {
         font-size: 35px;
-        color: rgb(42, 16, 188);
+        color: rgba(255,255,255,1);
       }
-
+      span{
+        color: white;
+      }
 
     }
   }
@@ -387,8 +395,8 @@ onUnmounted(() => {
     height: 40px;
     border: none;
     border-radius: 40px;
-    background-color: rgb(42, 16, 188);
-    color: white;
+    background-color: rgba(255, 255, 255, 1);
+    color: black;
   }
 }
 </style>

@@ -239,7 +239,6 @@ onMounted(async () => {
   <div class="momentsBox">
     <!-- 朋友圈 -->
     <section class="leftSection">
-
       <div class="card" v-for="item of momentsList" :key="item.id">
         <div class="point">
           <span></span>
@@ -308,11 +307,10 @@ onMounted(async () => {
     background-color: rgba(255, 255, 255, 1);
     border: 1px solid rgba(224, 224, 224, 1);
     overflow-y: auto;
-    box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
+    box-shadow: inset 0px 8px 16px rgba(0, 0, 0, 0.2),
       /* 上侧阴影 */
-      inset 0px -4px 8px rgba(255, 255, 255, 0.5);
+      inset 0px -8px 16px rgba(255, 255, 255, 0.5);
     /* 下侧高光 */
-
     scrollbar-width: none;
     /* Firefox */
     -ms-overflow-style: none;
@@ -322,7 +320,6 @@ onMounted(async () => {
       display: none;
       /* Chrome、Safari、Edge */
     }
-
     .card {
       width: 750px;
       height: 300px;
