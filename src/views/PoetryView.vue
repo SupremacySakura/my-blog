@@ -59,7 +59,7 @@ const handleOpen = (item: iPoetryItem) => {
   nowPoetry.value = item
   dialogVisible.value = true
 }
-const onError = (item:iPoetryItem) =>{
+const onError = (item: iPoetryItem) => {
   item.photo = test1
 }
 onMounted(async () => {
@@ -118,6 +118,7 @@ onMounted(async () => {
   flex-wrap: wrap;
   justify-content: space-between;
   align-content: flex-start;
+  background-color: rgba(247, 247, 247, 1);
 
   .card {
     width: 320px;

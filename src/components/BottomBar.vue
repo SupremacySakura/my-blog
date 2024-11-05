@@ -16,10 +16,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 0.5);
-  background-color: #f7f7f7;
-  position: fixed;
-  bottom: 0;
+  border-top: 1px solid rgba(224, 224, 224, 1);
+  background-color: rgba(255,255,255,1);
   span {
     color: black;
   }

@@ -143,6 +143,7 @@ onMounted(async () => {
   box-sizing: border-box;
   display: flex;
   overflow: hidden;
+  background-color: rgba(247, 247, 247, 1);
 
   .leftSection {
     padding-top: 20px;
@@ -151,7 +152,7 @@ onMounted(async () => {
     min-width: 600px;
     height: 90%;
     overflow-y: auto;
-    background-color: rgb(102.2, 177.4, 255);
+    background-color: rgba(255, 255, 255, 1);
     box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
       /* 上侧阴影 */
       inset 0px -4px 8px rgba(255, 255, 255, 0.5);
@@ -265,9 +266,9 @@ onMounted(async () => {
     margin-left: 40px;
     margin-top: 10px;
     padding: 15px;
-    background-color: #424243;
-    border: 1px solid #636466;
-    color: white;
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(224,224,224,1);
+    color: black;
     border-radius: 10px;
     display: flex;
     flex-direction: column;

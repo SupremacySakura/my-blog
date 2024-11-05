@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useRouter,useRoute } from 'vue-router'
+//导入vue路由相关api
+import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 //路由接口
@@ -8,7 +9,11 @@ interface iTabBarItem {
   text: string,
   path: string,
 }
-const gotoPage = (item:iTabBarItem) => {
+/**
+ * 跳转至指定路由
+ * @param item 接收一个iTabBarItem类型
+ */
+const gotoPage = (item: iTabBarItem) => {
   router.push(item.path)
 }
 //导航栏数组
@@ -39,8 +44,6 @@ const tabBarList: iTabBarItem[] = [
     path: '/poetry'
   }
 ]
-
-
 </script>
 
 <template>
@@ -50,7 +53,8 @@ const tabBarList: iTabBarItem[] = [
     </section>
     <section class="rightSection">
       <ul>
-        <li v-for="item of tabBarList" :key="item.id" @click="gotoPage(item)" :class="{'active':route.path===item.path}">{{ item.text }}</li>
+        <li v-for="item of tabBarList" :key="item.id" @click="gotoPage(item)"
+          :class="{ 'active': route.path === item.path }">{{ item.text }}</li>
       </ul>
     </section>
   </div>
@@ -61,7 +65,8 @@ const tabBarList: iTabBarItem[] = [
   width: 100%;
   min-width: 750px;
   height: 80px;
-  background-color: #f7f7f7;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);/* 添加阴影 */
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -23,7 +23,7 @@ const boxUp = (dom: HTMLElement) => {
   const animateBox = () => {
     dom.animate([
       { transform: 'translateY(0)' }, // 起始状态
-      { transform: 'translateY(-101vh)' } // 结束状态
+      { transform: 'translateY(-100vh)' } // 结束状态
     ], {
       duration: 1000,
       fill: 'forwards'
@@ -38,7 +38,7 @@ const boxUp = (dom: HTMLElement) => {
 const boxDown = (dom: HTMLElement) => {
   const animateBox = () => {
     dom.animate([
-      { transform: 'translateY(-101vh)' }, // 起始状态
+      { transform: 'translateY(-100vh)' }, // 起始状态
       { transform: 'translateY(0)' } // 结束状态
     ], {
       duration: 1000,
@@ -138,16 +138,16 @@ const handleScroll = () => {
   }
 
   lastScrollY.value = currentScrollY; // 更新上一个滚动位置
-  if(scrollDirection.value==='down'&&pageStart.value===false){
+  if (scrollDirection.value === 'down' && pageStart.value === false) {
     handleStart()
-  }else if(scrollDirection.value==='up'&&pageStart.value===true){
+  } else if (scrollDirection.value === 'up' && pageStart.value === true) {
     handleStop()
-  }else{
+  } else {
     return
   }
 }
 // 使用 throttle 创建节流函数
-const throttledScroll =throttle(handleScroll, 1000)
+const throttledScroll = throttle(handleScroll, 1000)
 onMounted(async () => {
   //初始化
   const options = {
@@ -182,7 +182,7 @@ onMounted(async () => {
       loadingInstance.close()
     }, 0)
   })
-  window.addEventListener('scroll',throttledScroll)
+  window.addEventListener('scroll', throttledScroll)
 })
 onUnmounted(() => {
   //页面销毁清楚定时器
@@ -244,6 +244,7 @@ onUnmounted(() => {
   width: 100%;
   height: 101vh;
   overflow: hidden;
+  background-color: rgba(247, 247, 247, 1);
 
   .homeBox {
     width: 100%;
@@ -282,7 +283,7 @@ onUnmounted(() => {
     min-height: 450px;
     display: flex;
     flex-direction: column;
-
+    padding-top: 10px;
     .bottomSection {
       width: 100%;
       height: 100%;
@@ -306,12 +307,12 @@ onUnmounted(() => {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            border: 1px solid rgb(50.8, 116.6, 184.5);
+            background-color: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(224, 224, 224, 1);
             margin-right: 10px;
             border-radius: 10px;
             padding: 10px;
             box-sizing: border-box;
-            background-color: rgb(102.2, 177.4, 255);
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
               /* 上侧阴影 */
               inset 0px -4px 8px rgba(255, 255, 255, 0.5);
@@ -324,7 +325,7 @@ onUnmounted(() => {
             border-radius: 40px;
             overflow: hidden;
             padding: 0;
-            border:1px solid rgb(50.8, 116.6, 184.5);
+
             ::v-deep(.el-image__inner) {
               /* 设置内部图片为圆形 */
               border-radius: 50%;
@@ -363,8 +364,9 @@ onUnmounted(() => {
 
           div {
             border-radius: 10px;
-            background-color: #39393A;
-            color: white;
+            background-color: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(224, 224, 224, 1);
+            color: black;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
               /* 上侧阴影 */
               inset 0px -4px 8px rgba(255, 255, 255, 0.5);

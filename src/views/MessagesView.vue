@@ -271,10 +271,11 @@ onMounted(async () => {
   padding-top: 100px;
   padding-left: 40px;
   padding-right: 40px;
-  margin-bottom: 60px;
+  padding-bottom: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: rgba(247, 247, 247, 1);
 
   .board {
     width: @standardWidth;
@@ -343,8 +344,7 @@ onMounted(async () => {
     textarea {
       width: 98%;
       height: 200px;
-      resize: none;
-      /* 禁止缩放 */
+      resize: none; /* 禁止缩放 */
       outline: none;
     }
 
@@ -377,7 +377,7 @@ onMounted(async () => {
       margin-bottom: 10px;
       border: 1px solid rgba(0, 0, 0, 0.5);
       border-radius: 10px;
-      background-color: #424243;
+      background-color: rgba(255,255,255,1);
 
       .leftSection {
         width: 50px;
@@ -415,6 +415,7 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     justify-content: start;
+
     .topDiv {
       width: 100%;
       height: 100px;

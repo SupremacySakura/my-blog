@@ -22,7 +22,7 @@ import uniappIcon from '@/assets/uni-app.png'
 import typescriptBG from '@/assets/Typescript.jpg'
 import typescriptIcon from '@/assets/typescript.png'
 //导入ElementPlus相关组件
-import { ElImage, ElLoading,ElTooltip } from 'element-plus'
+import { ElImage, ElLoading, ElTooltip } from 'element-plus'
 //导入lodash相关API
 import { throttle } from 'lodash'
 //导入moments相关API
@@ -60,7 +60,7 @@ interface iWaterFall {
   src: string,
   height: number,
   icon: string,
-  note:string,
+  note: string,
 }
 //技术栈数据数组
 const waterFallList = ref<iWaterFall[]>([
@@ -71,7 +71,7 @@ const waterFallList = ref<iWaterFall[]>([
     src: 'https://cn.vuejs.org/guide/introduction.html',
     height: 250,
     icon: vueIcon,
-    note:'Vue (发音为 /vjuː/，类似 view) 是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和 JavaScript 构建，并提供了一套声明式的、组件化的编程模型，帮助你高效地开发用户界面。无论是简单还是复杂的界面，Vue 都可以胜任。',
+    note: 'Vue (发音为 /vjuː/，类似 view) 是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和 JavaScript 构建，并提供了一套声明式的、组件化的编程模型，帮助你高效地开发用户界面。无论是简单还是复杂的界面，Vue 都可以胜任。',
   },
   {
     id: 2,
@@ -301,18 +301,21 @@ onMounted(async () => {
   overflow: hidden;
   display: flex;
   justify-content: space-between;
+  background-color: rgba(247, 247, 247, 1);
 
   .leftSection {
     width: 750px;
     height: 90%;
     box-sizing: border-box;
     margin-bottom: 40px;
-    background-color: rgb(102.2, 177.4, 255);
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(224, 224, 224, 1);
     overflow-y: auto;
     box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
       /* 上侧阴影 */
       inset 0px -4px 8px rgba(255, 255, 255, 0.5);
     /* 下侧高光 */
+
     scrollbar-width: none;
     /* Firefox */
     -ms-overflow-style: none;
@@ -329,7 +332,6 @@ onMounted(async () => {
       display: grid;
       grid-template-columns: 50px 700px;
       grid-template-rows: 50px 250px;
-
       .point {
         display: flex;
         flex-direction: column;
@@ -369,7 +371,7 @@ onMounted(async () => {
         section {
           width: 100%;
           height: 100%;
-          background-color: white;
+          background-color: rgba(247, 247, 247, 1);
           border-radius: 10px;
           padding: 10px;
           box-sizing: border-box;
@@ -398,6 +400,7 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
+    background-color: rgba(247, 247, 247, 1);
     scrollbar-width: none;
     /* Firefox */
     -ms-overflow-style: none;
@@ -423,24 +426,28 @@ onMounted(async () => {
         align-items: center;
         transform: scale(1.0);
         transition: all 0.5s ease;
-        &:hover{
+
+        &:hover {
           cursor: pointer;
           transform: scale(1.1);
           z-index: 1;
         }
+
         .background {
           width: 100%;
           height: 100%;
           position: absolute;
           z-index: -1;
         }
-        .shade{
+
+        .shade {
           width: 100%;
           height: 100%;
           position: absolute;
           z-index: -1;
           background-color: rgba(0, 0, 0, 0.4);
         }
+
         span {
           color: white;
         }
