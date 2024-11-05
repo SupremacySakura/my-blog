@@ -12,10 +12,16 @@ export const useAssetStore = defineStore('asset', () => {
     spinner: 'el-icon-loading',
     background: 'rgba(255, 255, 255, 1)',
   })
+  const _optionsWhite = ref({
+    lock: true, // 锁定屏幕，禁止操作
+    spinner: 'el-icon-loading',
+    background: 'rgba(255, 255, 255, 1)',
+  })
   return {
     _isVisit,
     _setIsVisit,
     _options,
+    _optionsWhite,
   }
 }, {
   persist: true

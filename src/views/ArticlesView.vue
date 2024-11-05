@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onMounted, ref, watchEffect, nextTick } from 'vue'
+import { onMounted, ref, watchEffect, nextTick, useTemplateRef } from 'vue'
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
 import yxzq from '@/assets/yxzq.jpg'
@@ -12,11 +12,12 @@ import {
 } from '@element-plus/icons-vue'
 //导入ElementPlus相关组件
 import { ElImage, ElLoading } from 'element-plus'
-//导入处理md文档的库
-import VueMarkdown from 'vue-markdown-render'
-import MarkdownItHighlight from 'markdown-it-highlightjs'
-import 'highlight.js/styles/atom-one-dark.css' // 导入高亮样式
-const plugins = [MarkdownItHighlight]
+//导入处理markdown的库
+import { marked } from 'marked'
+marked.setOptions({
+  gfm: true, // 启用 GitHub 风格的 Markdown
+  breaks: true // 支持换行符
+})
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
@@ -54,14 +55,14 @@ const handleGetArticles = async () => {
 //右侧展示文章数据
 //选中文章
 const articleItem = ref<iArticleItem>()
-
-//文章内容
-const source = ref('')
+const article = useTemplateRef('article')
 
 //监听文章dom,将选中文章挂载在上面
 watchEffect(async () => {
   const htmlContent = articleItem.value?.article as string
-  source.value = htmlContent
+  if(article.value){
+    article.value.innerHTML =await marked(htmlContent)
+  }
 })
 /**
  * 选中一篇文章
@@ -121,7 +122,9 @@ onMounted(async () => {
         <el-button type="danger" :icon="CloseBold" circle @click="handleClose" />
       </div>
       <h2>{{ articleItem.head }}</h2>
-      <vue-markdown :source="source" :plugins="plugins"></vue-markdown>
+      <div class="markdown-body" ref="article">
+
+      </div>
     </section>
 
   </div>
@@ -291,5 +294,20 @@ onMounted(async () => {
       width: 100%;
     }
   }
+}
+:deep(.markdown-body pre),
+:deep(.markdown-body code) {
+  display: block;
+  padding: 10px;
+  background-color: #f5f5f5;
+  /* 浅灰色背景 */
+  border: 1px solid #ddd;
+  /* 灰色边框 */
+  border-radius: 4px;
+  /* 圆角 */
+  font-family: monospace;
+  /* 等宽字体 */
+  overflow-x: auto;
+  /* 水平滚动条，适合长代码 */
 }
 </style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onUnmounted, nextTick, onMounted, ref, useTemplateRef } from 'vue'
+import { onUnmounted, nextTick, onMounted, ref, useTemplateRef, watchEffect } from 'vue'
 //导入测试图片
 import yxzq from '@/assets/yxzq.jpg'
 import backgroundImg from '@/assets/backgroundImg.jpg'
@@ -8,70 +8,46 @@ import backgroundImg from '@/assets/backgroundImg.jpg'
 import { getArticlesNum } from '@/services/apis/articles'
 //导入网站相关API
 import { getTime, getPeople } from '@/services/apis/asset'
+import { getMyInformation,getMyLabels } from '@/services/apis/my'
 //导入ElementPlus相关组件
 import { ElImage, ElLoading } from 'element-plus'
-//导入lodash相关API
-import { throttle } from 'lodash'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
-const {_options} = useAssetStore()
+const { _options, _optionsWhite } = useAssetStore()
+//导入处理markdown的库
+import { marked } from 'marked'
+marked.setOptions({
+  gfm: true, // 启用 GitHub 风格的 Markdown
+  breaks: true // 支持换行符
+})
 //开始前页面dom
 const homeBox = useTemplateRef('homeBox')
 //开始后页面dom
 const myBox = useTemplateRef('myBox')
 /**
- * dom上移100vh
- * @param dom 接收一个dom元素
- */
-const boxUp = (dom: HTMLElement) => {
-  const animateBox = () => {
-    dom.animate([
-      { transform: 'translateY(0)' }, // 起始状态
-      { transform: 'translateY(-100vh)' } // 结束状态
-    ], {
-      duration: 1000,
-      fill: 'forwards'
-    })
-  }
-  animateBox()
-}
-/**
- * dom下移100vh
- * @param dom 接收一个dom元素
- */
-const boxDown = (dom: HTMLElement) => {
-  const animateBox = () => {
-    dom.animate([
-      { transform: 'translateY(-100vh)' }, // 起始状态
-      { transform: 'translateY(0)' } // 结束状态
-    ], {
-      duration: 1000,
-      fill: 'forwards'
-    })
-  }
-  animateBox()
-}
-/**
  * 开始,进入开始后页面
  */
 const handleStart = () => {
-  //上移
-  if (homeBox.value && myBox.value) {
-    boxUp(homeBox.value)
-    boxUp(myBox.value)
-    pageStart.value = true
-  }
+  const loadingInstance = ElLoading.service(_optionsWhite)
+  nextTick(() => {
+    setTimeout(() => {
+      pageStart.value = true
+      loadingInstance.close()
+    }, 500)
+  })
 }
 /**
  * 结束,进入开始前页面
  */
 const handleStop = () => {
-  //下移
-  if (homeBox.value && myBox.value) {
-    boxDown(homeBox.value)
-    boxDown(myBox.value)
-    pageStart.value = false
-  }
+  const loadingInstance = ElLoading.service(_optionsWhite)
+
+  nextTick(() => {
+    setTimeout(() => {
+      pageStart.value = false
+      loadingInstance.close()
+    }, 500)
+  })
 }
 /**
  * 从后端获取文章数,赋值给articlesNum
@@ -125,39 +101,58 @@ const articlesNum = ref(0)
 //计算时间定时器
 let intervalId: number
 
-// 上一个滚动位置
-const lastScrollY = ref(0)
-// 当前滚动方向
-const scrollDirection = ref('')
 //当前处于页面
-const pageStart = ref(false)
-const handleScroll = () => {
-  const currentScrollY = window.scrollY; // 当前滚动位置
-
-  // 判断滚动方向
-  if (currentScrollY > lastScrollY.value) {
-    scrollDirection.value = 'down';
-  } else if (currentScrollY < lastScrollY.value) {
-    scrollDirection.value = 'up';
-  }
-
-  lastScrollY.value = currentScrollY; // 更新上一个滚动位置
-  if (scrollDirection.value === 'down' && pageStart.value === false) {
-    handleStart()
-  } else if (scrollDirection.value === 'up' && pageStart.value === true) {
-    handleStop()
-  } else {
-    return
+const pageStart = ref(true)
+//主页文章
+const homeArticleHTML = ref('')
+const homeArticle = useTemplateRef('homeArticle')
+const handleGetMyInformation = async () => {
+  const res = await getMyInformation()
+  if (res.data.code === 200) {
+    myInformation.value = res.data.data
+    homeArticleHTML.value = await marked(res.data.data.content)
   }
 }
-// 使用 throttle 创建节流函数
-const throttledScroll = throttle(handleScroll, 1000)
+watchEffect(() => {
+  if (homeArticle.value) {
+    homeArticle.value.innerHTML = homeArticleHTML.value
+  }
+})
+//定义标签接口
+interface iLabel {
+  id:number,
+  text:string,
+  color:string,
+  backgroundColor:string,
+}
+const labelList = ref<iLabel[]>([])
+/**
+ * 获取个人标签
+ */
+const handleGetMyLabels =async () =>{
+  const res = await getMyLabels()
+  if (res.data.code === 200) {
+   labelList.value = res.data.data
+  }
+}
+//定义个人信息接口
+interface iInformation {
+  id:number,
+  content:string,
+  name:string,
+  introduce:string,
+  identity:string,
+  address:string,
+}
+const myInformation = ref<iInformation>()
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
   //初始化
   await getANum()
   await getUsingTime()
+  await handleGetMyInformation()
+  await handleGetMyLabels()
   //开启定时器计算时间间隔
   intervalId = setInterval(() => {
     secondsDiff.value += 1
@@ -180,28 +175,37 @@ onMounted(async () => {
       loadingInstance.close()
     }, 0)
   })
-  window.addEventListener('scroll', throttledScroll)
 })
 onUnmounted(() => {
   //页面销毁清楚定时器
   clearInterval(intervalId)
-  window.removeEventListener('scroll', throttledScroll)
 })
 </script>
 
 <template>
   <div class="box">
-    <img :src="backgroundImg" alt="" class="background-img">
+    <img :src="backgroundImg" alt="" class="background-img" v-show="!pageStart">
     <!-- 开始前页面 -->
-    <div class="homeBox" ref="homeBox">
+    <div class="homeBox" ref="homeBox" v-show="!pageStart">
       <section class="topSection">
-        <h1>这是我的个人工作空间</h1>
+        <h1>这是我的个人博客</h1>
         <span>极简主义 实用主义</span>
         <button @click="handleStart()" class="changeButton">开始</button>
       </section>
     </div>
     <!-- 开始后页面 -->
-    <div class="myBox" ref="myBox">
+    <div class="myBox" ref="myBox" v-show="pageStart">
+      <section class="label">
+        <ul>
+          <li v-for="item of labelList" :key="item.id" :style="{color:item.color,backgroundColor:item.backgroundColor}">{{ item.text }}</li>
+        </ul>
+      </section>
+      <!-- 左边文章 -->
+      <section class="main">
+        <div ref="homeArticle" class="markdown-body">
+        </div>
+      </section>
+      <!-- 右边简介 -->
       <section class="bottomSection">
         <div class="about">
           <!-- 个人信息 -->
@@ -209,10 +213,10 @@ onUnmounted(() => {
             <div>
               <el-image :src="yxzq" alt="头像" class="custom-image" fit="cover" :preview-src-list="[yxzq]"
                 hide-on-click-modal />
-              <span>余心知秋</span>
-              <p>耗尽</p>
-              <span>全栈工程师(主前端)</span>
-              <address>2712794459@qq.com</address>
+              <span>{{ myInformation?.name||'余心知秋' }}</span>
+              <p>{{ myInformation?.introduce||'耗尽' }}</p>
+              <span>{{ myInformation?.identity||'前端工程师' }}</span>
+              <address>{{ myInformation?.address||'2712794459@qq.com' }}</address>
             </div>
           </section>
           <!-- 网站相关信息 -->
@@ -230,7 +234,6 @@ onUnmounted(() => {
               <span>{{ people }}</span>
             </div>
           </section>
-
         </div>
         <button @click="handleStop()" class="changeButton">返回</button>
       </section>
@@ -239,16 +242,20 @@ onUnmounted(() => {
 </template>
 
 <style lang="less" scoped>
+@-primary-background-color: rgba(247, 247, 247, 1);
+@-primary-background-fill-color: rgba(255, 255, 255, 1);
+
 .box {
   width: 100%;
-  height: 101vh;
-  overflow: hidden;
-  background-color: rgba(247, 247, 247, 1);
-  .background-img{
+  min-height: 100vh;
+  background-color: @-primary-background-color;
+
+  .background-img {
     width: 100%;
     height: 101vh;
     position: absolute;
   }
+
   .homeBox {
     width: 100%;
     min-width: 750px;
@@ -258,6 +265,7 @@ onUnmounted(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
 
     .topSection {
       display: flex;
@@ -272,9 +280,10 @@ onUnmounted(() => {
 
       h1 {
         font-size: 35px;
-        color: rgba(255,255,255,1);
+        color: @-primary-background-fill-color;
       }
-      span{
+
+      span {
         color: white;
       }
 
@@ -284,37 +293,78 @@ onUnmounted(() => {
   .myBox {
     width: 100%;
     min-width: 750px;
-    height: 100vh;
-    min-height: 450px;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     padding-top: 10px;
+    position: relative;
+
+    .label {
+      width: 50px;
+      min-height: 100vh;
+      background-color: @-primary-background-fill-color;
+      padding-top: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-right: 2px solid @-primary-background-color;
+
+      ul {
+        li {
+          display: block;
+          width: 40px;
+          text-align: center;
+          white-space: wrap;
+          border-radius: 5px;
+          margin-bottom: 10px;
+          background-color: @-primary-background-color;
+        }
+      }
+    }
+
+    .main {
+      width: 60%;
+      min-width: 600px;
+      min-height: 100vh;
+      background-color: @-primary-background-fill-color;
+      padding: 10px;
+      padding-top: 90px;
+    }
+
+    //右侧
     .bottomSection {
-      width: 100%;
-      height: 100%;
+      width: 450px;
+      height: 900px;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
+      position: sticky;
+      top: 20px;
 
       .about {
         width: 100%;
-        height: 40vh;
+        height: 90%;
         padding: 10px;
         box-sizing: border-box;
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
 
         .user {
+          margin-top: 10px;
+          margin-bottom: 10px;
+
           div {
-            width: 300px;
+            width: 410px;
             height: 310px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            background-color: rgba(255, 255, 255, 1);
+            align-items: center;
+            background-color: @-primary-background-fill-color;
             border: 1px solid rgba(224, 224, 224, 1);
-            margin-right: 10px;
             border-radius: 10px;
             padding: 10px;
             box-sizing: border-box;
@@ -331,7 +381,7 @@ onUnmounted(() => {
             overflow: hidden;
             padding: 0;
 
-            ::v-deep(.el-image__inner) {
+            :deep(.el-image__inner) {
               /* 设置内部图片为圆形 */
               border-radius: 50%;
               width: 100%;
@@ -369,7 +419,7 @@ onUnmounted(() => {
 
           div {
             border-radius: 10px;
-            background-color: rgba(255, 255, 255, 1);
+            background-color: @-primary-background-fill-color;
             border: 1px solid rgba(224, 224, 224, 1);
             color: black;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
@@ -395,8 +445,25 @@ onUnmounted(() => {
     height: 40px;
     border: none;
     border-radius: 40px;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: @-primary-background-fill-color;
     color: black;
+    margin-bottom: 20px;
   }
+}
+
+:deep(.markdown-body pre),
+:deep(.markdown-body code) {
+  display: block;
+  padding: 10px;
+  background-color: #f5f5f5;
+  /* 浅灰色背景 */
+  border: 1px solid #ddd;
+  /* 灰色边框 */
+  border-radius: 4px;
+  /* 圆角 */
+  font-family: monospace;
+  /* 等宽字体 */
+  overflow-x: auto;
+  /* 水平滚动条，适合长代码 */
 }
 </style>
