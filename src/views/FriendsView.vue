@@ -1,4 +1,5 @@
 <script setup lang="ts">
+//导入vue相关api
 import { ref, onMounted, nextTick } from 'vue'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
@@ -7,6 +8,8 @@ const { _options } = useAssetStore()
 import { ElImage, ElLoading, ElTooltip } from 'element-plus'
 import yxzq from '@/assets/yxzq.jpg'
 import user from '@/assets/user.png'
+//导入friends相关接口
+import { getFriends } from '@/services/apis/friends'
 //定义友链类型接口
 interface iFriendItem {
   id: number,
@@ -15,15 +18,13 @@ interface iFriendItem {
   label: string,
   url: string,
 }
-const friendsList = ref<iFriendItem[]>([
-  {
-    id: 0,
-    userHeadPortrait: yxzq,
-    name: '余心知秋',
-    label: '一个前端小白的博客111',
-    url: 'http://127.0.0.1',
-  },
-])
+const friendsList = ref<iFriendItem[]>([])
+const handleGetFriends = async() => {
+  const res = await getFriends()
+  if (res.data.code === 200) {
+    friendsList.value = res.data.data
+  }
+}
 const aboutList = ref([
   '🎄不支持网站加载速度慢的，和页面特别不美观的',
   '💖先友后链，申请前请先提前做好本站友情链接',
@@ -39,7 +40,7 @@ onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
 
-
+  await handleGetFriends()
   nextTick(() => {
     setTimeout(() => {
       loadingInstance.close()

@@ -1,7 +1,7 @@
 import http from '@/services/http'
 
 const getFriends = () => {
-  return http.get('/articles')
+  return http.get('/friends')
 }
 
 export {
