@@ -300,7 +300,8 @@ onMounted(async () => {
   background-color: rgba(247, 247, 247, 1);
 
   .leftSection {
-    width: 750px;
+    min-width: 750px;
+    width: 900px;
     height: 90%;
     box-sizing: border-box;
     margin-bottom: 40px;
@@ -388,7 +389,7 @@ onMounted(async () => {
   }
 
   .rightSection {
-    height: 100vh-40px;
+    height: 100vh-20px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
