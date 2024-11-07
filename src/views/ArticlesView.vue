@@ -1,11 +1,11 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onMounted, ref, nextTick, computed, } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 //导入router相关api
 import { useRouter } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
 const router = useRouter()
-//导入测试图片
+//导入默认图片
 import test1 from '@/assets/test1.jpg'
 import yxzq from '@/assets/yxzq.jpg'
 //导入文章相关API
@@ -41,17 +41,15 @@ const handleGetArticles = async () => {
     _setArticlesList(articlesList.value)
   }
 }
-//右侧展示文章数据
 //选中文章
 const articleItem = ref<iArticleItem>()
 /**
  * 选中一篇文章
- * @param item 文章类
+ * @param item 接收一个文章类
  */
 const handleChooseArticle = (item: iArticleItem) => {
   articleItem.value = item
   const loadingInstance = ElLoading.service(_optionsWhite)
-
   setTimeout(() => {
     if (articleItem.value) {
       router.push({
@@ -64,12 +62,27 @@ const handleChooseArticle = (item: iArticleItem) => {
     loadingInstance.close()
   }, 500)
 }
-
-const onError = (item: iArticleItem) => {
-  item.cover = test1
-  item.userHeadPortrait = yxzq
+//文章错误类型枚举
+enum ErrorImage {
+  Cover = 'COVER',
+  UserHeadPortrait = 'USERHEADPORTRAIT'
 }
-
+/**
+ * 处理文章中图片的错误
+ * @param item 接收一个文章
+ * @param type 接收一个错误类型
+ */
+const onError = (item: iArticleItem, type: ErrorImage) => {
+  if (type === ErrorImage.Cover) {
+    item.cover = test1
+  } else if (type === ErrorImage.UserHeadPortrait) {
+    item.userHeadPortrait = yxzq
+  }
+}
+/**
+ * 改变文章图片加载状态
+ * @param item 接收一个文章类
+ */
 const onImageLoad = (item: iArticleItem) => {
   item.loading = false
 }
@@ -99,7 +112,7 @@ onMounted(async () => {
     <section class="leftSection">
       <section class="card" v-for="(item, index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
-          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item)"
+          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item, ErrorImage.Cover)"
             v-loading="item.loading" element-loading-background="rgba(122, 122, 122, 0.8)"
             @load="onImageLoad(item)"></el-image>
         </div>
@@ -107,7 +120,7 @@ onMounted(async () => {
           <h2>{{ item.head }}</h2>
           <span class="abstract">{{ item.digest }}</span>
           <div class="author">
-            <img :src="item.userHeadPortrait" alt="">
+            <img :src="item.userHeadPortrait" alt="" @error="onError(item, ErrorImage.UserHeadPortrait)">
             <span>{{ item.name }}</span>
             <time>{{ item.time }}</time>
           </div>

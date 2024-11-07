@@ -6,19 +6,31 @@ import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
 //导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
+//导入默认头像
 import user from '@/assets/user.png'
 //导入friends相关接口
 import { getFriends } from '@/services/apis/friends'
 //导入类型
 import type { iFriendItem } from '@/interface'
-
+//朋友列表
 const friendsList = ref<iFriendItem[]>([])
-const handleGetFriends = async() => {
+/**
+ * 处理朋友图像加载失败
+ * @param item 接收一个朋友类
+ */
+const onError = (item: iFriendItem) => {
+  item.userHeadPortrait = user
+}
+/**
+ * 获取朋友列表
+ */
+const handleGetFriends = async () => {
   const res = await getFriends()
   if (res.data.code === 200) {
     friendsList.value = res.data.data
   }
 }
+//公告
 const aboutList = ref([
   '🎄不支持网站加载速度慢的，和页面特别不美观的',
   '💖先友后链，申请前请先提前做好本站友情链接',
@@ -27,18 +39,22 @@ const aboutList = ref([
   '🎯凡内容污秽、暴力的、广告挂马的、违背社会主义核心价值观的勿扰',
   '🍅申请方式请发送邮件申请',
   '🎄网站内别整啥乱七八糟的引流，影响正常阅读'])
-  const handleGoPage = (item:iFriendItem)=>{
-    window.open(item.url,'_blank')
-  }
+/**
+ * 跳转到朋友的博客
+ * @param item 接收一个朋友类
+ */
+const handleGoPage = (item: iFriendItem) => {
+  window.open(item.url, '_blank')
+}
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
-  try{
+  try {
     await handleGetFriends()
-  }catch(error){
+  } catch (error) {
     ElMessage.error('加载资源失败')
     console.log(error)
-  }finally{
+  } finally {
     nextTick(() => {
       setTimeout(() => {
         loadingInstance.close()
@@ -55,7 +71,7 @@ onMounted(async () => {
       <h2>友链站点</h2>
       <ul class="cardList">
         <li v-for="item of friendsList" :key="item.id" class="cardItem" @click="handleGoPage(item)">
-          <el-image :src="item.userHeadPortrait || user" alt="" fit="cover" lazy class="user" />
+          <el-image :src="item.userHeadPortrait" alt="" fit="cover" lazy class="user" @error="onError(item)" />
           <div class="info">
             <h4>{{ item.name }}</h4>
             <span>{{ item.label }}</span>
@@ -145,9 +161,11 @@ onMounted(async () => {
         }
       }
     }
-    .aboutList{
+
+    .aboutList {
       width: 100%;
-      .aboutItem{
+
+      .aboutItem {
         margin-bottom: 10px;
       }
     }

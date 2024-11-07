@@ -1,7 +1,7 @@
 <script setup lang="ts">
 //导入Vue相关API
 import { onUnmounted, nextTick, onMounted, ref, useTemplateRef, watchEffect } from 'vue'
-//导入测试图片
+//导入默认图片
 import yxzq from '@/assets/yxzq.jpg'
 import backgroundImg from '@/assets/backgroundImg.jpg'
 //导入文章相关API
@@ -47,7 +47,6 @@ const handleStart = () => {
  */
 const handleStop = () => {
   const loadingInstance = ElLoading.service(_optionsWhite)
-
   nextTick(() => {
     setTimeout(() => {
       _setPageStart(false)
@@ -56,7 +55,7 @@ const handleStop = () => {
   })
 }
 /**
- * 从后端获取文章数,赋值给articlesNum
+ * 获取文章数
  */
 const getANum = async () => {
   const res = await getArticlesNum()
@@ -74,7 +73,7 @@ const secondsDiff = ref(0)
 //访客人数
 const people = ref(0)
 /**
- * 获取起始时间与当前时间,计算出时间间隔并赋值
+ * 获取时间间隔
  */
 const getUsingTime = async () => {
   const res = await getTime()
@@ -94,7 +93,7 @@ const getUsingTime = async () => {
   }
 }
 /**
- * 获取访客人数,赋值给people
+ * 获取访客人数
  */
 const getPeopleTimes = async () => {
   const res = await getPeople()
@@ -109,6 +108,9 @@ let intervalId: number
 //主页文章
 const homeArticleHTML = ref('')
 const homeArticle = useTemplateRef('homeArticle')
+/**
+ * 获取个人信息
+ */
 const handleGetMyInformation = async () => {
   const res = await getMyInformation()
   if (res.data.code === 200) {
@@ -121,7 +123,7 @@ watchEffect(() => {
     homeArticle.value.innerHTML = homeArticleHTML.value
   }
 })
-
+//个人标签列表
 const labelList = ref<iLabelItem[]>([])
 /**
  * 获取个人标签
@@ -132,8 +134,16 @@ const handleGetMyLabels = async () => {
     labelList.value = res.data.data
   }
 }
-
+//我的个人信息
 const myInformation = ref<iInformation>()
+/**
+ * 处理头像加载失败
+ */
+const onError = () => {
+  if(myInformation.value){
+    myInformation.value.userHeadPortrait = yxzq
+  }
+}
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
@@ -144,6 +154,22 @@ onMounted(async () => {
     await handleGetMyInformation()
     await handleGetMyLabels()
     await getPeopleTimes()
+    //开启定时器计算时间间隔
+    intervalId = setInterval(() => {
+      secondsDiff.value += 1
+      if (secondsDiff.value >= 60) {
+        minutesDiff.value += 1
+        secondsDiff.value -= 60
+        if (minutesDiff.value >= 60) {
+          hoursDiff.value += 1
+          minutesDiff.value -= 60
+          if (hoursDiff.value >= 24) {
+            daysDiff.value += 1
+            hoursDiff.value -= 24
+          }
+        }
+      }
+    }, 1000)
   }catch(error){
     ElMessage.error('加载资源失败')
     console.log(error)
@@ -154,24 +180,6 @@ onMounted(async () => {
       }, 0)
     })
   }
-
-  //开启定时器计算时间间隔
-  intervalId = setInterval(() => {
-    secondsDiff.value += 1
-    if (secondsDiff.value >= 60) {
-      minutesDiff.value += 1
-      secondsDiff.value -= 60
-      if (minutesDiff.value >= 60) {
-        hoursDiff.value += 1
-        minutesDiff.value -= 60
-        if (hoursDiff.value >= 24) {
-          daysDiff.value += 1
-          hoursDiff.value -= 24
-        }
-      }
-    }
-  }, 1000)
- 
 })
 onUnmounted(() => {
   //页面销毁清楚定时器
@@ -209,8 +217,8 @@ onUnmounted(() => {
           <!-- 个人信息 -->
           <section class="user">
             <div>
-              <el-image :src="yxzq" alt="头像" class="custom-image" fit="cover" :preview-src-list="[yxzq]"
-                hide-on-click-modal />
+              <el-image :src="myInformation?.userHeadPortrait" alt="头像" class="custom-image" fit="cover" :preview-src-list="[yxzq]"
+                hide-on-click-modal @error="onError()"/>
               <span>{{ myInformation?.name || '余心知秋' }}</span>
               <p>{{ myInformation?.introduce || '耗尽' }}</p>
               <span>{{ myInformation?.identity || '前端工程师' }}</span>

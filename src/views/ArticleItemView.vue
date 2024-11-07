@@ -34,6 +34,9 @@ watchEffect(async () => {
 
   }
 })
+/**
+ * 返回文章页
+ */
 const handleGoBack = () => {
   const loadingInstance = ElLoading.service(_optionsWhite)
   setTimeout(()=>{

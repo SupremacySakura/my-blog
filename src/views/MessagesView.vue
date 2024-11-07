@@ -1,7 +1,7 @@
 <script setup lang="ts">
-//导入Vue相关API
+//导入vue相关API
 import { ref, onMounted, useTemplateRef, watchEffect, nextTick, watch } from 'vue'
-//导入测试图片
+//导入默认图片
 import background from '@/assets/messageBackground.jpeg'
 import user from '@/assets/user.png'
 //导入工具函数
@@ -29,11 +29,7 @@ const handleGetMessages = async () => {
   const res = await getMessages()
   if (+res.data.code === 200) {
     messagesList.value = res.data.data
-    messagesList.value.forEach((item) => {
-      if (!item.userHeadPortrait) {
-        item.userHeadPortrait = user
-      }
-    })
+    //手动触发弹幕动画更新
     count.value++
   }
 }

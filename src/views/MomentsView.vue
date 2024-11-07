@@ -1,7 +1,7 @@
 <script setup lang="ts">
 //导入Vue相关API
 import { onMounted, ref, useTemplateRef, nextTick, onUnmounted } from 'vue'
-//导入图片
+//导入默认图片
 import yxzq from '@/assets/yxzq.jpg'
 import backgroundImg from '@/assets/backgroundImg3.jpg'
 //导入ElementPlus相关组件
@@ -16,19 +16,17 @@ import { getMoments, getTechnology } from '@/services/apis/moments'
 //导入类型
 import type { iMomentItem, iWaterFallItem, iRowItem } from '@/interface'
 /**
- * 获取朋友圈列表,并给poetryList赋值
+ * 获取朋友圈列表
  */
 const handleGetMoments = async () => {
   const res = await getMoments()
   if (+res.data.code === 200) {
     momentsList.value = res.data.data
-    momentsList.value.forEach((item) => {
-      if (!item.userHeadPortrait) {
-        item.userHeadPortrait = yxzq
-      }
-    })
   }
 }
+/**
+ * 获取技术栈列表
+ */
 const handleGetTechnology = async () => {
   const res = await getTechnology()
   if (+res.data.code === 200) {
@@ -37,6 +35,13 @@ const handleGetTechnology = async () => {
 }
 //朋友圈数组
 const momentsList = ref<iMomentItem[]>([])
+/**
+ * 处理朋友圈头像显示错误
+ * @param item 接收一个朋友圈类
+ */
+const onUserImageError = (item:iMomentItem) => {
+  item.userHeadPortrait = yxzq
+}
 //技术栈数据数组
 const waterFallList = ref<iWaterFallItem[]>([])
 /**
@@ -90,6 +95,9 @@ const setPosition = (children: HTMLElement[], maginLeft: number, width: number, 
     rowsList.value[rowsList.value.findIndex(item => item.id === minItem.id)].height += child.offsetHeight + marginTop
   })
 }
+/**
+ * 更新瀑布流
+ */
 const newWaterFall = () => {
   if (waterFallBox.value && waterFallItems.value) {
     const children = waterFallItems.value
@@ -100,13 +108,20 @@ const newWaterFall = () => {
         rowsList.value.push({ id: i, height: 0 })
       }
       setPosition(children, margin.value, 170, 10)
-      console.log(rowsList.value)
     })
   }
 }
+/**
+ * 改变技术栈图片加载状态
+ * @param item 接收一个技术栈类
+ */
 const onImageLoad = (item: iWaterFallItem) => {
   item.loading = false
 }
+/**
+ * 处理技术栈图片加载错误
+ * @param item 接收一个技术栈类
+ */
 const onBackgroundImageError = (item: iWaterFallItem) => {
   item.photo = backgroundImg
 }
@@ -119,7 +134,8 @@ onMounted(async () => {
     newWaterFall()
     window.addEventListener('resize', throttle(() => { newWaterFall() }, 1000))
   } catch (error) {
-
+    ElMessage.error('加载资源失败')
+    console.log(error)
   } finally {
     nextTick(() => {
       setTimeout(() => {
@@ -148,7 +164,7 @@ onMounted(async () => {
         <div class="moment">
           <section>
             <div>
-              <el-image :src="item.userHeadPortrait" alt="头像" class="custom-image" fit="cover" lazy></el-image>
+              <el-image :src="item.userHeadPortrait||yxzq" alt="头像" class="custom-image" fit="cover" lazy @error="onUserImageError(item)"></el-image>
               <span>{{ item.name }}</span>
             </div>
             <div>
@@ -321,7 +337,8 @@ onMounted(async () => {
         align-items: center;
         transform: scale(1.0);
         transition: all 0.5s ease;
-
+        border-radius: 5px;
+        overflow: hidden;
         &:hover {
           cursor: pointer;
           transform: scale(1.1);

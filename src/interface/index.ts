@@ -33,6 +33,7 @@ interface iInformation {
   introduce: string,
   identity: string,
   address: string,
+  userHeadPortrait:string,
 }
 //评论类型接口
 interface iMessageItem {
