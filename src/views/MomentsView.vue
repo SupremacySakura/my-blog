@@ -5,14 +5,14 @@ import { onMounted, ref, useTemplateRef, nextTick, onUnmounted } from 'vue'
 import yxzq from '@/assets/yxzq.jpg'
 import backgroundImg from '@/assets/backgroundImg3.jpg'
 //导入ElementPlus相关组件
-import { ElImage, ElLoading, ElTooltip } from 'element-plus'
+import { ElMessage, ElImage, ElLoading, ElTooltip } from 'element-plus'
 //导入lodash相关API
 import { throttle } from 'lodash'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
 //导入moments相关API
-import { getMoments,getTechnology } from '@/services/apis/moments'
+import { getMoments, getTechnology } from '@/services/apis/moments'
 //导入类型
 import type { iMomentItem, iWaterFallItem, iRowItem } from '@/interface'
 /**
@@ -29,7 +29,7 @@ const handleGetMoments = async () => {
     })
   }
 }
-const handleGetTechnology =async () => {
+const handleGetTechnology = async () => {
   const res = await getTechnology()
   if (+res.data.code === 200) {
     waterFallList.value = res.data.data
@@ -104,7 +104,7 @@ const newWaterFall = () => {
     })
   }
 }
-const onImageLoad = (item:iWaterFallItem) => {
+const onImageLoad = (item: iWaterFallItem) => {
   item.loading = false
 }
 const onBackgroundImageError = (item: iWaterFallItem) => {
@@ -113,17 +113,20 @@ const onBackgroundImageError = (item: iWaterFallItem) => {
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
+  try {
+    await handleGetMoments()
+    await handleGetTechnology()
+    newWaterFall()
+    window.addEventListener('resize', throttle(() => { newWaterFall() }, 1000))
+  } catch (error) {
 
-  await handleGetMoments()
-  await handleGetTechnology()
-  newWaterFall()
-  window.addEventListener('resize', throttle(() => { newWaterFall() }, 1000))
-  nextTick(() => {
-    setTimeout(() => {
-      loadingInstance.close()
-    }, 0)
-  })
-  console.log(waterFallList.value)
+  } finally {
+    nextTick(() => {
+      setTimeout(() => {
+        loadingInstance.close()
+      }, 0)
+    })
+  }
 })
 
 </script>
@@ -162,7 +165,8 @@ onMounted(async () => {
       <div class="box" ref="waterFallBox">
         <div v-for="item of waterFallList" :key="item.id" class="waterFallItem" :style="{ height: item.height + 'px' }"
           @click="handleOpen(item.src)" ref="waterFallItems">
-          <el-image :src="item.photo" alt="背景" class="background" fit="cover" lazy v-loading="item.loading" @load="onImageLoad(item)" @error="onBackgroundImageError(item)"></el-image>
+          <el-image :src="item.photo" alt="背景" class="background" fit="cover" lazy v-loading="item.loading"
+            @load="onImageLoad(item)" @error="onBackgroundImageError(item)"></el-image>
           <div class="shade"></div>
           <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy></el-image>
           <span v-show="!item.loading">{{ item.text }}</span>

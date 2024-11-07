@@ -147,20 +147,20 @@ const onError = (item: iMessageItem) => {
   item.userHeadPortrait = user
 }
 onMounted(async () => {
-  const options = {
-    lock: true, // 锁定屏幕，禁止操作
-    text: '正在加载...(若长时间无法加载出来,请刷新页面)',
-    spinner: 'el-icon-loading',
-    background: 'rgba(255, 255, 255, 1)',
-  }
-  const loadingInstance = ElLoading.service(options)
+  const loadingInstance = ElLoading.service(_options)
   //初始化
-  await handleGetMessages()
-  nextTick(() => {
-    setTimeout(() => {
-      loadingInstance.close()
-    }, 0)
-  })
+  try {
+    await handleGetMessages()
+  } catch (error) {
+    ElMessage.error('加载资源失败')
+    console.log(error)
+  } finally {
+    nextTick(() => {
+      setTimeout(() => {
+        loadingInstance.close()
+      }, 0)
+    })
+  }
 })
 </script>
 
@@ -334,7 +334,8 @@ onMounted(async () => {
     textarea {
       width: 98%;
       height: 200px;
-      resize: none; /* 禁止缩放 */
+      resize: none;
+      /* 禁止缩放 */
       outline: none;
     }
 
@@ -367,7 +368,7 @@ onMounted(async () => {
       margin-bottom: 10px;
       border: 1px solid rgba(0, 0, 0, 0.5);
       border-radius: 10px;
-      background-color: rgba(255,255,255,1);
+      background-color: rgba(255, 255, 255, 1);
 
       .leftSection {
         width: 50px;

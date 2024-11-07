@@ -5,7 +5,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
 //导入ElementPlus相关组件
-import { ElImage, ElLoading } from 'element-plus'
+import { ElMessage, ElImage, ElLoading } from 'element-plus'
 import user from '@/assets/user.png'
 //导入friends相关接口
 import { getFriends } from '@/services/apis/friends'
@@ -33,13 +33,19 @@ const aboutList = ref([
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
+  try{
+    await handleGetFriends()
+  }catch(error){
+    ElMessage.error('加载资源失败')
+    console.log(error)
+  }finally{
+    nextTick(() => {
+      setTimeout(() => {
+        loadingInstance.close()
+      }, 0)
+    })
+  }
 
-  await handleGetFriends()
-  nextTick(() => {
-    setTimeout(() => {
-      loadingInstance.close()
-    }, 0)
-  })
 })
 </script>
 

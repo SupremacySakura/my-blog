@@ -11,7 +11,7 @@ import yxzq from '@/assets/yxzq.jpg'
 //导入文章相关API
 import { getArticles } from '@/services/apis/articles'
 //导入ElementPlus相关组件
-import { ElImage, ElLoading } from 'element-plus'
+import { ElMessage, ElImage, ElLoading } from 'element-plus'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _options, _optionsWhite } = useAssetStore()
@@ -70,20 +70,26 @@ const onError = (item: iArticleItem) => {
   item.userHeadPortrait = yxzq
 }
 
-const onImageLoad = (item:iArticleItem) => {
+const onImageLoad = (item: iArticleItem) => {
   item.loading = false
 }
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
-  //初始化
-  await handleGetArticles()
-  articleItem.value = articlesList.value[0]
-  nextTick(() => {
-    setTimeout(() => {
-      loadingInstance.close()
-    }, 0)
-  })
+  try {
+    await handleGetArticles()
+    //初始化
+    articleItem.value = articlesList.value[0]
+  } catch (error) {
+    ElMessage.error('加载资源失败')
+    console.log(error)
+  } finally {
+    nextTick(() => {
+      setTimeout(() => {
+        loadingInstance.close()
+      }, 0)
+    })
+  }
 })
 </script>
 
@@ -91,10 +97,11 @@ onMounted(async () => {
   <div class="articlesBox">
     <!-- 左边文章列表展示 -->
     <section class="leftSection">
-      <section class="card" v-for="(item,index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
+      <section class="card" v-for="(item, index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
-          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item)" v-loading="item.loading"
-            element-loading-background="rgba(122, 122, 122, 0.8)" @load="onImageLoad(item)"></el-image>
+          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item)"
+            v-loading="item.loading" element-loading-background="rgba(122, 122, 122, 0.8)"
+            @load="onImageLoad(item)"></el-image>
         </div>
         <div class="info">
           <h2>{{ item.head }}</h2>

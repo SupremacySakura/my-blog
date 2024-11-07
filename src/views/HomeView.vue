@@ -10,7 +10,7 @@ import { getArticlesNum } from '@/services/apis/articles'
 import { getTime, getPeople } from '@/services/apis/asset'
 import { getMyInformation, getMyLabels } from '@/services/apis/my'
 //导入ElementPlus相关组件
-import { ElImage, ElLoading } from 'element-plus'
+import { ElMessage, ElImage, ElLoading } from 'element-plus'
 //导入pinia相关api
 import { storeToRefs } from 'pinia'
 //导入asset仓库
@@ -138,10 +138,23 @@ onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
   //初始化
-  await getANum()
-  await getUsingTime()
-  await handleGetMyInformation()
-  await handleGetMyLabels()
+  try{
+    await getANum()
+    await getUsingTime()
+    await handleGetMyInformation()
+    await handleGetMyLabels()
+    await getPeopleTimes()
+  }catch(error){
+    ElMessage.error('加载资源失败')
+    console.log(error)
+  }finally{
+    nextTick(() => {
+      setTimeout(() => {
+        loadingInstance.close()
+      }, 0)
+    })
+  }
+
   //开启定时器计算时间间隔
   intervalId = setInterval(() => {
     secondsDiff.value += 1
@@ -158,12 +171,7 @@ onMounted(async () => {
       }
     }
   }, 1000)
-  await getPeopleTimes()
-  nextTick(() => {
-    setTimeout(() => {
-      loadingInstance.close()
-    }, 0)
-  })
+ 
 })
 onUnmounted(() => {
   //页面销毁清楚定时器
