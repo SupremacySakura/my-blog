@@ -18,15 +18,8 @@ const { _userHeadPortrait, _name, _address, _setInfo } = useMessagesStore()
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
-//定义评论类型接口
-interface iMessageItem {
-  id: number,
-  userHeadPortrait: string,
-  name: string,
-  content: string,
-  time: string,
-  address: string,
-}
+//导入类型
+import type { iMessageItem } from '@/interface'
 //定义评论数组
 const messagesList = ref<iMessageItem[]>([])
 /**

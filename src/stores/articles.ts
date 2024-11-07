@@ -1,16 +1,10 @@
-import { ref, computed } from 'vue'
+//导入vue相关api
+import { ref } from 'vue'
+//导入pinia相关api
 import { defineStore } from 'pinia'
-//创建文章类
-interface iArticleItem {
-  id: number,
-  head: string,
-  digest: string,
-  article: string,
-  userHeadPortrait: string,
-  name: string,
-  time: string,
-  cover: string
-}
+//导入类型
+import type { iArticleItem } from '@/interface'
+
 export const useArticlesStore = defineStore('articles', () => {
   const _articlesList = ref<iArticleItem[]>([])
   const _setArticlesList = (item: iArticleItem[]) => {

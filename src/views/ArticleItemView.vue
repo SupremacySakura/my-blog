@@ -19,17 +19,8 @@ import { ElLoading } from 'element-plus'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _optionsWhite } = useAssetStore()
-//创建文章类
-interface iArticleItem {
-  id: number,
-  head: string,
-  digest: string,
-  article: string,
-  userHeadPortrait: string,
-  name: string,
-  time: string,
-  cover: string
-}
+//导入类型
+import type { iArticleItem } from '@/interface'
 //文章
 const article = ref<iArticleItem>()
 //文章dom

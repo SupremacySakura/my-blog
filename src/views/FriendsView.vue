@@ -5,19 +5,13 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
 //导入ElementPlus相关组件
-import { ElImage, ElLoading, ElTooltip } from 'element-plus'
-import yxzq from '@/assets/yxzq.jpg'
+import { ElImage, ElLoading } from 'element-plus'
 import user from '@/assets/user.png'
 //导入friends相关接口
 import { getFriends } from '@/services/apis/friends'
-//定义友链类型接口
-interface iFriendItem {
-  id: number,
-  userHeadPortrait: string,
-  name: string,
-  label: string,
-  url: string,
-}
+//导入类型
+import type { iFriendItem } from '@/interface'
+
 const friendsList = ref<iFriendItem[]>([])
 const handleGetFriends = async() => {
   const res = await getFriends()

@@ -24,6 +24,8 @@ marked.setOptions({
   gfm: true, // 启用 GitHub 风格的 Markdown
   breaks: true // 支持换行符
 })
+//导入类型
+import type { iLabelItem,iInformation } from '@/interface'
 //开始前页面dom
 const homeBox = useTemplateRef('homeBox')
 //开始后页面dom
@@ -119,14 +121,8 @@ watchEffect(() => {
     homeArticle.value.innerHTML = homeArticleHTML.value
   }
 })
-//定义标签接口
-interface iLabel {
-  id: number,
-  text: string,
-  color: string,
-  backgroundColor: string,
-}
-const labelList = ref<iLabel[]>([])
+
+const labelList = ref<iLabelItem[]>([])
 /**
  * 获取个人标签
  */
@@ -136,15 +132,7 @@ const handleGetMyLabels = async () => {
     labelList.value = res.data.data
   }
 }
-//定义个人信息接口
-interface iInformation {
-  id: number,
-  content: string,
-  name: string,
-  introduce: string,
-  identity: string,
-  address: string,
-}
+
 const myInformation = ref<iInformation>()
 onMounted(async () => {
   //初始化

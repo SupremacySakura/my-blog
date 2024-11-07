@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onMounted, ref, nextTick, } from 'vue'
+import { onMounted, ref, nextTick, computed, } from 'vue'
 //导入router相关api
 import { useRouter } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
@@ -18,17 +18,8 @@ const { _options, _optionsWhite } = useAssetStore()
 //导入articles仓库
 import { useArticlesStore } from '@/stores/articles'
 const { _setArticlesList } = useArticlesStore()
-//创建文章类
-interface iArticleItem {
-  id: number,
-  head: string,
-  digest: string,
-  article: string,
-  userHeadPortrait: string,
-  name: string,
-  time: string,
-  cover: string
-}
+//导入类型
+import type { iArticleItem } from '@/interface'
 //文章数组
 const articlesList = ref<iArticleItem[]>([])
 /**
@@ -60,7 +51,7 @@ const articleItem = ref<iArticleItem>()
 const handleChooseArticle = (item: iArticleItem) => {
   articleItem.value = item
   const loadingInstance = ElLoading.service(_optionsWhite)
-  
+
   setTimeout(() => {
     if (articleItem.value) {
       router.push({
@@ -77,6 +68,10 @@ const handleChooseArticle = (item: iArticleItem) => {
 const onError = (item: iArticleItem) => {
   item.cover = test1
   item.userHeadPortrait = yxzq
+}
+
+const onImageLoad = (item:iArticleItem) => {
+  item.loading = false
 }
 onMounted(async () => {
   //初始化
@@ -96,9 +91,10 @@ onMounted(async () => {
   <div class="articlesBox">
     <!-- 左边文章列表展示 -->
     <section class="leftSection">
-      <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)">
+      <section class="card" v-for="(item,index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
-          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item)"></el-image>
+          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item)" v-loading="item.loading"
+            element-loading-background="rgba(122, 122, 122, 0.8)" @load="onImageLoad(item)"></el-image>
         </div>
         <div class="info">
           <h2>{{ item.head }}</h2>

@@ -30,6 +30,8 @@ import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
 //导入moments相关API
 import { getMoments } from '@/services/apis/moments'
+//导入类型
+import type { iMomentItem, iWaterFallItem, iRowItem } from '@/interface'
 /**
  * 获取朋友圈列表,并给poetryList赋值
  */
@@ -44,29 +46,10 @@ const handleGetMoments = async () => {
     })
   }
 }
-//定义朋友圈接口
-interface iMomentItem {
-  id: number,
-  time: string,
-  userHeadPortrait: string,
-  name: string,
-  content: string,
-
-}
 //朋友圈数组
 const momentsList = ref<iMomentItem[]>([])
-//技术栈类型接口
-interface iWaterFall {
-  id: number,
-  photo: string,
-  text: string,
-  src: string,
-  height: number,
-  icon: string,
-  note: string,
-}
 //技术栈数据数组
-const waterFallList = ref<iWaterFall[]>([
+const waterFallList = ref<iWaterFallItem[]>([
   {
     id: 1,
     photo: vueBG,
@@ -75,6 +58,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 250,
     icon: vueIcon,
     note: 'Vue (发音为 /vjuː/，类似 view) 是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和 JavaScript 构建，并提供了一套声明式的、组件化的编程模型，帮助你高效地开发用户界面。无论是简单还是复杂的界面，Vue 都可以胜任。',
+    loading: true,
   },
   {
     id: 2,
@@ -84,6 +68,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 255,
     icon: reactIcon,
     note: 'React 是一个用于构建用户界面的 JavaScript 库，由 Facebook 开发和维护。它专注于构建单页应用程序中的视图层，使用组件化的方式来构建界面，支持高效地更新和渲染用户界面。',
+    loading: true,
   },
   {
     id: 3,
@@ -93,6 +78,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 212.5,
     icon: nodejsIcon,
     note: 'Node.js 是一个基于 Chrome V8 引擎的 JavaScript 运行时环境，使得 JavaScript 可以在服务器端运行。它最初由 Ryan Dahl 在 2009 年创建，并通过异步、事件驱动的编程模型来提高性能和扩展性。',
+    loading: true,
   },
   {
     id: 4,
@@ -102,6 +88,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 212.5,
     icon: elementPlusIcon,
     note: 'Element Plus 是一个基于 Vue 3 的 UI 组件库，提供了丰富的组件和样式，适合构建现代化的 Web 应用。Element Plus 是 Element UI 的升级版，专门为 Vue 3 设计和优化，保持了原有的简洁风格和易用性，同时提升了性能和兼容性。',
+    loading: true,
   },
   {
     id: 5,
@@ -111,6 +98,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 226,
     icon: axiosIcon,
     note: 'Axios 是一个基于 Promise 的 JavaScript HTTP 客户端，用于在浏览器和 Node.js 中发送请求，帮助开发者轻松与后端 API 进行通信。它提供了一系列功能，简化了 HTTP 请求的发起、数据处理和错误捕获。',
+    loading: true,
   },
   {
     id: 6,
@@ -120,6 +108,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 255,
     icon: expressIcon,
     note: 'Express 是一个简洁而灵活的 Node.js Web 应用框架，用于构建服务器端应用和 API。它提供了丰富的功能和简洁的接口，使得处理路由、中间件、请求和响应变得更加容易，是构建 RESTful API 和 Web 应用的主流选择之一。',
+    loading: true,
   },
   {
     id: 7,
@@ -129,6 +118,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 256.5,
     icon: harmoneyOsIcon,
     note: 'HarmonyOS(鸿蒙操作系统)是由华为开发的一款面向多种设备的分布式操作系统。它最初于 2019 年发布，旨在打破设备间的边界，提供跨平台的用户体验，使不同设备之间能够无缝连接与协作。HarmonyOS 支持多种设备类型，包括手机、平板、智能家居设备、智能手表、车载系统等。',
+    loading: true,
   },
   {
     id: 8,
@@ -138,6 +128,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 255,
     icon: uniappIcon,
     note: 'UniApp 是一个基于 Vue.js 的跨平台前端框架，主要由 DCloud 开发，用于构建支持多端发布的应用。UniApp 允许开发者使用 Vue.js 语法，通过一次编码生成适配多个平台的应用，包括微信小程序、支付宝小程序、H5、App（iOS 和 Android）、以及各类智能设备小程序。',
+    loading: true,
   },
   {
     id: 9,
@@ -147,6 +138,7 @@ const waterFallList = ref<iWaterFall[]>([
     height: 255,
     icon: typescriptIcon,
     note: 'TypeScript 是微软开发的一种 JavaScript 超集，它在 JavaScript 基础上添加了静态类型、接口和类等功能。TypeScript 设计的初衷是让 JavaScript 适合大型项目的开发需求，提供更好的代码可读性、可维护性和开发体验。TypeScript 的文件扩展名是 .ts，最终会编译成标准的 JavaScript 文件来执行。',
+    loading: true,
   },
 ])
 /**
@@ -163,11 +155,6 @@ const waterFallBox = useTemplateRef('waterFallBox')
 const waterFallItems = useTemplateRef('waterFallItems')
 //列数
 const rows = ref(0)
-//列数类型接口
-interface iRowItem {
-  id: number,
-  height: number,
-}
 //列数数组
 const rowsList = ref<iRowItem[]>([])
 //左右间距
@@ -219,6 +206,9 @@ const newWaterFall = () => {
     })
   }
 }
+const onImageLoad = (item:iWaterFallItem) => {
+  item.loading = false
+}
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
@@ -269,10 +259,10 @@ onMounted(async () => {
       <div class="box" ref="waterFallBox">
         <div v-for="item of waterFallList" :key="item.id" class="waterFallItem" :style="{ height: item.height + 'px' }"
           @click="handleOpen(item.src)" ref="waterFallItems">
-          <el-image :src="item.photo" alt="背景" class="background" fit="cover" lazy></el-image>
+          <el-image :src="item.photo" alt="背景" class="background" fit="cover" lazy v-loading="item.loading" @load="onImageLoad(item)"></el-image>
           <div class="shade"></div>
           <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy></el-image>
-          <span>{{ item.text }}</span>
+          <span v-show="!item.loading">{{ item.text }}</span>
           <el-tooltip class="box-item" effect="dark" placement="top-start">
             <template #content>{{ item.note }}</template>
             <el-button>了解</el-button>
@@ -321,12 +311,14 @@ onMounted(async () => {
       display: none;
       /* Chrome、Safari、Edge */
     }
+
     .card {
       width: 750px;
       height: 300px;
       display: grid;
       grid-template-columns: 50px 700px;
       grid-template-rows: 50px 250px;
+
       .point {
         display: flex;
         flex-direction: column;
