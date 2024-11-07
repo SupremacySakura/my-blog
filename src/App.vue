@@ -10,6 +10,7 @@ import { RouterView } from 'vue-router'
 
 <style lang="less">
 * {
+  font-family: 'KaiTi', 'SimKai', '楷体', '楷体_GB2312', 'Times New Roman', serif;
   /* 去掉默认外边距 */
   margin: 0;
   /* 去默认内边距 */

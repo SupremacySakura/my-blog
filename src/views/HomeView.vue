@@ -255,10 +255,10 @@ onUnmounted(() => {
   width: 100%;
   min-height: 100vh;
   background-color: @-primary-background-color;
-
   .background-img {
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    min-height: 800px;
     position: absolute;
   }
 
