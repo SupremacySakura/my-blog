@@ -15,5 +15,16 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue', 'pinia', 'vue-router', 'axios'],
+          marked: ['marked'],
+          // 其他大文件可以单独分块
+        },
+      },
+    },
   }
 })
