@@ -11,6 +11,7 @@ import { getTime, getPeople } from '@/services/apis/asset'
 import { getMyInformation, getMyLabels } from '@/services/apis/my'
 //导入ElementPlus相关组件
 import { ElImage, ElLoading } from 'element-plus'
+//导入pinia相关api
 import { storeToRefs } from 'pinia'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
@@ -253,7 +254,7 @@ onUnmounted(() => {
 
   .background-img {
     width: 100%;
-    height: 101vh;
+    height: 100%;
     position: absolute;
   }
 

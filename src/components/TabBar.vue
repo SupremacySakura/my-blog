@@ -20,7 +20,7 @@ interface iTabBarItem {
  * @param item 接收一个iTabBarItem类型
  */
 const gotoPage = (item: iTabBarItem) => {
-  if (item.path !== '/home'&&item.path!=='/poetry'){
+  if (item.path !== '/home'){
     _setPageStart(true)
   }else{
     _setPageStart(false)

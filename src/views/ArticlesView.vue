@@ -1,26 +1,23 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onMounted, ref, watchEffect, nextTick, useTemplateRef } from 'vue'
+import { onMounted, ref, nextTick, } from 'vue'
+//导入router相关api
+import { useRouter } from 'vue-router'
+import type { RouteLocationRaw } from 'vue-router'
+const router = useRouter()
 //导入测试图片
 import test1 from '@/assets/test1.jpg'
 import yxzq from '@/assets/yxzq.jpg'
 //导入文章相关API
 import { getArticles } from '@/services/apis/articles'
-//导入ElementPlus图标
-import {
-  CloseBold
-} from '@element-plus/icons-vue'
 //导入ElementPlus相关组件
 import { ElImage, ElLoading } from 'element-plus'
-//导入处理markdown的库
-import { marked } from 'marked'
-marked.setOptions({
-  gfm: true, // 启用 GitHub 风格的 Markdown
-  breaks: true // 支持换行符
-})
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
-const { _options } = useAssetStore()
+const { _options, _optionsWhite } = useAssetStore()
+//导入articles仓库
+import { useArticlesStore } from '@/stores/articles'
+const { _setArticlesList } = useArticlesStore()
 //创建文章类
 interface iArticleItem {
   id: number,
@@ -40,7 +37,7 @@ const articlesList = ref<iArticleItem[]>([])
 const handleGetArticles = async () => {
   const res = await getArticles()
   if (+res.data.code === 200) {
-    articlesList.value = res.data.data
+    articlesList.value = [...articlesList.value, ...res.data.data]
     //处理空图片
     articlesList.value.forEach((item) => {
       if (!item.userHeadPortrait) {
@@ -50,33 +47,33 @@ const handleGetArticles = async () => {
         item.cover = test1
       }
     })
+    _setArticlesList(articlesList.value)
   }
 }
 //右侧展示文章数据
 //选中文章
 const articleItem = ref<iArticleItem>()
-const article = useTemplateRef('article')
-
-//监听文章dom,将选中文章挂载在上面
-watchEffect(async () => {
-  const htmlContent = articleItem.value?.article as string
-  if(article.value){
-    article.value.innerHTML =await marked(htmlContent)
-  }
-})
 /**
  * 选中一篇文章
  * @param item 文章类
  */
 const handleChooseArticle = (item: iArticleItem) => {
   articleItem.value = item
+  const loadingInstance = ElLoading.service(_optionsWhite)
+  
+  setTimeout(() => {
+    if (articleItem.value) {
+      router.push({
+        name: 'show',
+        params: {
+          id: articleItem.value.id
+        }
+      } as RouteLocationRaw)
+    }
+    loadingInstance.close()
+  }, 500)
 }
-/**
- * 清空选中文章
- */
-const handleClose = () => {
-  articleItem.value = undefined
-}
+
 const onError = (item: iArticleItem) => {
   item.cover = test1
   item.userHeadPortrait = yxzq
@@ -99,12 +96,10 @@ onMounted(async () => {
   <div class="articlesBox">
     <!-- 左边文章列表展示 -->
     <section class="leftSection">
-      <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)"
-        :class="{ active: articleItem?.id === item.id }">
+      <section class="card" v-for="item of articlesList" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
           <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item)"></el-image>
         </div>
-        <div class="shade"></div>
         <div class="info">
           <h2>{{ item.head }}</h2>
           <span class="abstract">{{ item.digest }}</span>
@@ -116,17 +111,6 @@ onMounted(async () => {
         </div>
       </section>
     </section>
-    <!-- 选中文章展示 -->
-    <section class="articleBoard" v-if="articleItem">
-      <div class="close">
-        <el-button type="danger" :icon="CloseBold" circle @click="handleClose" />
-      </div>
-      <h2>{{ articleItem.head }}</h2>
-      <div class="markdown-body" ref="article">
-
-      </div>
-    </section>
-
   </div>
 </template>
 
@@ -134,28 +118,22 @@ onMounted(async () => {
 .articlesBox {
   min-width: 750px;
   width: 100%;
-  height: 100vh;
-  padding-top: 90px;
+  min-height: 100vh;
+  padding-top: 80px;
   padding-left: 40px;
   padding-right: 40px;
-  padding-bottom: 10px;
   box-sizing: border-box;
   display: flex;
-  overflow: hidden;
   background-color: rgba(247, 247, 247, 1);
+  justify-content: center;
 
   .leftSection {
     padding-top: 20px;
     padding-left: 10px;
     padding-right: 10px;
-    min-width: 600px;
-    height: 90%;
-    overflow-y: auto;
+    width: 900px;
+    min-height: 100vh;
     background-color: rgba(255, 255, 255, 1);
-    box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
-      /* 上侧阴影 */
-      inset 0px -4px 8px rgba(255, 255, 255, 0.5);
-    /* 下侧高光 */
     scrollbar-width: none;
     /* Firefox */
     -ms-overflow-style: none;
@@ -166,14 +144,17 @@ onMounted(async () => {
       /* Chrome、Safari、Edge */
     }
 
+    box-sizing: border-box;
+
     .card {
-      min-width: 300px;
-      width: 78%;
+      width: 800px;
       height: 200px;
       border-radius: 8px;
       background-color: aliceblue;
       margin: 0 auto;
       display: flex;
+      align-items: center;
+      justify-content: space-around;
       overflow: hidden;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2),
         /* 主阴影 */
@@ -185,19 +166,15 @@ onMounted(async () => {
       transform: scale(1);
       transition: transform 0.8s ease;
       margin-bottom: 30px;
-      position: relative;
 
       &:hover {
         transform: scale(1.1);
       }
 
       .image {
-        width: 100%;
-        height: 100%;
+        width: 320px;
+        height: 180px;
         border-radius: 8px;
-        position: absolute;
-        z-index: 0;
-        overflow: hidden;
 
         .cover {
           width: 100%;
@@ -206,25 +183,14 @@ onMounted(async () => {
         }
       }
 
-      .shade {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: 1;
-        background-color: rgba(0, 0, 0, 0.1);
-      }
-
       .info {
-        width: 100%;
+        width: 360px;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        // box-sizing: border-box;
         padding: 10px;
-        position: absolute;
-        z-index: 1;
-        color: white;
+        color: rgb(0, 0, 0);
 
         .abstract {
           width: 100%;
@@ -250,64 +216,6 @@ onMounted(async () => {
         }
       }
     }
-
-    .active {
-      transform: scale(1.1);
-    }
   }
-
-  .articleBoard {
-    min-width: 550px;
-    flex-grow: 1;
-    height: 90%;
-    box-sizing: border-box;
-    margin-right: 10px;
-    margin-left: 40px;
-    margin-top: 10px;
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 1);
-    border: 1px solid rgba(224,224,224,1);
-    color: black;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: auto;
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-
-    /* IE 和 Edge */
-    &::-webkit-scrollbar {
-      display: none;
-      /* Chrome、Safari、Edge */
-    }
-
-    .close {
-      width: 100%;
-      display: flex;
-      justify-content: end;
-      font-size: 20px;
-    }
-
-    p {
-      width: 100%;
-    }
-  }
-}
-:deep(.markdown-body pre),
-:deep(.markdown-body code) {
-  display: block;
-  padding: 10px;
-  background-color: #f5f5f5;
-  /* 浅灰色背景 */
-  border: 1px solid #ddd;
-  /* 灰色边框 */
-  border-radius: 4px;
-  /* 圆角 */
-  font-family: monospace;
-  /* 等宽字体 */
-  overflow-x: auto;
-  /* 水平滚动条，适合长代码 */
 }
 </style>
