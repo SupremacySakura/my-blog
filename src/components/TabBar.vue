@@ -50,12 +50,7 @@ const tabBarList: iTabBarItem[] = [
     path: '/messages'
   },
   {
-    id: 5,
-    text: '诗与远方',
-    path: '/poetry'
-  },
-  {
-    id:6,
+    id:5,
     text:'朋友们',
     path:'/friends'
   }

@@ -29,11 +29,6 @@ const router = createRouter({
           component: () => import('@/views/MessagesView.vue'),
         },
         {
-          path: '/poetry',
-          name: 'poetry',
-          component: () => import('@/views/PoetryView.vue'),
-        },
-        {
           path:'/friends',
           name:'friends',
           component: () => import('@/views/FriendsView.vue'),
