@@ -366,7 +366,7 @@ onMounted(async () => {
       width: 100px;
       height: 50px;
       border-radius: 50px;
-      background-color: #f7f7f7;
+      background-color: rgb(255,255,255,1);
       border: none;
     }
   }
