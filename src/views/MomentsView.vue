@@ -14,7 +14,8 @@ const { _options } = useAssetStore()
 //导入moments相关API
 import { getMoments, getTechnology } from '@/services/apis/moments'
 //导入类型
-import type { iMomentItem, iWaterFallItem, iRowItem } from '@/interface'
+import type { iMomentItem, iWaterFallItem, iRowItem } from '@/types'
+import { EWaterFallPhotoType } from '@/types'
 /**
  * 获取朋友圈列表
  */
@@ -22,6 +23,9 @@ const handleGetMoments = async () => {
   const res = await getMoments()
   if (+res.data.code === 200) {
     momentsList.value = res.data.data
+    momentsList.value.forEach((item)=>{
+      item.loading = true
+    })
   }
 }
 /**
@@ -31,6 +35,9 @@ const handleGetTechnology = async () => {
   const res = await getTechnology()
   if (+res.data.code === 200) {
     waterFallList.value = res.data.data
+    waterFallList.value.forEach((item) => {
+      item.loading = [true, true]
+    })
   }
 }
 //朋友圈数组
@@ -39,7 +46,7 @@ const momentsList = ref<iMomentItem[]>([])
  * 处理朋友圈头像显示错误
  * @param item 接收一个朋友圈类
  */
-const onUserImageError = (item:iMomentItem) => {
+const onUserImageError = (item: iMomentItem) => {
   item.userHeadPortrait = yxzq
 }
 //技术栈数据数组
@@ -112,10 +119,27 @@ const newWaterFall = () => {
   }
 }
 /**
- * 改变技术栈图片加载状态
- * @param item 接收一个技术栈类
+ * 瀑布流图片加载完成
+ * @param item 瀑布流类
+ * @param photoType 图片类型
  */
-const onImageLoad = (item: iWaterFallItem) => {
+function onImageLoad(item: iWaterFallItem, photoType: EWaterFallPhotoType){
+    switch (photoType) {
+      case EWaterFallPhotoType.icon:
+        item.loading[EWaterFallPhotoType.icon] = false
+        break
+      case EWaterFallPhotoType.photo:
+        item.loading[EWaterFallPhotoType.photo] = false
+        break
+      default:
+        break 
+  }
+}
+/**
+ * 朋友圈加载完成
+ * @param item 朋友圈类
+ */
+function onMomentImageLoad(item:iMomentItem) {
   item.loading = false
 }
 /**
@@ -164,7 +188,8 @@ onMounted(async () => {
         <div class="moment">
           <section>
             <div>
-              <el-image :src="item.userHeadPortrait||yxzq" alt="头像" class="custom-image" fit="cover" lazy @error="onUserImageError(item)"></el-image>
+              <el-image :src="item.userHeadPortrait || yxzq" alt="头像" class="custom-image" fit="cover" lazy
+                @error="onUserImageError(item)" v-loading="item.loading" @load="onMomentImageLoad(item)"></el-image>
               <span>{{ item.name }}</span>
             </div>
             <div>
@@ -181,10 +206,12 @@ onMounted(async () => {
       <div class="box" ref="waterFallBox">
         <div v-for="item of waterFallList" :key="item.id" class="waterFallItem" :style="{ height: item.height + 'px' }"
           @click="handleOpen(item.src)" ref="waterFallItems">
-          <el-image :src="item.photo" alt="背景" class="background" fit="cover" lazy v-loading="item.loading"
-            @load="onImageLoad(item)" @error="onBackgroundImageError(item)"></el-image>
+          <el-image :src="item.photo||backgroundImg" alt="背景" class="background" fit="cover" lazy
+            v-loading="item.loading[EWaterFallPhotoType.photo]" @load="onImageLoad(item,EWaterFallPhotoType.photo)"
+            @error="onBackgroundImageError(item)"></el-image>
           <div class="shade"></div>
-          <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy></el-image>
+          <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy
+            v-loading="item.loading[EWaterFallPhotoType.icon]" @load="onImageLoad(item,EWaterFallPhotoType.icon)"></el-image>
           <span v-show="!item.loading">{{ item.text }}</span>
           <el-tooltip class="box-item" effect="dark" placement="top-start">
             <template #content>{{ item.note }}</template>
@@ -339,6 +366,7 @@ onMounted(async () => {
         transition: all 0.5s ease;
         border-radius: 5px;
         overflow: hidden;
+
         &:hover {
           cursor: pointer;
           transform: scale(1.1);

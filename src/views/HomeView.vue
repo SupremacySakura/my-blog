@@ -25,7 +25,7 @@ marked.setOptions({
   breaks: true // 支持换行符
 })
 //导入类型
-import type { iLabelItem,iInformation } from '@/interface'
+import type { iLabelItem, iInformation } from '@/types'
 //开始前页面dom
 const homeBox = useTemplateRef('homeBox')
 //开始后页面dom
@@ -115,6 +115,9 @@ const handleGetMyInformation = async () => {
   const res = await getMyInformation()
   if (res.data.code === 200) {
     myInformation.value = res.data.data
+    if (myInformation.value) {
+      myInformation.value.loading = true
+    }
     homeArticleHTML.value = await marked(res.data.data.content)
   }
 }
@@ -140,15 +143,24 @@ const myInformation = ref<iInformation>()
  * 处理头像加载失败
  */
 const onError = () => {
-  if(myInformation.value){
+  if (myInformation.value) {
     myInformation.value.userHeadPortrait = yxzq
   }
+}
+/**
+ * 图片加载完成
+ */
+const onImageLoad = () => {
+  if (myInformation.value) {
+    myInformation.value.loading = false
+  }
+
 }
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
   //初始化
-  try{
+  try {
     await getANum()
     await getUsingTime()
     await handleGetMyInformation()
@@ -170,10 +182,10 @@ onMounted(async () => {
         }
       }
     }, 1000)
-  }catch(error){
+  } catch (error) {
     ElMessage.error('加载资源失败')
     console.log(error)
-  }finally{
+  } finally {
     nextTick(() => {
       setTimeout(() => {
         loadingInstance.close()
@@ -202,7 +214,8 @@ onUnmounted(() => {
     <div class="myBox" ref="myBox" v-show="_pageStart">
       <section class="label">
         <ul>
-          <li v-for="item of labelList" :key="item.id" :style="{ color: item.color, backgroundColor: item.backgroundColor }">
+          <li v-for="item of labelList" :key="item.id"
+            :style="{ color: item.color, backgroundColor: item.backgroundColor }">
             {{ item.text }}</li>
         </ul>
       </section>
@@ -217,8 +230,9 @@ onUnmounted(() => {
           <!-- 个人信息 -->
           <section class="user">
             <div>
-              <el-image :src="myInformation?.userHeadPortrait" alt="头像" class="custom-image" fit="cover" :preview-src-list="[yxzq]"
-                hide-on-click-modal @error="onError()"/>
+              <el-image :src="myInformation?.userHeadPortrait" alt="头像" class="custom-image" fit="cover"
+                :preview-src-list="[yxzq]" hide-on-click-modal @error="onError()" v-loading="myInformation?.loading"
+                @load="onImageLoad()" />
               <span>{{ myInformation?.name || '余心知秋' }}</span>
               <p>{{ myInformation?.introduce || '耗尽' }}</p>
               <span>{{ myInformation?.identity || '前端工程师' }}</span>
@@ -255,6 +269,7 @@ onUnmounted(() => {
   width: 100%;
   min-height: 100vh;
   background-color: @-primary-background-color;
+
   .background-img {
     width: 100%;
     height: 100vh;

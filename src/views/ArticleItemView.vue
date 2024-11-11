@@ -20,7 +20,7 @@ import { ElLoading } from 'element-plus'
 import { useAssetStore } from '@/stores/asset'
 const { _optionsWhite } = useAssetStore()
 //导入类型
-import type { iArticleItem } from '@/interface'
+import type { iArticleItem } from '@/types'
 //文章
 const article = ref<iArticleItem>()
 //文章dom

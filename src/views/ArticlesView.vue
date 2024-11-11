@@ -19,7 +19,8 @@ const { _options, _optionsWhite } = useAssetStore()
 import { useArticlesStore } from '@/stores/articles'
 const { _setArticlesList } = useArticlesStore()
 //导入类型
-import type { iArticleItem } from '@/interface'
+import type { iArticleItem } from '@/types'
+import { EArticlePhotoType } from '@/types'
 //文章数组
 const articlesList = ref<iArticleItem[]>([])
 /**
@@ -29,14 +30,9 @@ const handleGetArticles = async () => {
   const res = await getArticles()
   if (+res.data.code === 200) {
     articlesList.value = [...articlesList.value, ...res.data.data]
-    //处理空图片
+    //处理数据
     articlesList.value.forEach((item) => {
-      if (!item.userHeadPortrait) {
-        item.userHeadPortrait = yxzq
-      }
-      if (!item.cover) {
-        item.cover = test1
-      }
+      item.loading = [true, true]
     })
     _setArticlesList(articlesList.value)
   }
@@ -80,11 +76,21 @@ const onError = (item: iArticleItem, type: ErrorImage) => {
   }
 }
 /**
- * 改变文章图片加载状态
- * @param item 接收一个文章类
+ * 
+ * @param item 文章类
+ * @param type 文章类型
  */
-const onImageLoad = (item: iArticleItem) => {
-  item.loading = false
+const onImageLoad = (item: iArticleItem, type: EArticlePhotoType) => {
+  switch (type){
+    case EArticlePhotoType.userHeadPortrait:
+      item.loading[EArticlePhotoType.userHeadPortrait] = false
+      break
+    case EArticlePhotoType.cover:
+      item.loading[EArticlePhotoType.cover] = false
+      break
+    default:
+      break
+  }
 }
 onMounted(async () => {
   //初始化
@@ -112,15 +118,17 @@ onMounted(async () => {
     <section class="leftSection">
       <section class="card" v-for="(item, index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
-          <el-image :src="item.cover" alt="封面" class="cover" fit="cover" lazy @error="onError(item, ErrorImage.Cover)"
-            v-loading="item.loading" element-loading-background="rgba(122, 122, 122, 0.8)"
-            @load="onImageLoad(item)"></el-image>
+          <el-image :src="item.cover||test1" alt="封面" class="cover" fit="cover" lazy @error="onError(item, ErrorImage.Cover)"
+            v-loading="item.loading[EArticlePhotoType.cover]" element-loading-background="rgba(122, 122, 122, 0.8)"
+            @load="onImageLoad(item, EArticlePhotoType.cover)"></el-image>
         </div>
         <div class="info">
           <h2>{{ item.head }}</h2>
           <span class="abstract">{{ item.digest }}</span>
           <div class="author">
-            <img :src="item.userHeadPortrait" alt="" @error="onError(item, ErrorImage.UserHeadPortrait)">
+            <el-image :src="item.userHeadPortrait||yxzq" alt="" @error="onError(item, ErrorImage.UserHeadPortrait)"
+              class="userHeadPortrait" lazy v-loading="item.loading[EArticlePhotoType.userHeadPortrait]"
+              @load="onImageLoad(item, EArticlePhotoType.userHeadPortrait)" />
             <span>{{ item.name }}</span>
             <time>{{ item.time }}</time>
           </div>
@@ -219,7 +227,7 @@ onMounted(async () => {
           display: flex;
           align-items: center;
 
-          img {
+          .userHeadPortrait {
             width: 50px;
             height: 50px;
             border-radius: 50px;

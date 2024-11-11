@@ -3,7 +3,7 @@ import { ref } from 'vue'
 //导入pinia相关api
 import { defineStore } from 'pinia'
 //导入类型
-import type { iArticleItem } from '@/interface'
+import type { iArticleItem } from '@/types'
 
 export const useArticlesStore = defineStore('articles', () => {
   const _articlesList = ref<iArticleItem[]>([])

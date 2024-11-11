@@ -11,7 +11,7 @@ import user from '@/assets/user.png'
 //导入friends相关接口
 import { getFriends } from '@/services/apis/friends'
 //导入类型
-import type { iFriendItem } from '@/interface'
+import type { iFriendItem } from '@/types'
 //朋友列表
 const friendsList = ref<iFriendItem[]>([])
 /**
@@ -28,6 +28,9 @@ const handleGetFriends = async () => {
   const res = await getFriends()
   if (res.data.code === 200) {
     friendsList.value = res.data.data
+    friendsList.value.forEach((item) => {
+      item.loading = true
+    })
   }
 }
 //公告
@@ -45,6 +48,13 @@ const aboutList = ref([
  */
 const handleGoPage = (item: iFriendItem) => {
   window.open(item.url, '_blank')
+}
+/**
+ * 图片加载完成
+ * @param item 朋友类
+ */
+const onImageLoad = (item: iFriendItem) => {
+  item.loading = false
 }
 onMounted(async () => {
   //初始化
@@ -71,7 +81,8 @@ onMounted(async () => {
       <h2>友链站点</h2>
       <ul class="cardList">
         <li v-for="item of friendsList" :key="item.id" class="cardItem" @click="handleGoPage(item)">
-          <el-image :src="item.userHeadPortrait" alt="" fit="cover" lazy class="user" @error="onError(item)" />
+          <el-image :src="item.userHeadPortrait||user" alt="头像" fit="cover" lazy class="user" @error="onError(item)"
+            v-loading="item.loading" @load="onImageLoad(item)" />
           <div class="info">
             <h4>{{ item.name }}</h4>
             <span>{{ item.label }}</span>

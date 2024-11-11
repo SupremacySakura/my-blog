@@ -19,7 +19,8 @@ const { _userHeadPortrait, _name, _address, _setInfo } = useMessagesStore()
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
 //导入类型
-import type { iMessageItem } from '@/interface'
+import type { iMessageItem } from '@/types'
+import { EMessagePhotoType } from '@/types'
 //定义评论数组
 const messagesList = ref<iMessageItem[]>([])
 /**
@@ -29,6 +30,9 @@ const handleGetMessages = async () => {
   const res = await getMessages()
   if (+res.data.code === 200) {
     messagesList.value = res.data.data
+    messagesList.value.forEach((item) => {
+      item.loading = [true, true]
+    })
     //手动触发弹幕动画更新
     count.value++
   }
@@ -142,6 +146,23 @@ watchEffect(() => {
 const onError = (item: iMessageItem) => {
   item.userHeadPortrait = user
 }
+/**
+ * 图片加载完成
+ * @param item 文章类
+ * @param type 图片类型
+ */
+const onImageLoad = (item: iMessageItem, type: EMessagePhotoType) => {
+  switch (type) {
+    case EMessagePhotoType.Danmu:
+      item.loading[EMessagePhotoType.Danmu] = false
+      break
+    case EMessagePhotoType.Message:
+      item.loading[EMessagePhotoType.Message] = false
+      break
+    default:
+      break
+  }
+}
 onMounted(async () => {
   const loadingInstance = ElLoading.service(_options)
   //初始化
@@ -170,8 +191,9 @@ onMounted(async () => {
         <h4>欢迎留言,你可以在这里畅所欲言</h4>
       </div>
       <div class="showItem" v-for="item of messagesList" ref="showList" :key="item.id">
-        <el-image :src="item.userHeadPortrait" alt="头像" class="custom-image" fit="cover" lazy
-          @error="onError(item)"></el-image>
+        <el-image :src="item.userHeadPortrait||user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
+          v-loading="item.loading[EMessagePhotoType.Danmu]"
+          @load="onImageLoad(item, EMessagePhotoType.Danmu)"></el-image>
         <span class="name">{{ item.name }}:</span>
         <span class="content">{{ item.content }}</span>
       </div>
@@ -193,8 +215,9 @@ onMounted(async () => {
       </div>
       <div class="messagesItem" v-for="item of messagesList" :key="item.id">
         <section class="leftSection">
-          <el-image :src="item.userHeadPortrait" alt="头像" class="custom-image" fit="cover" lazy
-            @error="onError(item)"></el-image>
+          <el-image :src="item.userHeadPortrait||user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
+            v-loading="item.loading[EMessagePhotoType.Message]"
+            @load="onImageLoad(item, EMessagePhotoType.Message)"></el-image>
         </section>
         <section class="rightSection">
           <h4>{{ item.name }}</h4>

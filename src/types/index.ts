@@ -8,8 +8,14 @@ interface iArticleItem {
   name: string,
   time: string,
   cover: string,
-  loading: boolean,
+  loading: boolean[],  // 第一项表示头像加载,第二项表示封面加载
 }
+//声明加载文章图片枚举
+enum EArticlePhotoType {
+  userHeadPortrait = 0,
+  cover = 1
+}
+
 //友链类型接口
 interface iFriendItem {
   id: number,
@@ -17,7 +23,9 @@ interface iFriendItem {
   name: string,
   label: string,
   url: string,
+  loading:boolean,
 }
+
 //标签类型接口
 interface iLabelItem {
   id: number,
@@ -25,6 +33,7 @@ interface iLabelItem {
   color: string,
   backgroundColor: string,
 }
+
 //个人信息类型接口
 interface iInformation {
   id: number,
@@ -33,8 +42,10 @@ interface iInformation {
   introduce: string,
   identity: string,
   address: string,
-  userHeadPortrait:string,
+  userHeadPortrait: string,
+  loading:boolean,
 }
+
 //评论类型接口
 interface iMessageItem {
   id: number,
@@ -43,7 +54,13 @@ interface iMessageItem {
   content: string,
   time: string,
   address: string,
+  loading:boolean[],//第一项表示弹幕,第二项表示留言
 }
+enum EMessagePhotoType {
+  Danmu = 0,
+  Message = 1,
+}
+
 //朋友圈类型接口
 interface iMomentItem {
   id: number,
@@ -51,8 +68,9 @@ interface iMomentItem {
   userHeadPortrait: string,
   name: string,
   content: string,
-
+  loading:boolean,
 }
+
 //技术栈类型接口
 interface iWaterFallItem {
   id: number,
@@ -62,13 +80,19 @@ interface iWaterFallItem {
   height: number,
   icon: string,
   note: string,
-  loading:boolean,
+  loading: boolean[],//第一项表示背景图片,第二项表示图标
 }
+enum EWaterFallPhotoType {
+  photo = 0,
+  icon = 1
+}
+
 //列数类型接口
 interface iRowItem {
   id: number,
   height: number,
 }
+
 export type {
   iArticleItem,
   iFriendItem,
@@ -78,4 +102,9 @@ export type {
   iMomentItem,
   iWaterFallItem,
   iRowItem,
+}
+export {
+  EArticlePhotoType,
+  EWaterFallPhotoType,
+  EMessagePhotoType,
 }
