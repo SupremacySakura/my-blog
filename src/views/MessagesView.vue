@@ -271,7 +271,7 @@ onMounted(async () => {
 
 <style lang="less" scoped>
 @standardWidth: 1600px * 0.8px;
-
+@screen-midMobile: 1200px;
 .messagesBox {
   width: 100%;
   box-sizing: border-box;
@@ -285,7 +285,7 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   background-color: rgba(247, 247, 247, 1);
-
+  //上部留言板
   .board {
     width: @standardWidth;
     height: 900px * 0.8;
@@ -293,7 +293,9 @@ onMounted(async () => {
     color: white;
     margin-bottom: 10px;
     overflow: hidden;
-
+    @media screen and (max-width:@screen-midMobile) {
+      width: 700px;
+    }
     .backgroundImage {
       width: 100%;
       height: 100%;
@@ -339,7 +341,7 @@ onMounted(async () => {
       }
     }
   }
-
+  //留言发布区
   .messagesPublish {
     width: @standardWidth;
     height: 350px;
@@ -349,7 +351,9 @@ onMounted(async () => {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
-
+    @media screen and (max-width:@screen-midMobile) {
+        width: 700px;
+      }
     textarea {
       width: 98%;
       height: 200px;
@@ -370,10 +374,12 @@ onMounted(async () => {
       border: none;
     }
   }
-
+  //评论展示区
   .messagesShow {
     width: @standardWidth;
-
+    @media screen and (max-width:@screen-midMobile) {
+        width: 700px;
+      }
     .showTop {
       margin-bottom: 10px;
     }

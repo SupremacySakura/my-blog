@@ -83,17 +83,14 @@ const tabBarList: iTabBarItem[] = [
   position: fixed;
   top: 0;
   z-index: 2;
-
   .leftSection {
     font-size: 24px;
     font-weight: 600;
     padding: 10px;
   }
-
   .rightSection {
     ul {
       display: flex;
-
       li {
         width: 80px;
         height: 40px;
@@ -101,12 +98,10 @@ const tabBarList: iTabBarItem[] = [
         line-height: 40px;
         margin: 10px;
         border-radius: 5px;
-
         &:hover {
           background-color: rgba(29, 30, 31, 0.2);
         }
       }
-
       .active {
         background-color: rgba(29, 30, 31, 0.1);
       }

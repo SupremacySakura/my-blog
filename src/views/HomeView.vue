@@ -212,6 +212,7 @@ onUnmounted(() => {
     </div>
     <!-- 开始后页面 -->
     <div class="myBox" ref="myBox" v-show="_pageStart">
+      <!-- 左侧标签 -->
       <section class="label">
         <ul>
           <li v-for="item of labelList" :key="item.id"
@@ -219,13 +220,13 @@ onUnmounted(() => {
             {{ item.text }}</li>
         </ul>
       </section>
-      <!-- 左边文章 -->
+      <!-- 中间文章 -->
       <section class="main">
         <div ref="homeArticle" class="markdown-body">
         </div>
       </section>
       <!-- 右边简介 -->
-      <section class="bottomSection">
+      <section class="rightSection">
         <div class="about">
           <!-- 个人信息 -->
           <section class="user">
@@ -247,7 +248,7 @@ onUnmounted(() => {
             </div>
             <div>
               <h4>本站运行时间</h4>
-              <time>{{ daysDiff + 'day' + hoursDiff + 'hour' + minutesDiff + 'min' + secondsDiff + 's' }}</time>
+              <time>{{ daysDiff + '天' + hoursDiff + '小时' + minutesDiff + '分钟' + secondsDiff + '秒' }}</time>
             </div>
             <div>
               <h4>访客数量</h4>
@@ -264,7 +265,7 @@ onUnmounted(() => {
 <style lang="less" scoped>
 @-primary-background-color: rgba(247, 247, 247, 1);
 @-primary-background-fill-color: rgba(255, 255, 255, 1);
-
+@screen-midMobile:1200px;
 .box {
   width: 100%;
   min-height: 100vh;
@@ -319,7 +320,7 @@ onUnmounted(() => {
     justify-content: center;
     padding-top: 10px;
     position: relative;
-
+    //左侧
     .label {
       width: 50px;
       min-height: 100vh;
@@ -342,7 +343,7 @@ onUnmounted(() => {
         }
       }
     }
-
+    //中间
     .main {
       width: 60%;
       min-width: 600px;
@@ -353,7 +354,7 @@ onUnmounted(() => {
     }
 
     //右侧
-    .bottomSection {
+    .rightSection {
       width: 450px;
       height: 900px;
       display: flex;
@@ -362,7 +363,9 @@ onUnmounted(() => {
       align-items: center;
       position: sticky;
       top: 20px;
-
+      @media screen and (max-width:@screen-midMobile) {
+        width: 250px;
+      }
       .about {
         width: 100%;
         height: 90%;
@@ -393,6 +396,9 @@ onUnmounted(() => {
               /* 上侧阴影 */
               inset 0px -4px 8px rgba(255, 255, 255, 0.5);
             /* 下侧高光 */
+            @media screen and (max-width:@screen-midMobile) {
+                width: 220px;
+              }
           }
 
           .custom-image {
@@ -418,7 +424,7 @@ onUnmounted(() => {
             font-size: 12px;
           }
         }
-
+        //右侧下部信息
         .info {
           width: 410px;
           height: 310px;
@@ -426,7 +432,10 @@ onUnmounted(() => {
           grid-template-columns: 200px 200px;
           grid-template-rows: 150px 150px;
           gap: 10px;
-
+          @media screen and (max-width:@screen-midMobile) {
+              width: 220px;
+              grid-template-columns: 100px 100px;
+            }
           .number {
             grid-column-start: 1;
             grid-column-end: 3;
@@ -453,7 +462,9 @@ onUnmounted(() => {
             justify-content: space-around;
 
             time {
-              white-space: wrap;
+              width: 100%;
+              white-space: normal;
+              overflow: hidden;
             }
           }
         }
