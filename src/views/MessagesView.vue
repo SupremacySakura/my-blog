@@ -41,7 +41,6 @@ const handleGetMessages = async () => {
         item.loading = [true, true]
       }
     })
-    console.log(messagesList.value.length)
     //手动触发弹幕动画更新
     count.value++
   }
@@ -129,10 +128,11 @@ watchEffect(() => {
         showList.value.map((item, index) => {
           if (item.getAnimations().length === 0) {
             item.style.top = `${random(0, 670)}px`
+            item.style.right = `${-item.offsetWidth}px`
             const animateMessage = () => {
               item.animate([
                 { transform: 'translateX(0)' }, // 起始状态
-                { transform: 'translateX(-1480px)' } // 结束状态
+                { transform: `translateX(-${(board.value as HTMLElement).offsetWidth+item.offsetWidth}px)` } // 结束状态
               ], {
                 duration: random(6000, 12000),
                 iterations: 1 // 无限循环
@@ -344,7 +344,6 @@ onMounted(async () => {
       position: absolute;
       z-index: 1;
       background-color: rgba(62, 62, 63, 0.5);
-      right: -200px;
 
       .custom-image {
         width: 50px;
