@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef,onMounted } from 'vue'
+import { ref, useTemplateRef,onMounted,nextTick } from 'vue'
 //导入vue路由相关api
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -100,6 +100,17 @@ const tabRight = () => {
 onMounted(()=>{
   //初始化
   nowPath.value = _nowPath
+  nextTick(()=>{
+    setTimeout(()=>{
+      if (container.value && containerItem.value) {
+        const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
+        container.value.scrollBy({
+          left: index * 100, // 向左滚动指定的像素
+          behavior: 'smooth', // 添加平滑滚动效果
+        })
+      }
+    },0)
+  })
 })
 </script>
 

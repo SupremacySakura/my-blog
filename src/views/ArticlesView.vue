@@ -250,7 +250,7 @@ onMounted(async () => {
           position: relative;
           z-index: 1;
           color: rgba(255, 255, 255, 1);
-          ;
+          box-sizing: border-box;
         }
 
         .abstract {
