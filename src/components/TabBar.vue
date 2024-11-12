@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 //导入vue路由相关api
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -26,6 +26,7 @@ interface iTabBarItem {
  * @param item 接收一个iTabBarItem类型
  */
 const gotoPage = (item: iTabBarItem) => {
+  nowPath.value = item
   if (item.path !== '/home') {
     _setPageStart(true)
   } else {
@@ -65,14 +66,34 @@ const tabBarList: iTabBarItem[] = [
 const container = useTemplateRef('container')
 //子盒子
 const containerItem = useTemplateRef('containerItem')
+//存储当前路由
+const nowPath = ref<iTabBarItem>({
+  id: 1,
+  text: '首页',
+  path: '/home'
+},)
 const tabLeft = () => {
   if (container.value && containerItem.value) {
     container.value.scrollLeft -= 100
+    if (nowPath.value != tabBarList[0]) {
+      const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
+      const gotoItem = tabBarList[index - 1]
+      if (gotoItem) {
+        gotoPage(gotoItem)
+      }
+    }
   }
 }
 const tabRight = () => {
   if (container.value && containerItem.value) {
     container.value.scrollLeft += 100
+    if (nowPath.value != tabBarList[tabBarList.length]) {
+      const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
+      const gotoItem = tabBarList[index + 1]
+      if (gotoItem) {
+        gotoPage(gotoItem)
+      }
+    }
   }
 }
 </script>
@@ -108,10 +129,15 @@ const tabRight = () => {
   position: fixed;
   top: 0;
   z-index: 2;
+
   .leftSection {
     font-size: 24px;
     font-weight: 600;
     padding: 10px;
+
+    @media screen and (max-width:@screen-small-mobile) {
+      font-size: 20px;
+    }
   }
 
   .rightSection {
@@ -121,6 +147,7 @@ const tabRight = () => {
     @media screen and (max-width:@screen-small-mobile) {
       width: 200px;
     }
+
     .changeBtn {
       display: none;
 

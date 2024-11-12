@@ -17,6 +17,7 @@
 </template>
 
 <style lang="less" scoped>
+@screen-small-mobile: 750px;
 .bottomBox {
   width: 100vw;
   box-sizing: border-box;
@@ -28,12 +29,19 @@
   background-color: rgba(255,255,255,1);
   justify-content: space-around;
   padding: 10px;
+  @media screen and (max-width:@screen-small-mobile) {
+      height: 60px;
+    }
   .leftSection{
     width: 500px;
     height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    @media screen and (max-width:@screen-small-mobile) {
+      height: 40px;
+      font-size: 12px;
+    }
     .beian{
       width: 250px;
       height: 26px;
@@ -43,6 +51,9 @@
       align-items: center;
       background-color: skyblue;
       overflow: hidden;
+      @media screen and (max-width:@screen-small-mobile) {
+         width: 200px;
+        }
       span{
         height: 100%;
         line-height: 26px;
