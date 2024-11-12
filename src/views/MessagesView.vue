@@ -413,7 +413,7 @@ onMounted(async () => {
 
     .messagesItem {
       width: 100%;
-      height: 100px;
+      min-height: 100px;
       display: flex;
       box-sizing: border-box;
       padding: 10px;
@@ -438,7 +438,13 @@ onMounted(async () => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-
+        p{
+          width: 90%;
+          word-break: break-word;
+          white-space: normal;
+          overflow: hidden;
+            /* 长单词或字符串在必要时换行 */
+        }
         div {
           display: flex;
           justify-content: space-between;
@@ -448,6 +454,15 @@ onMounted(async () => {
         time {
           font-size: 12px;
           color: rgb(166.2, 168.6, 173.4);
+        }
+        address{
+          width: 120px;
+          white-space: normal;
+            /* 允许文本自动换行 */
+          word-wrap: break-word;
+            /* 允许长单词自动换行 */
+            overflow-wrap: break-word;
+            /* 允许长文本自动换行 */
         }
       }
     }
