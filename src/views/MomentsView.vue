@@ -213,7 +213,7 @@ onMounted(async () => {
           <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy
             v-loading="item.loading[EWaterFallPhotoType.icon]"
             @load="onImageLoad(item, EWaterFallPhotoType.icon)"></el-image>
-          <span v-show="!item.loading">{{ item.text }}</span>
+          <span v-show="item.loading.every(item => item === false)">{{ item.text }}</span>
           <el-tooltip class="box-item" effect="dark" placement="top-start">
             <template #content>{{ item.note }}</template>
             <el-button>了解</el-button>
