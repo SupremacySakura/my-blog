@@ -265,7 +265,10 @@ onUnmounted(() => {
 <style lang="less" scoped>
 @-primary-background-color: rgba(247, 247, 247, 1);
 @-primary-background-fill-color: rgba(255, 255, 255, 1);
-@screen-midMobile:1200px;
+@screen-middle-mobile: 1200px;
+@screen-small-mobile: 750px;
+@screen-mini-mobile: 410px;
+
 .box {
   width: 100%;
   min-height: 100vh;
@@ -274,15 +277,12 @@ onUnmounted(() => {
   .background-img {
     width: 100%;
     height: 100vh;
-    min-height: 800px;
     position: absolute;
   }
 
   .homeBox {
     width: 100%;
-    min-width: 750px;
     height: 100vh;
-    min-height: 450px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -314,12 +314,16 @@ onUnmounted(() => {
 
   .myBox {
     width: 100%;
-    min-width: 750px;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     padding-top: 10px;
     position: relative;
+
+    @media screen and (max-width:@screen-small-mobile) {
+      flex-wrap: wrap;
+    }
+
     //左侧
     .label {
       width: 50px;
@@ -343,14 +347,17 @@ onUnmounted(() => {
         }
       }
     }
+
     //中间
     .main {
       width: 60%;
-      min-width: 600px;
       min-height: 100vh;
       background-color: @-primary-background-fill-color;
       padding: 10px;
       padding-top: 90px;
+      @media screen and (max-width:@screen-small-mobile) {
+          width: 70vw;
+        }
     }
 
     //右侧
@@ -363,9 +370,15 @@ onUnmounted(() => {
       align-items: center;
       position: sticky;
       top: 20px;
-      @media screen and (max-width:@screen-midMobile) {
+
+      @media screen and (max-width:@screen-middle-mobile) {
         width: 250px;
       }
+
+      @media screen and (max-width:@screen-small-mobile) {
+        width: 450px;
+      }
+
       .about {
         width: 100%;
         height: 90%;
@@ -395,10 +408,15 @@ onUnmounted(() => {
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
               /* 上侧阴影 */
               inset 0px -4px 8px rgba(255, 255, 255, 0.5);
+
             /* 下侧高光 */
-            @media screen and (max-width:@screen-midMobile) {
-                width: 220px;
-              }
+            @media screen and (max-width:@screen-middle-mobile) {
+              width: 220px;
+            }
+
+            @media screen and (max-width:@screen-small-mobile) {
+              width: 90vw;
+            }
           }
 
           .custom-image {
@@ -424,6 +442,7 @@ onUnmounted(() => {
             font-size: 12px;
           }
         }
+
         //右侧下部信息
         .info {
           width: 410px;
@@ -432,10 +451,17 @@ onUnmounted(() => {
           grid-template-columns: 200px 200px;
           grid-template-rows: 150px 150px;
           gap: 10px;
-          @media screen and (max-width:@screen-midMobile) {
-              width: 220px;
-              grid-template-columns: 100px 100px;
-            }
+
+          @media screen and (max-width:@screen-middle-mobile) {
+            width: 220px;
+            grid-template-columns: 100px 100px;
+          }
+
+          @media screen and (max-width:@screen-small-mobile) {
+            width: 90vw;
+            grid-template-columns: 49% 49%;
+          }
+
           .number {
             grid-column-start: 1;
             grid-column-end: 3;

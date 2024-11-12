@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue'
 //导入vue路由相关api
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -9,6 +10,11 @@ import { useAssetStore } from '@/stores/asset'
 const { _setPageStart } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
+//导入ElementPlus相关内容
+import {
+  ArrowLeft,
+  ArrowRight,
+} from '@element-plus/icons-vue'
 //路由接口
 interface iTabBarItem {
   id: number,
@@ -20,9 +26,9 @@ interface iTabBarItem {
  * @param item 接收一个iTabBarItem类型
  */
 const gotoPage = (item: iTabBarItem) => {
-  if (item.path !== '/home'){
+  if (item.path !== '/home') {
     _setPageStart(true)
-  }else{
+  } else {
     _setPageStart(false)
   }
   router.push(item.path)
@@ -50,33 +56,52 @@ const tabBarList: iTabBarItem[] = [
     path: '/messages'
   },
   {
-    id:5,
-    text:'朋友们',
-    path:'/friends'
+    id: 5,
+    text: '朋友们',
+    path: '/friends'
   }
 ]
+//父盒子
+const container = useTemplateRef('container')
+//子盒子
+const containerItem = useTemplateRef('containerItem')
+const tabLeft = () => {
+  if (container.value && containerItem.value) {
+    container.value.scrollLeft -= 100
+  }
+}
+const tabRight = () => {
+  if (container.value && containerItem.value) {
+    container.value.scrollLeft += 100
+  }
+}
 </script>
 
 <template>
-  <div class="tabBarBox" :class="{'first-page':_pageStart,'other-page':!_pageStart}">
+  <div class="tabBarBox" :class="{ 'first-page': _pageStart, 'other-page': !_pageStart }">
     <section class="leftSection">
       <span>余心知秋的博客</span>
     </section>
     <section class="rightSection">
-      <ul>
+      <el-button type="primary" :icon="ArrowLeft" circle class="changeBtn" @click="tabLeft()" />
+      <el-button type="primary" :icon="ArrowRight" circle class="changeBtn" @click="tabRight()" />
+      <ul ref="container">
         <li v-for="item of tabBarList" :key="item.id" @click="gotoPage(item)"
-          :class="{ 'active': route.path === item.path }">{{ item.text }}</li>
+          :class="{ 'active': route.path === item.path }" ref="containerItem">{{ item.text }}</li>
       </ul>
     </section>
   </div>
 </template>
 
 <style lang="less" scoped>
+@screen-small-mobile: 750px;
+@screen-mini-mobile: 500px;
+
 .tabBarBox {
-  width: 100%;
-  min-width: 750px;
+  width: 100vw;
   height: 80px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);/* 添加阴影 */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  /* 添加阴影 */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -88,30 +113,56 @@ const tabBarList: iTabBarItem[] = [
     font-weight: 600;
     padding: 10px;
   }
+
   .rightSection {
+    display: flex;
+    align-items: center;
+
+    @media screen and (max-width:@screen-small-mobile) {
+      width: 200px;
+    }
+    .changeBtn {
+      display: none;
+
+      @media screen and (max-width:@screen-small-mobile) {
+        display: block;
+      }
+    }
+
     ul {
       display: flex;
+      scroll-behavior: smooth;
+
+      @media screen and (max-width:@screen-small-mobile) {
+        width: 100px;
+        overflow-x: auto;
+      }
+
       li {
-        width: 80px;
+        min-width: 80px;
         height: 40px;
         text-align: center;
         line-height: 40px;
         margin: 10px;
         border-radius: 5px;
+
         &:hover {
           background-color: rgba(29, 30, 31, 0.2);
         }
       }
+
       .active {
         background-color: rgba(29, 30, 31, 0.1);
       }
     }
   }
 }
-.first-page{
+
+.first-page {
   background-color: rgba(255, 255, 255, 1);
 }
-.other-page{
+
+.other-page {
   background-color: rgba(255, 255, 255, 0.1);
 }
 </style>

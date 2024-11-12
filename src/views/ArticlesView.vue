@@ -81,7 +81,7 @@ const onError = (item: iArticleItem, type: ErrorImage) => {
  * @param type 文章类型
  */
 const onImageLoad = (item: iArticleItem, type: EArticlePhotoType) => {
-  switch (type){
+  switch (type) {
     case EArticlePhotoType.userHeadPortrait:
       item.loading[EArticlePhotoType.userHeadPortrait] = false
       break
@@ -118,15 +118,17 @@ onMounted(async () => {
     <section class="leftSection">
       <section class="card" v-for="(item, index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
-          <el-image :src="item.cover||test1" alt="封面" class="cover" fit="cover" lazy @error="onError(item, ErrorImage.Cover)"
-            v-loading="item.loading[EArticlePhotoType.cover]" element-loading-background="rgba(122, 122, 122, 0.8)"
+          <el-image :src="item.cover || test1" alt="封面" class="cover" fit="cover" lazy
+            @error="onError(item, ErrorImage.Cover)" v-loading="item.loading[EArticlePhotoType.cover]"
+            element-loading-background="rgba(122, 122, 122, 0.8)"
             @load="onImageLoad(item, EArticlePhotoType.cover)"></el-image>
         </div>
+        <div class="block"></div>
         <div class="info">
           <h2>{{ item.head }}</h2>
           <span class="abstract">{{ item.digest }}</span>
           <div class="author">
-            <el-image :src="item.userHeadPortrait||yxzq" alt="" @error="onError(item, ErrorImage.UserHeadPortrait)"
+            <el-image :src="item.userHeadPortrait || yxzq" alt="" @error="onError(item, ErrorImage.UserHeadPortrait)"
               class="userHeadPortrait" lazy v-loading="item.loading[EArticlePhotoType.userHeadPortrait]"
               @load="onImageLoad(item, EArticlePhotoType.userHeadPortrait)" />
             <span>{{ item.name }}</span>
@@ -139,8 +141,9 @@ onMounted(async () => {
 </template>
 
 <style lang="less" scoped>
+@screen-middle-mobile: 960px;
+
 .articlesBox {
-  min-width: 750px;
   width: 100%;
   min-height: 100vh;
   padding-top: 80px;
@@ -158,17 +161,11 @@ onMounted(async () => {
     width: 900px;
     min-height: 100vh;
     background-color: rgba(255, 255, 255, 1);
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-
-    /* IE 和 Edge */
-    &::-webkit-scrollbar {
-      display: none;
-      /* Chrome、Safari、Edge */
-    }
-
     box-sizing: border-box;
+
+    @media screen and (max-width:@screen-middle-mobile) {
+      width: 95%;
+    }
 
     .card {
       width: 800px;
@@ -191,6 +188,10 @@ onMounted(async () => {
       transition: transform 0.8s ease;
       margin-bottom: 30px;
 
+      @media screen and (max-width:@screen-middle-mobile) {
+        width: 90%;
+      }
+
       &:hover {
         transform: scale(1.1);
       }
@@ -200,13 +201,30 @@ onMounted(async () => {
         height: 180px;
         border-radius: 8px;
 
+        @media screen and (max-width:@screen-middle-mobile) {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: 0;
+        }
+
         .cover {
           width: 100%;
           height: 100%;
           border-radius: 8px;
         }
       }
-
+      .block{
+        display: none;
+        @media screen and (max-width:@screen-middle-mobile) {
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: absolute;
+            z-index: 0;
+            background-color: rgba(0,0,0,0.5);
+        }
+      }
       .info {
         width: 360px;
         height: 100%;
@@ -215,6 +233,14 @@ onMounted(async () => {
         justify-content: space-around;
         padding: 10px;
         color: rgb(0, 0, 0);
+
+        @media screen and (max-width:@screen-middle-mobile) {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          z-index: 1;
+          color: rgba(255,255,255,1);;
+        }
 
         .abstract {
           width: 100%;

@@ -275,7 +275,6 @@ onMounted(async () => {
 .messagesBox {
   width: 100%;
   box-sizing: border-box;
-  min-width: 750px;
   min-height: 100vh;
   padding-top: 100px;
   padding-left: 40px;
@@ -294,7 +293,7 @@ onMounted(async () => {
     margin-bottom: 10px;
     overflow: hidden;
     @media screen and (max-width:@screen-midMobile) {
-      width: 700px;
+      width: 90%;
     }
     .backgroundImage {
       width: 100%;
@@ -352,7 +351,7 @@ onMounted(async () => {
     justify-content: space-between;
     margin-bottom: 20px;
     @media screen and (max-width:@screen-midMobile) {
-        width: 700px;
+        width: 90%;
       }
     textarea {
       width: 98%;
@@ -378,7 +377,7 @@ onMounted(async () => {
   .messagesShow {
     width: @standardWidth;
     @media screen and (max-width:@screen-midMobile) {
-        width: 700px;
+        width: 90%;
       }
     .showTop {
       margin-bottom: 10px;

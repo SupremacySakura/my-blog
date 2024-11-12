@@ -97,6 +97,7 @@ onMounted(async () => {
 </template>
 
 <style lang="less" scoped>
+@screen-middle-mobile: 960px;
 .friendsBox {
   width: 100%;
   min-height: 100vh;
@@ -111,7 +112,9 @@ onMounted(async () => {
     box-sizing: border-box;
     padding: 20px;
     margin-top: 80px;
-
+    @media screen and (max-width:@screen-middle-mobile) {
+      width: 90%;
+    }
     .cardList {
       width: 100%;
       margin-top: 10px;

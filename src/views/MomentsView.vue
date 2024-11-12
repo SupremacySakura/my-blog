@@ -23,7 +23,7 @@ const handleGetMoments = async () => {
   const res = await getMoments()
   if (+res.data.code === 200) {
     momentsList.value = res.data.data
-    momentsList.value.forEach((item)=>{
+    momentsList.value.forEach((item) => {
       item.loading = true
     })
   }
@@ -97,7 +97,7 @@ const setPosition = (children: HTMLElement[], maginLeft: number, width: number, 
     const child = item
     //寻找到高度最小的一项,项这一项添加
     const minItem = rowsList.value.reduce((min, current) => current.height < min.height ? current : min, rowsList.value[0])
-    child.style.left = `${maginLeft * (minItem.id + 1) + width * (minItem.id - 1)}px`
+    child.style.left = `${maginLeft * (minItem.id) + width * (minItem.id - 1)}px`
     child.style.top = `${minItem.height}px`
     rowsList.value[rowsList.value.findIndex(item => item.id === minItem.id)].height += child.offsetHeight + marginTop
   })
@@ -123,23 +123,23 @@ const newWaterFall = () => {
  * @param item 瀑布流类
  * @param photoType 图片类型
  */
-function onImageLoad(item: iWaterFallItem, photoType: EWaterFallPhotoType){
-    switch (photoType) {
-      case EWaterFallPhotoType.icon:
-        item.loading[EWaterFallPhotoType.icon] = false
-        break
-      case EWaterFallPhotoType.photo:
-        item.loading[EWaterFallPhotoType.photo] = false
-        break
-      default:
-        break 
+function onImageLoad(item: iWaterFallItem, photoType: EWaterFallPhotoType) {
+  switch (photoType) {
+    case EWaterFallPhotoType.icon:
+      item.loading[EWaterFallPhotoType.icon] = false
+      break
+    case EWaterFallPhotoType.photo:
+      item.loading[EWaterFallPhotoType.photo] = false
+      break
+    default:
+      break
   }
 }
 /**
  * 朋友圈加载完成
  * @param item 朋友圈类
  */
-function onMomentImageLoad(item:iMomentItem) {
+function onMomentImageLoad(item: iMomentItem) {
   item.loading = false
 }
 /**
@@ -206,12 +206,13 @@ onMounted(async () => {
       <div class="box" ref="waterFallBox">
         <div v-for="item of waterFallList" :key="item.id" class="waterFallItem" :style="{ height: item.height + 'px' }"
           @click="handleOpen(item.src)" ref="waterFallItems">
-          <el-image :src="item.photo||backgroundImg" alt="背景" class="background" fit="cover" lazy
-            v-loading="item.loading[EWaterFallPhotoType.photo]" @load="onImageLoad(item,EWaterFallPhotoType.photo)"
+          <el-image :src="item.photo || backgroundImg" alt="背景" class="background" fit="cover" lazy
+            v-loading="item.loading[EWaterFallPhotoType.photo]" @load="onImageLoad(item, EWaterFallPhotoType.photo)"
             @error="onBackgroundImageError(item)"></el-image>
           <div class="shade"></div>
           <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy
-            v-loading="item.loading[EWaterFallPhotoType.icon]" @load="onImageLoad(item,EWaterFallPhotoType.icon)"></el-image>
+            v-loading="item.loading[EWaterFallPhotoType.icon]"
+            @load="onImageLoad(item, EWaterFallPhotoType.icon)"></el-image>
           <span v-show="!item.loading">{{ item.text }}</span>
           <el-tooltip class="box-item" effect="dark" placement="top-start">
             <template #content>{{ item.note }}</template>
@@ -225,9 +226,12 @@ onMounted(async () => {
 </template>
 
 <style lang="less" scoped>
+@screen-middle-mobile: 960px;
+@screen-small-mobile: 750px;
+
 .momentsBox {
   width: 100%;
-  min-width: 1000px;
+  // min-width: 1000px;
   height: 100vh;
   padding-top: 90px;
   padding-left: 40px;
@@ -239,8 +243,12 @@ onMounted(async () => {
   justify-content: space-between;
   background-color: rgba(247, 247, 247, 1);
 
+  @media screen and (max-width:@screen-middle-mobile) {
+    flex-wrap: wrap;
+    overflow: auto;
+  }
+
   .leftSection {
-    min-width: 750px;
     width: 900px;
     height: 90%;
     box-sizing: border-box;
@@ -251,23 +259,23 @@ onMounted(async () => {
     box-shadow: inset 0px 8px 16px rgba(0, 0, 0, 0.2),
       /* 上侧阴影 */
       inset 0px -8px 16px rgba(255, 255, 255, 0.5);
-    /* 下侧高光 */
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
 
-    /* IE 和 Edge */
-    &::-webkit-scrollbar {
-      display: none;
-      /* Chrome、Safari、Edge */
+    /* 下侧高光 */
+    @media screen and (max-width:@screen-small-mobile) {
+      width: 100%;
+      height: 300px;
     }
 
     .card {
-      width: 750px;
+      width: 100%;
       height: 300px;
       display: grid;
       grid-template-columns: 50px 700px;
       grid-template-rows: 50px 250px;
+
+      @media screen and (max-width:@screen-middle-mobile) {
+          grid-template-columns: 50px auto;
+      }
 
       .point {
         display: flex;
@@ -339,14 +347,11 @@ onMounted(async () => {
     align-items: center;
     overflow-y: auto;
     background-color: rgba(247, 247, 247, 1);
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-
-    /* IE 和 Edge */
-    &::-webkit-scrollbar {
-      display: none;
-      /* Chrome、Safari、Edge */
+    margin-left: 10px;
+    @media screen and (max-width:@screen-middle-mobile) {
+      width: 100%;
+      min-height: 1000px;
+      margin-left: 0px;
     }
 
     .box {

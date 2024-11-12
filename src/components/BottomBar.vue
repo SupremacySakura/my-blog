@@ -19,7 +19,7 @@
 <style lang="less" scoped>
 .bottomBox {
   width: 100%;
-  min-width: 600px;
+  // min-width: 600px;
   height: 80px;
   display: flex;
   justify-content: center;

@@ -2,7 +2,7 @@
 //导入vue相关api
 import { ref, onMounted, useTemplateRef, watchEffect } from 'vue'
 //导入router相关api
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 //导入处理markdown的库
@@ -39,10 +39,10 @@ watchEffect(async () => {
  */
 const handleGoBack = () => {
   const loadingInstance = ElLoading.service(_optionsWhite)
-  setTimeout(()=>{
+  setTimeout(() => {
     router.push('/articles')
     loadingInstance.close()
-  },500)
+  }, 500)
 }
 onMounted(() => {
   //初始化
@@ -62,6 +62,8 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
+@screen-middle-mobile: 960px;
+
 .article-item-box {
   width: 100%;
   min-height: 100vh;
@@ -72,13 +74,22 @@ onMounted(() => {
   display: flex;
   justify-content: center;
 
+  @media screen and (max-width:@screen-middle-mobile) {
+    box-sizing: border-box;
+  }
+
   .article-item {
     width: 900px;
     min-height: 100vh;
     background-color: rgba(255, 255, 255, 1);
     padding: 20px;
+
+    @media screen and (max-width:@screen-middle-mobile) {
+      width: 95%;
+    }
   }
 }
+
 :deep(.markdown-body pre),
 :deep(.markdown-body code) {
   display: block;
