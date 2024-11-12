@@ -75,24 +75,30 @@ const nowPath = ref<iTabBarItem>({
 })
 const tabLeft = () => {
   if (container.value && containerItem.value) {
-    container.value.scrollLeft -= 100
     if (nowPath.value != tabBarList[0]) {
       const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
       const gotoItem = tabBarList[index - 1]
       if (gotoItem) {
         gotoPage(gotoItem)
+        container.value.scrollTo({
+          left: (index-1) * 100, // 向左滚动指定的像素
+          behavior: 'smooth', // 添加平滑滚动效果
+        })
       }
     }
   }
 }
 const tabRight = () => {
   if (container.value && containerItem.value) {
-    container.value.scrollLeft += 100
     if (nowPath.value != tabBarList[tabBarList.length]) {
       const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
       const gotoItem = tabBarList[index + 1]
       if (gotoItem) {
         gotoPage(gotoItem)
+        container.value.scrollTo({
+          left: (index + 1) * 100, // 向左滚动指定的像素
+          behavior: 'smooth', // 添加平滑滚动效果
+        })
       }
     }
   }
@@ -104,7 +110,7 @@ onMounted(()=>{
     setTimeout(()=>{
       if (container.value && containerItem.value) {
         const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
-        container.value.scrollBy({
+        container.value.scrollTo({
           left: index * 100, // 向左滚动指定的像素
           behavior: 'smooth', // 添加平滑滚动效果
         })
