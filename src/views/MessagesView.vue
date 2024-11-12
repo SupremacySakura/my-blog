@@ -191,8 +191,8 @@ onMounted(async () => {
         <h4>欢迎留言,你可以在这里畅所欲言</h4>
       </div>
       <div class="showItem" v-for="item of messagesList" ref="showList" :key="item.id">
-        <el-image :src="item.userHeadPortrait||user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
-          v-loading="item.loading[EMessagePhotoType.Danmu]"
+        <el-image :src="item.userHeadPortrait || user" alt="头像" class="custom-image" fit="cover" lazy
+          @error="onError(item)" v-loading="item.loading[EMessagePhotoType.Danmu]"
           @load="onImageLoad(item, EMessagePhotoType.Danmu)"></el-image>
         <span class="name">{{ item.name }}:</span>
         <span class="content">{{ item.content }}</span>
@@ -215,8 +215,8 @@ onMounted(async () => {
       </div>
       <div class="messagesItem" v-for="item of messagesList" :key="item.id">
         <section class="leftSection">
-          <el-image :src="item.userHeadPortrait||user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
-            v-loading="item.loading[EMessagePhotoType.Message]"
+          <el-image :src="item.userHeadPortrait || user" alt="头像" class="custom-image" fit="cover" lazy
+            @error="onError(item)" v-loading="item.loading[EMessagePhotoType.Message]"
             @load="onImageLoad(item, EMessagePhotoType.Message)"></el-image>
         </section>
         <section class="rightSection">
@@ -271,7 +271,9 @@ onMounted(async () => {
 
 <style lang="less" scoped>
 @standardWidth: 1600px * 0.8px;
-@screen-midMobile: 1600px * 0.8px;
+@screen-middle-mobile: 1600px * 0.8px;
+@screen-mini-mobile: 500px;
+
 .messagesBox {
   width: 100%;
   box-sizing: border-box;
@@ -284,6 +286,12 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   background-color: rgba(247, 247, 247, 1);
+
+  @media screen and (max-width:@screen-mini-mobile) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
   //上部留言板
   .board {
     width: @standardWidth;
@@ -292,9 +300,15 @@ onMounted(async () => {
     color: white;
     margin-bottom: 10px;
     overflow: hidden;
-    @media screen and (max-width:@screen-midMobile) {
+
+    @media screen and (max-width:@screen-middle-mobile) {
       width: 90%;
     }
+
+    @media screen and (max-width:@screen-mini-mobile) {
+      width: 100%;
+    }
+
     .backgroundImage {
       width: 100%;
       height: 100%;
@@ -340,6 +354,7 @@ onMounted(async () => {
       }
     }
   }
+
   //留言发布区
   .messagesPublish {
     width: @standardWidth;
@@ -350,9 +365,15 @@ onMounted(async () => {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
-    @media screen and (max-width:@screen-midMobile) {
-        width: 90%;
-      }
+
+    @media screen and (max-width:@screen-middle-mobile) {
+      width: 90%;
+    }
+
+    @media screen and (max-width:@screen-mini-mobile) {
+      width: 100%;
+    }
+
     textarea {
       width: 98%;
       height: 200px;
@@ -369,16 +390,23 @@ onMounted(async () => {
       width: 100px;
       height: 50px;
       border-radius: 50px;
-      background-color: rgb(255,255,255,1);
+      background-color: rgb(255, 255, 255, 1);
       border: none;
     }
   }
+
   //评论展示区
   .messagesShow {
     width: @standardWidth;
-    @media screen and (max-width:@screen-midMobile) {
-        width: 90%;
-      }
+
+    @media screen and (max-width:@screen-middle-mobile) {
+      width: 90%;
+    }
+
+    @media screen and (max-width:@screen-mini-mobile) {
+      width: 100%;
+    }
+
     .showTop {
       margin-bottom: 10px;
     }

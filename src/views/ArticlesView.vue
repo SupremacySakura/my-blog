@@ -153,7 +153,10 @@ onMounted(async () => {
   display: flex;
   background-color: rgba(247, 247, 247, 1);
   justify-content: center;
-
+  @media screen and (max-width:@screen-middle-mobile) {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
   .leftSection {
     padding-top: 20px;
     padding-left: 10px;
@@ -164,7 +167,7 @@ onMounted(async () => {
     box-sizing: border-box;
 
     @media screen and (max-width:@screen-middle-mobile) {
-      width: 95%;
+      width: 100%;
     }
 
     .card {
@@ -189,7 +192,7 @@ onMounted(async () => {
       margin-bottom: 30px;
 
       @media screen and (max-width:@screen-middle-mobile) {
-        width: 90%;
+        width: 95%;
       }
 
       &:hover {

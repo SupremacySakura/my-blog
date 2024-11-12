@@ -263,7 +263,7 @@ onMounted(async () => {
     /* 下侧高光 */
     @media screen and (max-width:@screen-small-mobile) {
       width: 100%;
-      height: 300px;
+      height: 100vh;
     }
 
     .card {

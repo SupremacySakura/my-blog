@@ -113,7 +113,7 @@ onMounted(async () => {
     padding: 20px;
     margin-top: 80px;
     @media screen and (max-width:@screen-middle-mobile) {
-      width: 90%;
+      width: 95%;
     }
     .cardList {
       width: 100%;
