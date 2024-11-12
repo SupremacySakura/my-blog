@@ -18,8 +18,8 @@
 
 <style lang="less" scoped>
 .bottomBox {
-  width: 100%;
-  // min-width: 600px;
+  width: 100vw;
+  box-sizing: border-box;
   height: 80px;
   display: flex;
   justify-content: center;
@@ -35,22 +35,26 @@
     flex-direction: column;
     justify-content: space-around;
     .beian{
-      width: 224px;
+      width: 250px;
       height: 26px;
       border-radius: 5px;
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
-      background-color: #424243;
+      background-color: skyblue;
       overflow: hidden;
       span{
         height: 100%;
         line-height: 26px;
-        background-color: skyblue;
+        text-align: center;
       }
       a{
         color: rgb(255,255,255,1);
         text-decoration: none;
+        background-color: #424243;
+        line-height: 26px;
+        height: 100%;
+        padding: 5px;
         &:hover{
           color: rgb(102.2, 177.4, 255);
         }
