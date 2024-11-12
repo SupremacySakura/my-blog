@@ -9,7 +9,7 @@ const router = useRouter()
 import test1 from '@/assets/test1.jpg'
 import yxzq from '@/assets/yxzq.jpg'
 //导入文章相关API
-import { getArticles } from '@/services/apis/articles'
+import { getArticles, getArticlesNum } from '@/services/apis/articles'
 //导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
 //导入asset仓库
@@ -23,19 +23,44 @@ import type { iArticleItem } from '@/types'
 import { EArticlePhotoType } from '@/types'
 //文章数组
 const articlesList = ref<iArticleItem[]>([])
+//文章页码
+const page = ref(1)
+//发布文章数量
+const articlesNum = ref(0)
+/**
+ * 获取文章数
+ */
+const getANum = async () => {
+  const res = await getArticlesNum()
+  if (res.data.code === 200) {
+    articlesNum.value = res.data.data
+  }
+}
 /**
  * 获取文章数据
  */
 const handleGetArticles = async () => {
-  const res = await getArticles()
+  await getANum()
+  if (articlesNum.value === articlesList.value.length) {
+    return
+  }
+  const res = await getArticles(page.value)
+  console.log(res)
   if (+res.data.code === 200) {
-    articlesList.value = [...articlesList.value, ...res.data.data]
     //处理数据
-    articlesList.value.forEach((item) => {
+    res.data.data.forEach((item: any) => {
       item.loading = [true, true]
     })
+    articlesList.value = [...articlesList.value, ...res.data.data]
     _setArticlesList(articlesList.value)
   }
+}
+/**
+ * 获取更多文章
+ */
+const handleGetMore = async () => {
+  page.value += 1
+  await handleGetArticles()
 }
 //选中文章
 const articleItem = ref<iArticleItem>()
@@ -114,7 +139,7 @@ onMounted(async () => {
 
 <template>
   <div class="articlesBox">
-    <!-- 左边文章列表展示 -->
+    <!-- 文章列表展示 -->
     <section class="leftSection">
       <section class="card" v-for="(item, index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
@@ -135,6 +160,10 @@ onMounted(async () => {
             <time>{{ item.time }}</time>
           </div>
         </div>
+      </section>
+      <section class="moreSection">
+        <el-button v-if="articlesList.length < articlesNum" @click="handleGetMore()">点击加载更多</el-button>
+        <span v-else>已经没有更多了</span>
       </section>
     </section>
   </div>
@@ -167,6 +196,9 @@ onMounted(async () => {
     min-height: 100vh;
     background-color: rgba(255, 255, 255, 1);
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     @media screen and (max-width:@screen-middle-mobile) {
       padding-left: 5px;
@@ -276,6 +308,9 @@ onMounted(async () => {
           }
         }
       }
+    }
+    .moreSection{
+      margin-bottom: 10px;
     }
   }
 }
