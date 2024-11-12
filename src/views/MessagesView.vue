@@ -230,7 +230,7 @@ onMounted(async () => {
       </div>
     </section>
     <!-- 发表评论弹窗 -->
-    <el-dialog v-model="dialogVisible" width="500">
+    <el-dialog v-model="dialogVisible">
       <section class="dialogBox">
         <h4>基本信息填写</h4>
         <div class="topDiv">
@@ -452,13 +452,20 @@ onMounted(async () => {
       }
     }
   }
-
+  :deep(.el-dialog){
+    width: 500px;
+      @media screen and (max-width:@screen-mini-mobile) {
+        width: 100vw;
+      }
+  }
   .dialogBox {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
-
+    @media screen and (max-width:@screen-mini-mobile) {
+        width: 100vw;
+      }
     .topDiv {
       width: 100%;
       height: 100px;
@@ -516,7 +523,6 @@ onMounted(async () => {
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
-
       div {
         width: 300px;
       }
