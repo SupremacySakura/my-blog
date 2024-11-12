@@ -271,7 +271,7 @@ onMounted(async () => {
 
 <style lang="less" scoped>
 @standardWidth: 1600px * 0.8px;
-@screen-midMobile: 1200px;
+@screen-midMobile: 1600px * 0.8px;
 .messagesBox {
   width: 100%;
   box-sizing: border-box;
