@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue'
+import { ref, useTemplateRef,onMounted } from 'vue'
 //导入vue路由相关api
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -7,7 +7,7 @@ const route = useRoute()
 import { storeToRefs } from 'pinia'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
-const { _setPageStart } = useAssetStore()
+const { _setPageStart,_nowPath,_setNowPath } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
 //导入ElementPlus相关内容
@@ -27,6 +27,7 @@ interface iTabBarItem {
  */
 const gotoPage = (item: iTabBarItem) => {
   nowPath.value = item
+  _setNowPath(item)
   if (item.path !== '/home') {
     _setPageStart(true)
   } else {
@@ -71,7 +72,7 @@ const nowPath = ref<iTabBarItem>({
   id: 1,
   text: '首页',
   path: '/home'
-},)
+})
 const tabLeft = () => {
   if (container.value && containerItem.value) {
     container.value.scrollLeft -= 100
@@ -96,6 +97,10 @@ const tabRight = () => {
     }
   }
 }
+onMounted(()=>{
+  //初始化
+  nowPath.value = _nowPath
+})
 </script>
 
 <template>

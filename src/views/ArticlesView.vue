@@ -153,10 +153,12 @@ onMounted(async () => {
   display: flex;
   background-color: rgba(247, 247, 247, 1);
   justify-content: center;
+
   @media screen and (max-width:@screen-middle-mobile) {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .leftSection {
     padding-top: 20px;
     padding-left: 10px;
@@ -167,6 +169,8 @@ onMounted(async () => {
     box-sizing: border-box;
 
     @media screen and (max-width:@screen-middle-mobile) {
+      padding-left: 5px;
+      padding-right: 5px;
       width: 100%;
     }
 
@@ -217,17 +221,20 @@ onMounted(async () => {
           border-radius: 8px;
         }
       }
-      .block{
+
+      .block {
         display: none;
+
         @media screen and (max-width:@screen-middle-mobile) {
-            width: 100%;
-            height: 100%;
-            display: block;
-            position: absolute;
-            z-index: 0;
-            background-color: rgba(0,0,0,0.5);
+          width: 100%;
+          height: 100%;
+          display: block;
+          position: absolute;
+          z-index: 0;
+          background-color: rgba(0, 0, 0, 0.5);
         }
       }
+
       .info {
         width: 360px;
         height: 100%;
@@ -242,7 +249,8 @@ onMounted(async () => {
           height: 100%;
           position: relative;
           z-index: 1;
-          color: rgba(255,255,255,1);;
+          color: rgba(255, 255, 255, 1);
+          ;
         }
 
         .abstract {

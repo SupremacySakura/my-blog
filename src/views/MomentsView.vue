@@ -246,6 +246,8 @@ onMounted(async () => {
   @media screen and (max-width:@screen-middle-mobile) {
     flex-wrap: wrap;
     overflow: auto;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .leftSection {
@@ -274,7 +276,7 @@ onMounted(async () => {
       grid-template-rows: 50px 250px;
 
       @media screen and (max-width:@screen-middle-mobile) {
-          grid-template-columns: 50px auto;
+        grid-template-columns: 50px auto;
       }
 
       .point {
@@ -348,6 +350,7 @@ onMounted(async () => {
     overflow-y: auto;
     background-color: rgba(247, 247, 247, 1);
     margin-left: 10px;
+
     @media screen and (max-width:@screen-middle-mobile) {
       width: 100%;
       min-height: 1000px;
