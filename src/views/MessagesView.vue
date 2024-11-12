@@ -29,10 +29,19 @@ const messagesList = ref<iMessageItem[]>([])
 const handleGetMessages = async () => {
   const res = await getMessages()
   if (+res.data.code === 200) {
-    messagesList.value = res.data.data
+    res.data.data.reverse()
+    messagesList.value = [...messagesList.value.reverse(),...res.data.data].reduce((acc,current)=>{
+      if(!acc.some((item:any) => item.id === current.id)){
+        acc.unshift(current)
+      }
+      return acc
+    },[])
     messagesList.value.forEach((item) => {
-      item.loading = [true, true]
+      if(!item.loading){
+        item.loading = [true, true]
+      }
     })
+    console.log(messagesList.value.length)
     //手动触发弹幕动画更新
     count.value++
   }
