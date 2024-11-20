@@ -45,7 +45,6 @@ const handleGetArticles = async () => {
     return
   }
   const res = await getArticles(page.value)
-  console.log(res)
   if (+res.data.code === 200) {
     //处理数据
     res.data.data.forEach((item: any) => {

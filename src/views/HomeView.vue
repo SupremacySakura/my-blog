@@ -24,6 +24,16 @@ marked.setOptions({
   gfm: true, // 启用 GitHub 风格的 Markdown
   breaks: true // 支持换行符
 })
+marked.setOptions({
+  highlight: (code, lang) => {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(code, { language: lang }).value
+    }
+    return hljs.highlightAuto(code).value
+  },
+})
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css' // 引入高亮样式文件
 //导入类型
 import type { iLabelItem, iInformation } from '@/types'
 //开始前页面dom
@@ -509,10 +519,25 @@ onUnmounted(() => {
   }
 }
 
-:deep(.markdown-body pre),
 :deep(.markdown-body code) {
+  display: inline-block;
+  padding: 5px;
+  background-color: #f5f5f5;
+  /* 浅灰色背景 */
+  border: 1px solid #ddd;
+  /* 灰色边框 */
+  border-radius: 4px;
+  /* 圆角 */
+  font-family: monospace;
+  /* 等宽字体 */
+  overflow-x: auto;
+  /* 水平滚动条，适合长代码 */
+}
+
+:deep(.markdown-body pre),
+:deep(.markdown-body pre code) {
   display: block;
-  padding: 10px;
+  padding: 5px;
   background-color: #f5f5f5;
   /* 浅灰色背景 */
   border: 1px solid #ddd;
