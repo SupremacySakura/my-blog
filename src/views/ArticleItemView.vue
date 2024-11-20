@@ -20,7 +20,7 @@ marked.setOptions({
   },
 })
 import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css' // 引入高亮样式文件
+// import hljs from 'highlight.js/lib/core'; // 只引入核心功能
 //导入articles仓库
 import { useArticlesStore } from '@/stores/articles'
 const { _articlesList } = useArticlesStore()

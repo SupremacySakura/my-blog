@@ -36,5 +36,7 @@ export default defineConfig({
         },
       },
     },
+    // 启用 Tree Shaking
+    minify: 'esbuild',
   }
 })

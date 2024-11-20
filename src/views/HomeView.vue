@@ -33,7 +33,6 @@ marked.setOptions({
   },
 })
 import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css' // 引入高亮样式文件
 //导入类型
 import type { iLabelItem, iInformation } from '@/types'
 //开始前页面dom
