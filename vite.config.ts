@@ -32,6 +32,7 @@ export default defineConfig({
           vendor: ['vue', 'pinia', 'vue-router', 'axios','pinia-plugin-persistedstate'],
           utils: ['dayjs', 'lodash','marked'],
           element: ['element-plus'],
+          types: ['highlight.js'],
         },
       },
     },
