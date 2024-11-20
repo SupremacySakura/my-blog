@@ -83,13 +83,13 @@ const getUsingTime = async () => {
     const endDate = new Date()
     // 计算时间间隔（以毫秒为单位）
     const timeDiff = endDate.getTime() - startDate.getTime()
-    secondsDiff.value = Math.floor(timeDiff / 1000)
-    minutesDiff.value = Math.floor(secondsDiff.value / 60)
-    secondsDiff.value = Math.floor(secondsDiff.value % 60)
-    hoursDiff.value = Math.floor(minutesDiff.value / 60)
-    minutesDiff.value = Math.floor(minutesDiff.value % 60)
-    daysDiff.value = Math.floor(hoursDiff.value / 24)
-    hoursDiff.value = Math.floor(hoursDiff.value % 24)
+    secondsDiff.value = Math.floor(timeDiff / 1000) || 0
+    minutesDiff.value = Math.floor(secondsDiff.value / 60) || 0
+    secondsDiff.value = Math.floor(secondsDiff.value % 60) || 0
+    hoursDiff.value = Math.floor(minutesDiff.value / 60) || 0
+    minutesDiff.value = Math.floor(minutesDiff.value % 60) || 0
+    daysDiff.value = Math.floor(hoursDiff.value / 24) || 0
+    hoursDiff.value = Math.floor(hoursDiff.value % 24) || 0
   }
 }
 /**
@@ -98,7 +98,7 @@ const getUsingTime = async () => {
 const getPeopleTimes = async () => {
   const res = await getPeople()
   if (res.data.code === 200) {
-    people.value = res.data.data
+    people.value = res.data.data || 0
   }
 }
 //发布文章数量
