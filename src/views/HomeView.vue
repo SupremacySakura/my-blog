@@ -134,6 +134,12 @@ const handleGetMyInformation = async () => {
 watchEffect(() => {
   if (homeArticle.value) {
     homeArticle.value.innerHTML = homeArticleHTML.value
+    nextTick(() => {
+      const codeBlocks = homeArticle.value?.querySelectorAll('pre code')
+      codeBlocks?.forEach((block) => {
+        hljs.highlightElement(block as HTMLElement); // 手动高亮每个代码块
+      })
+    })
   }
 })
 //个人标签列表

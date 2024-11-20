@@ -40,11 +40,11 @@ watchEffect(async () => {
     if (article.value) {
       articleBody.value.innerHTML = await marked(article.value.article)
       nextTick(() => {
-        const codeBlocks = articleBody.value?.querySelectorAll('pre code');
+        const codeBlocks = articleBody.value?.querySelectorAll('pre code')
         codeBlocks?.forEach((block) => {
           hljs.highlightElement(block as HTMLElement); // 手动高亮每个代码块
-        });
-      });
+        })
+      })
     }
   } else {
 
