@@ -255,7 +255,7 @@ onMounted(async () => {
           </div>
           <div class="name">
             <span>昵称(必填)</span>
-            <input type="text" v-model="name">
+            <input type="text" v-model.trim="name">
           </div>
         </div>
         <div class="bottomDiv">
