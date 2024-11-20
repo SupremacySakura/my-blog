@@ -40,7 +40,14 @@ const router = createRouter({
         }
       ]
     },
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { left: 0, top: 0 };  // 返回符合 ScrollPosition 的类型
+    }
+  }
 })
 
 export default router
