@@ -61,7 +61,18 @@ const handleGetArticles = async () => {
 const handleGetMore = async () => {
   page.value += 1
   isLoading.value = true
-  await handleGetArticles()
+  try {
+    await handleGetArticles()
+  } catch (error) {
+    ElMessage.error('加载资源失败')
+    console.log(error)
+    if (page.value > 1) {
+      page.value -= 1
+    }
+  } finally {
+    isLoading.value = false
+  }
+
 }
 //选中文章
 const articleItem = ref<iArticleItem>()
