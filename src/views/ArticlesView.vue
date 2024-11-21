@@ -50,6 +50,7 @@ const handleGetArticles = async () => {
     res.data.data.forEach((item: any) => {
       item.loading = [true, true]
     })
+    isLoading.value = false
     articlesList.value = [...articlesList.value, ...res.data.data]
     _setArticlesList(articlesList.value)
   }
@@ -59,6 +60,7 @@ const handleGetArticles = async () => {
  */
 const handleGetMore = async () => {
   page.value += 1
+  isLoading.value = true
   await handleGetArticles()
 }
 //选中文章
@@ -116,6 +118,8 @@ const onImageLoad = (item: iArticleItem, type: EArticlePhotoType) => {
       break
   }
 }
+//加载更多状态
+const isLoading = ref(false)
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
@@ -161,8 +165,9 @@ onMounted(async () => {
         </div>
       </section>
       <section class="moreSection">
-        <el-button v-if="articlesList.length < articlesNum" @click="handleGetMore()">点击加载更多</el-button>
-        <span v-else>已经没有更多了</span>
+        <el-button v-if="articlesList.length < articlesNum && isLoading===false" @click="handleGetMore()">点击加载更多</el-button>
+        <span v-else-if="isLoading===false">已经没有更多了</span>
+        <div class="loader" v-show="isLoading"></div>
       </section>
     </section>
   </div>
@@ -311,6 +316,20 @@ onMounted(async () => {
     .moreSection{
       margin-bottom: 10px;
     }
+  }
+}
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 120px;
+  height: 20px;
+  background:
+    linear-gradient(90deg, #0000, orange) left -50px top 0/50px 20px no-repeat lightblue;
+  animation: l2 1s infinite linear;
+}
+
+@keyframes l2 {
+  100% {
+    background-position: right -50px top 0
   }
 }
 </style>
