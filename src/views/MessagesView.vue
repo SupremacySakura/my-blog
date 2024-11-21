@@ -167,7 +167,7 @@ watchEffect(() => {
     nextTick(() => {
       if (showList.value) {
         showList.value.map((item, index) => {
-          if (item.getAnimations().length === 0) {
+          if (item.getAnimations().length === 0 && item) {
             item.style.top = `${random(0, 670)}px`
             item.style.right = `${-item.offsetWidth}px`
             const animateMessage = () => {
