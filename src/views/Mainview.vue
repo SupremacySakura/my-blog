@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //导入路由相关API
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 //导入组件
 import TabBar from '@/components/TabBar.vue'
 import BottomBar from '@/components/BottomBar.vue'

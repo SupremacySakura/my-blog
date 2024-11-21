@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onMounted, ref, useTemplateRef, nextTick, onUnmounted } from 'vue'
+import { onMounted, ref, useTemplateRef, nextTick } from 'vue'
 //导入默认图片
 import yxzq from '@/assets/yxzq.jpg'
 import backgroundImg from '@/assets/backgroundImg3.jpg'
