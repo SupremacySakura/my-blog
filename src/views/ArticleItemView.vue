@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //导入vue相关api
-import { ref, onMounted, useTemplateRef, watchEffect,nextTick } from 'vue'
+import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
 //导入router相关api
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
@@ -108,7 +108,7 @@ onMounted(() => {
 
 
 :deep(.markdown-body code) {
-  display:inline-block;
+  display: inline-block;
   padding: 5px;
   background-color: #f5f5f5;
   /* 浅灰色背景 */
@@ -121,6 +121,7 @@ onMounted(() => {
   overflow-x: auto;
   /* 水平滚动条，适合长代码 */
 }
+
 :deep(.markdown-body pre),
 :deep(.markdown-body pre code) {
   display: block;

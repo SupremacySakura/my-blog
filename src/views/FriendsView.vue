@@ -81,7 +81,7 @@ onMounted(async () => {
       <h2>友链站点</h2>
       <ul class="cardList">
         <li v-for="item of friendsList" :key="item.id" class="cardItem" @click="handleGoPage(item)">
-          <el-image :src="item.userHeadPortrait||user" alt="头像" fit="cover" lazy class="user" @error="onError(item)"
+          <el-image :src="item.userHeadPortrait || user" alt="头像" fit="cover" lazy class="user" @error="onError(item)"
             v-loading="item.loading" @load="onImageLoad(item)" />
           <div class="info">
             <h4>{{ item.name }}</h4>
@@ -98,6 +98,7 @@ onMounted(async () => {
 
 <style lang="less" scoped>
 @screen-middle-mobile: 960px;
+
 .friendsBox {
   width: 100%;
   min-height: 100vh;
@@ -112,9 +113,11 @@ onMounted(async () => {
     box-sizing: border-box;
     padding: 20px;
     margin-top: 80px;
+
     @media screen and (max-width:@screen-middle-mobile) {
       width: 95%;
     }
+
     .cardList {
       width: 100%;
       margin-top: 10px;

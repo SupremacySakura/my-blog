@@ -370,9 +370,10 @@ onUnmounted(() => {
       background-color: @-primary-background-fill-color;
       padding: 10px;
       padding-top: 90px;
+
       @media screen and (max-width:@screen-small-mobile) {
-          width: 70vw;
-        }
+        width: 70vw;
+      }
     }
 
     //右侧

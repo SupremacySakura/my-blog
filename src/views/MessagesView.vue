@@ -1,13 +1,13 @@
 <script setup lang="ts">
 //导入vue相关API
-import { ref, onMounted, useTemplateRef, watchEffect, nextTick, watch } from 'vue'
+import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
 //导入默认图片
 import background from '@/assets/messageBackground.jpeg'
 import user from '@/assets/user.png'
 //导入工具函数
 import { random } from '@/utils'
 //导入留言相关API
-import { getMessages, postMessages } from '@/services/apis/messages'
+import { getMessages, postMessages, getMessagesNum } from '@/services/apis/messages'
 //导入ElementPlus组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
 //导入dayjs库
@@ -23,27 +23,51 @@ import type { iMessageItem } from '@/types'
 import { EMessagePhotoType } from '@/types'
 //定义评论数组
 const messagesList = ref<iMessageItem[]>([])
+//page
+const page = ref(1)
+//留言数量
+const messageNum = ref(0)
+//加载状态
+const isLoading = ref(false)
 /**
  * 获取留言数据,并赋值给messagesList
  */
 const handleGetMessages = async () => {
-  const res = await getMessages()
+  await handleGetMessagesNum()
+  const res = await getMessages(page.value)
   if (+res.data.code === 200) {
-    res.data.data.reverse()
-    messagesList.value = [...messagesList.value.reverse(),...res.data.data].reduce((acc,current)=>{
-      if(!acc.some((item:any) => item.id === current.id)){
-        acc.unshift(current)
+    messagesList.value = [...messagesList.value, ...res.data.data,].reduce((acc, current) => {
+      if (!acc.some((item: any) => item.id === current.id)) {
+        acc.push(current)
       }
       return acc
-    },[])
+    }, [])
     messagesList.value.forEach((item) => {
-      if(!item.loading){
+      if (!item.loading) {
         item.loading = [true, true]
       }
     })
     //手动触发弹幕动画更新
     count.value++
   }
+}
+/**
+ * 获取留言数量
+ */
+const handleGetMessagesNum = async () => {
+  const res = await getMessagesNum()
+  if (+res.data.code === 200) {
+    messageNum.value = res.data.data || 0
+  }
+}
+/**
+ * 加载更多留言
+ */
+const handleGetMoreMessages = async () => {
+  isLoading.value = true
+  page.value++
+  await handleGetMessages()
+  isLoading.value = false
 }
 //发布留言弹窗控制
 const dialogVisible = ref(false)
@@ -99,8 +123,8 @@ const handlePublish = async () => {
   const loadingInstance = ElLoading.service(_options)
   dialogVisible.value = false
   content.value = ''
-  const res = await postMessages(params)
-  if (res.data.code === 200) {
+  const resP = await postMessages(params)
+  if (resP.data.code === 200) {
     loadingInstance.close()
     ElMessage({
       message: '发布成功',
@@ -110,7 +134,13 @@ const handlePublish = async () => {
     loadingInstance.close()
     ElMessage.error('发布失败')
   }
-  handleGetMessages()
+  const res = await getMessages(1)
+  if (+res.data.code === 200) {
+    messagesList.value.unshift(res.data.data[0])
+    messagesList.value[0].loading = [true, true]
+    //手动触发弹幕动画更新
+    count.value++
+  }
   _setInfo(userHeadPortrait.value, name.value, address.value)
 }
 //留言板dom
@@ -132,7 +162,7 @@ watchEffect(() => {
             const animateMessage = () => {
               item.animate([
                 { transform: 'translateX(0)' }, // 起始状态
-                { transform: `translateX(-${(board.value as HTMLElement).offsetWidth+item.offsetWidth}px)` } // 结束状态
+                { transform: `translateX(-${(board.value as HTMLElement).offsetWidth + item.offsetWidth}px)` } // 结束状态
               ], {
                 duration: random(6000, 12000),
                 iterations: 1 // 无限循环
@@ -237,6 +267,12 @@ onMounted(async () => {
           </div>
         </section>
       </div>
+    </section>
+    <section class="moreSection">
+      <el-button @click="handleGetMoreMessages()"
+        v-if="messageNum > messagesList.length && isLoading === false">点击加载更多</el-button>
+      <span v-else-if="isLoading === false">已经没有更多了</span>
+      <div class="loader" v-else></div>
     </section>
     <!-- 发表评论弹窗 -->
     <el-dialog v-model="dialogVisible">
@@ -446,13 +482,15 @@ onMounted(async () => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        p{
+
+        p {
           width: 90%;
           word-break: break-word;
           white-space: normal;
           overflow: hidden;
-            /* 长单词或字符串在必要时换行 */
+          /* 长单词或字符串在必要时换行 */
         }
+
         div {
           display: flex;
           justify-content: space-between;
@@ -463,32 +501,91 @@ onMounted(async () => {
           font-size: 12px;
           color: rgb(166.2, 168.6, 173.4);
         }
-        address{
+
+        address {
           width: 120px;
           white-space: normal;
-            /* 允许文本自动换行 */
+          /* 允许文本自动换行 */
           word-wrap: break-word;
-            /* 允许长单词自动换行 */
-            overflow-wrap: break-word;
-            /* 允许长文本自动换行 */
+          /* 允许长单词自动换行 */
+          overflow-wrap: break-word;
+          /* 允许长文本自动换行 */
         }
       }
     }
   }
-  :deep(.el-dialog){
-    width: 500px;
-      @media screen and (max-width:@screen-mini-mobile) {
-        width: 100vw;
-      }
+
+  .moreSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+
+ /* HTML: <div class="loader"></div> */
+ .loader {
+   width: 120px;
+   height: 20px;
+   background:
+     linear-gradient(90deg, #0001 33%, #0005 50%, #0001 66%) #f2f2f2;
+   background-size: 300% 100%;
+   animation: l1 1s infinite linear;
+ }
+
+ @keyframes l1 {
+   0% {
+     background-position: right
+   }
+ }
+  .loader:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(9px at bottom right, #0000 94%, currentColor) top left,
+      radial-gradient(9px at bottom left, #0000 94%, currentColor) top right,
+      radial-gradient(9px at top right, #0000 94%, currentColor) bottom left,
+      radial-gradient(9px at top left, #0000 94%, currentColor) bottom right;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    animation: l18 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+  }
+
+  @keyframes l18 {
+    33% {
+      inset: -10px;
+      transform: rotate(0deg)
+    }
+
+    66% {
+      inset: -10px;
+      transform: rotate(90deg)
+    }
+
+    100% {
+      inset: 0;
+      transform: rotate(90deg)
+    }
+  }
+
+  :deep(.el-dialog) {
+    width: 500px;
+
+    @media screen and (max-width:@screen-mini-mobile) {
+      width: 100vw;
+    }
+  }
+
   .dialogBox {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
+
     @media screen and (max-width:@screen-mini-mobile) {
-        width: 100vw;
-      }
+      width: 100vw;
+    }
+
     .topDiv {
       width: 100%;
       height: 100px;
@@ -546,6 +643,7 @@ onMounted(async () => {
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
+
       div {
         width: 300px;
       }

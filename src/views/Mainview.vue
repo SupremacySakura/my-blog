@@ -33,5 +33,4 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

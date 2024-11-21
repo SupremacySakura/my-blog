@@ -165,9 +165,10 @@ onMounted(async () => {
         </div>
       </section>
       <section class="moreSection">
-        <el-button v-if="articlesList.length < articlesNum && isLoading===false" @click="handleGetMore()">点击加载更多</el-button>
-        <span v-else-if="isLoading===false">已经没有更多了</span>
-        <div class="loader" v-show="isLoading"></div>
+        <el-button v-if="articlesList.length < articlesNum && isLoading === false"
+          @click="handleGetMore()">点击加载更多</el-button>
+        <span v-else-if="isLoading === false">已经没有更多了</span>
+        <div class="loader" v-else></div>
       </section>
     </section>
   </div>
@@ -313,11 +314,13 @@ onMounted(async () => {
         }
       }
     }
-    .moreSection{
+
+    .moreSection {
       margin-bottom: 10px;
     }
   }
 }
+
 /* HTML: <div class="loader"></div> */
 .loader {
   width: 120px;
