@@ -66,8 +66,19 @@ const handleGetMessagesNum = async () => {
 const handleGetMoreMessages = async () => {
   isLoading.value = true
   page.value++
-  await handleGetMessages()
-  isLoading.value = false
+  try {
+    await handleGetMessages()
+  } catch (error) {
+    ElMessage.error('加载资源失败')
+    console.log(error)
+    if (page.value > 1) {
+      page.value--
+    }
+  } finally {
+    isLoading.value = false
+  }
+
+
 }
 //发布留言弹窗控制
 const dialogVisible = ref(false)
@@ -521,21 +532,22 @@ onMounted(async () => {
     align-items: center;
   }
 
- /* HTML: <div class="loader"></div> */
- .loader {
-   width: 120px;
-   height: 20px;
-   background:
-     linear-gradient(90deg, #0001 33%, #0005 50%, #0001 66%) #f2f2f2;
-   background-size: 300% 100%;
-   animation: l1 1s infinite linear;
- }
+  /* HTML: <div class="loader"></div> */
+  .loader {
+    width: 120px;
+    height: 20px;
+    background:
+      linear-gradient(90deg, #0001 33%, #0005 50%, #0001 66%) #f2f2f2;
+    background-size: 300% 100%;
+    animation: l1 1s infinite linear;
+  }
 
- @keyframes l1 {
-   0% {
-     background-position: right
-   }
- }
+  @keyframes l1 {
+    0% {
+      background-position: right
+    }
+  }
+
   :deep(.el-dialog) {
     width: 500px;
 
