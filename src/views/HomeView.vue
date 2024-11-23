@@ -18,13 +18,13 @@ import { useAssetStore } from '@/stores/asset'
 const { _options, _optionsWhite, _setPageStart } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
+//导入工具
+import { hljs } from '@/utils/index'
 //导入处理markdown的库
 import { marked } from 'marked'
 marked.setOptions({
   gfm: true, // 启用 GitHub 风格的 Markdown
-  breaks: true // 支持换行符
-})
-marked.setOptions({
+  breaks: true, // 支持换行符
   highlight: (code, lang) => {
     if (lang && hljs.getLanguage(lang)) {
       return hljs.highlight(code, { language: lang }).value
@@ -32,7 +32,6 @@ marked.setOptions({
     return hljs.highlightAuto(code).value
   },
 })
-import hljs from 'highlight.js'
 //导入类型
 import type { iLabelItem, iInformation } from '@/types'
 //开始前页面dom

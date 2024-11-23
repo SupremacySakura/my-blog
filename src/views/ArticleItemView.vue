@@ -5,13 +5,13 @@ import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
+//导入工具
+import { hljs } from '@/utils/index'
 //导入处理markdown的库
 import { marked } from 'marked'
 marked.setOptions({
   gfm: true, // 启用 GitHub 风格的 Markdown
-  breaks: true // 支持换行符
-})
-marked.setOptions({
+  breaks: true, // 支持换行符
   highlight: (code, lang) => {
     if (lang && hljs.getLanguage(lang)) {
       return hljs.highlight(code, { language: lang }).value
@@ -19,7 +19,6 @@ marked.setOptions({
     return hljs.highlightAuto(code).value
   },
 })
-import hljs from 'highlight.js'
 //导入articles仓库
 import { useArticlesStore } from '@/stores/articles'
 const { _articlesList } = useArticlesStore()
