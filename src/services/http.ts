@@ -1,8 +1,7 @@
 import axios from "axios"
 
 const http = axios.create({
-  // baseURL: 'http://8.137.77.95:5050',//API的基准URL
-  baseURL: 'http://127.0.0.1:5050',
+  baseURL: import.meta.env.VUE_APP_HTTP_URL,
   timeout: 10000,//请求超时时间
   headers: {
     'Content-Type': 'application/json'

@@ -38,5 +38,6 @@ export default defineConfig({
     },
     // 启用 Tree Shaking
     minify: 'esbuild',
-  }
+  },
+  envPrefix: 'VUE_APP_',
 })
