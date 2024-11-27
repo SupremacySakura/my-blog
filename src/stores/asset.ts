@@ -34,6 +34,10 @@ export const useAssetStore = defineStore('asset', () => {
   const _setNowPath = (item: iTabBarItem) => {
     _nowPath.value = item
   }
+  const _theme = ref(false)
+  const _setTheme = (boolean: boolean) => {
+    _theme.value = boolean
+  }
   return {
     _isVisit,
     _setIsVisit,
@@ -43,6 +47,8 @@ export const useAssetStore = defineStore('asset', () => {
     _setPageStart,
     _nowPath,
     _setNowPath,
+    _theme,
+    _setTheme,
   }
 }, {
   persist: true

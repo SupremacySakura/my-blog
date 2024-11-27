@@ -11,7 +11,9 @@ import { onMounted, onUnmounted } from 'vue'
 //导入网站仓库
 import { useAssetStore } from '@/stores/asset'
 const { _isVisit, _setIsVisit } = useAssetStore()
-
+//导入pinia相关api
+import { storeToRefs } from 'pinia'
+const { _theme } = storeToRefs(useAssetStore())
 onMounted(() => {
   //初始化,访问
   if (!_isVisit) {
@@ -26,7 +28,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="mainBox">
+  <div class="mainBox" :class="{ 'dark-theme': _theme }">
     <TabBar></TabBar>
     <RouterView></RouterView>
     <BottomBar></BottomBar>

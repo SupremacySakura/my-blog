@@ -102,14 +102,15 @@ onMounted(async () => {
 .friendsBox {
   width: 100%;
   min-height: 100vh;
-  background-color: rgba(247, 247, 247, 1);
+  background-color: var(--friend-background-color);
   display: flex;
   justify-content: center;
+  color: var(--friend-text-color);
 
   .cardBox {
     width: 60%;
     min-height: 100vh;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--friend-background-fill-color);
     box-sizing: border-box;
     padding: 20px;
     margin-top: 80px;
@@ -130,7 +131,7 @@ onMounted(async () => {
         height: 100px;
         margin-left: 20px;
         margin-bottom: 20px;
-        background-color: rgba(255, 255, 255, 1);
+        background-color: var(--friend-card-background-color);
         display: flex;
         justify-content: space-around;
         align-items: center;

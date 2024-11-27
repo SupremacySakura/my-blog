@@ -58,11 +58,11 @@ const handleClick = (item: iAboutItem) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-top: 1px solid rgba(224, 224, 224, 1);
-  background-color: rgba(255, 255, 255, 1);
+  border-top: 1px solid var(--bottombar-border-top-color);
+  background-color: var(--bottombar-background-color);
   justify-content: space-around;
   padding: 10px;
-
+  color: var(--bottombar-text-color);
   @media screen and (max-width:@screen-small-mobile) {
     height: 60px;
   }
@@ -112,10 +112,6 @@ const handleClick = (item: iAboutItem) => {
         }
       }
     }
-  }
-
-  span {
-    color: black;
   }
 
   .rightSection {

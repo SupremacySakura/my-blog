@@ -241,7 +241,7 @@ onMounted(async () => {
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-  background-color: rgba(247, 247, 247, 1);
+  background-color: var(--moment-background-box-color);
 
   @media screen and (max-width:@screen-middle-mobile) {
     flex-wrap: wrap;
@@ -255,14 +255,16 @@ onMounted(async () => {
     height: 90%;
     box-sizing: border-box;
     margin-bottom: 40px;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--moment-left-background-color);
     border: 1px solid rgba(224, 224, 224, 1);
     overflow-y: auto;
     box-shadow: inset 0px 8px 16px rgba(0, 0, 0, 0.2),
       /* 上侧阴影 */
-      inset 0px -8px 16px rgba(255, 255, 255, 0.5);
+      inset 0px -8px 16px var(--moment-left-shadow-color);
 
     /* 下侧高光 */
+    color: var(--moment-left-text-color);
+
     @media screen and (max-width:@screen-small-mobile) {
       width: 100%;
       height: 100vh;
@@ -318,7 +320,7 @@ onMounted(async () => {
         section {
           width: 100%;
           height: 100%;
-          background-color: rgba(247, 247, 247, 1);
+          background-color: var(--moment-left-background-box-color);
           border-radius: 10px;
           padding: 10px;
           box-sizing: border-box;
@@ -348,7 +350,7 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
-    background-color: rgba(247, 247, 247, 1);
+    background-color: var(--moment-right-background-color);
     margin-left: 10px;
 
     @media screen and (max-width:@screen-middle-mobile) {

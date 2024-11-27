@@ -341,7 +341,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(247, 247, 247, 1);
+  background-color: var(--message-background-color);
 
   @media screen and (max-width:@screen-mini-mobile) {
     padding-left: 20px;
@@ -435,6 +435,7 @@ onMounted(async () => {
       resize: none;
       /* 禁止缩放 */
       outline: none;
+      background-color: var(--message-background-fill-color);
     }
 
     div {
@@ -445,7 +446,7 @@ onMounted(async () => {
       width: 100px;
       height: 50px;
       border-radius: 50px;
-      background-color: rgb(255, 255, 255, 1);
+      background-color: var(--message-background-fill-color);
       border: none;
     }
   }
@@ -475,7 +476,8 @@ onMounted(async () => {
       margin-bottom: 10px;
       border: 1px solid rgba(0, 0, 0, 0.5);
       border-radius: 10px;
-      background-color: rgba(255, 255, 255, 1);
+      background-color: var(--message-background-fill-color);
+      color: var(--message-text-color);
 
       .leftSection {
         width: 50px;

@@ -84,9 +84,10 @@ onMounted(() => {
   padding-top: 80px;
   padding-left: 40px;
   padding-right: 40px;
-  background-color: rgba(247, 247, 247, 1);
+  background-color: var(--article-background-color);
   display: flex;
   justify-content: center;
+  color: var(--article-card-text-color);
 
   @media screen and (max-width:@screen-middle-mobile) {
     box-sizing: border-box;
@@ -95,7 +96,7 @@ onMounted(() => {
   .article-item {
     width: 900px;
     min-height: 100vh;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--message-background-fill-color);
     padding: 20px;
 
     @media screen and (max-width:@screen-middle-mobile) {
@@ -108,9 +109,9 @@ onMounted(() => {
 :deep(.markdown-body code) {
   display: inline-block;
   padding: 5px;
-  background-color: #f5f5f5;
+  background-color: rgb(245, 245, 245);
   /* 浅灰色背景 */
-  border: 1px solid #ddd;
+  border: 1px solid rgb(221, 221, 221);
   /* 灰色边框 */
   border-radius: 4px;
   /* 圆角 */
@@ -118,15 +119,16 @@ onMounted(() => {
   /* 等宽字体 */
   overflow-x: auto;
   /* 水平滚动条，适合长代码 */
+  color: black;
 }
 
 :deep(.markdown-body pre),
 :deep(.markdown-body pre code) {
   display: block;
   padding: 5px;
-  background-color: #f5f5f5;
+  background-color: rgb(245, 245, 245);
   /* 浅灰色背景 */
-  border: 1px solid #ddd;
+  border: 1px solid rgb(221, 221, 221);
   /* 灰色边框 */
   border-radius: 4px;
   /* 圆角 */

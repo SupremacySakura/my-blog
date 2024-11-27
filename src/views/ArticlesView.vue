@@ -196,7 +196,7 @@ onMounted(async () => {
   padding-right: 40px;
   box-sizing: border-box;
   display: flex;
-  background-color: rgba(247, 247, 247, 1);
+  background-color: var(--article-background-color);
   justify-content: center;
 
   @media screen and (max-width:@screen-middle-mobile) {
@@ -210,7 +210,7 @@ onMounted(async () => {
     padding-right: 10px;
     width: 900px;
     min-height: 100vh;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--article-background-fill-color);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -226,7 +226,7 @@ onMounted(async () => {
       width: 800px;
       height: 200px;
       border-radius: 8px;
-      background-color: aliceblue;
+      background-color: var(--article-card-background-color);
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -290,7 +290,7 @@ onMounted(async () => {
         flex-direction: column;
         justify-content: space-around;
         padding: 10px;
-        color: rgb(0, 0, 0);
+        color: var(--article-card-text-color);
 
         @media screen and (max-width:@screen-middle-mobile) {
           width: 100%;

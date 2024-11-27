@@ -11,13 +11,17 @@ import { getTime, getPeople } from '@/services/apis/asset'
 import { getMyInformation, getMyLabels } from '@/services/apis/my'
 //导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
+import {
+  Hide,
+  View
+} from '@element-plus/icons-vue'
 //导入pinia相关api
 import { storeToRefs } from 'pinia'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
-const { _options, _optionsWhite, _setPageStart } = useAssetStore()
+const { _options, _optionsWhite, _setPageStart, _setTheme } = useAssetStore()
 const assetStore = useAssetStore()
-const { _pageStart } = storeToRefs(assetStore)
+const { _pageStart, _theme } = storeToRefs(assetStore)
 //导入工具
 import { hljs } from '@/utils/index'
 //导入处理markdown的库
@@ -170,6 +174,14 @@ const onImageLoad = () => {
   }
 
 }
+//主题
+const handleChangeTheme = () => {
+
+}
+const theme = ref(_theme)
+watchEffect(() => {
+  _setTheme(theme.value)
+})
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
@@ -222,6 +234,9 @@ onUnmounted(() => {
         <h1>这是我的个人博客</h1>
         <span>极简主义 实用主义</span>
         <button @click="handleStart()" class="changeButton">开始</button>
+        <el-switch v-model="theme" :active-action-icon="View" :inactive-action-icon="Hide"
+          style="--el-switch-on-color: var(--home-background-fill-color); --el-switch-off-color: var(--home-background-fill-color)"
+          @change="handleChangeTheme" />
       </section>
     </div>
     <!-- 开始后页面 -->
@@ -277,8 +292,6 @@ onUnmounted(() => {
 </template>
 
 <style lang="less" scoped>
-@-primary-background-color: rgba(247, 247, 247, 1);
-@-primary-background-fill-color: rgba(255, 255, 255, 1);
 @screen-middle-mobile: 1200px;
 @screen-small-mobile: 750px;
 @screen-mini-mobile: 410px;
@@ -286,7 +299,7 @@ onUnmounted(() => {
 .box {
   width: 100%;
   min-height: 100vh;
-  background-color: @-primary-background-color;
+  background-color: var(--home-background-color);
 
   .background-img {
     width: 100%;
@@ -316,7 +329,7 @@ onUnmounted(() => {
 
       h1 {
         font-size: 35px;
-        color: @-primary-background-fill-color;
+        color: var(--home-head-text-color);
       }
 
       span {
@@ -333,6 +346,7 @@ onUnmounted(() => {
     justify-content: center;
     padding-top: 10px;
     position: relative;
+    color: var(--home-text-color);
 
     @media screen and (max-width:@screen-small-mobile) {
       flex-wrap: wrap;
@@ -342,12 +356,12 @@ onUnmounted(() => {
     .label {
       width: 50px;
       min-height: 100vh;
-      background-color: @-primary-background-fill-color;
+      background-color: var(--home-background-fill-color);
       padding-top: 90px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      border-right: 2px solid @-primary-background-color;
+      border-right: 2px solid var(--home-background-color);
 
       ul {
         li {
@@ -357,7 +371,7 @@ onUnmounted(() => {
           white-space: wrap;
           border-radius: 5px;
           margin-bottom: 10px;
-          background-color: @-primary-background-color;
+          background-color: var(--home-background-color);
         }
       }
     }
@@ -366,7 +380,7 @@ onUnmounted(() => {
     .main {
       width: 60%;
       min-height: 100vh;
-      background-color: @-primary-background-fill-color;
+      background-color: var(--home-background-fill-color);
       padding: 10px;
       padding-top: 90px;
 
@@ -415,7 +429,7 @@ onUnmounted(() => {
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
-            background-color: @-primary-background-fill-color;
+            background-color: var(--home-background-fill-color);
             border: 1px solid rgba(224, 224, 224, 1);
             border-radius: 10px;
             padding: 10px;
@@ -490,9 +504,8 @@ onUnmounted(() => {
 
           div {
             border-radius: 10px;
-            background-color: @-primary-background-fill-color;
+            background-color: var(--home-background-fill-color);
             border: 1px solid rgba(224, 224, 224, 1);
-            color: black;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
               /* 上侧阴影 */
               inset 0px -4px 8px rgba(255, 255, 255, 0.5);
@@ -518,8 +531,8 @@ onUnmounted(() => {
     height: 40px;
     border: none;
     border-radius: 40px;
-    background-color: @-primary-background-fill-color;
-    color: black;
+    background-color: var(--home-background-fill-color);
+    color: var(--home-text-color);
     margin-bottom: 20px;
   }
 }

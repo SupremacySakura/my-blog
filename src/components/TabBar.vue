@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef,onMounted,nextTick } from 'vue'
+import { ref, useTemplateRef, onMounted, nextTick } from 'vue'
 //导入vue路由相关api
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -7,7 +7,7 @@ const route = useRoute()
 import { storeToRefs } from 'pinia'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
-const { _setPageStart,_nowPath,_setNowPath } = useAssetStore()
+const { _setPageStart, _nowPath, _setNowPath } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
 //导入ElementPlus相关内容
@@ -81,7 +81,7 @@ const tabLeft = () => {
       if (gotoItem) {
         gotoPage(gotoItem)
         container.value.scrollTo({
-          left: (index-1) * 100, // 向左滚动指定的像素
+          left: (index - 1) * 100, // 向左滚动指定的像素
           behavior: 'smooth', // 添加平滑滚动效果
         })
       }
@@ -103,11 +103,11 @@ const tabRight = () => {
     }
   }
 }
-onMounted(()=>{
+onMounted(() => {
   //初始化
   nowPath.value = _nowPath
-  nextTick(()=>{
-    setTimeout(()=>{
+  nextTick(() => {
+    setTimeout(() => {
       if (container.value && containerItem.value) {
         const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
         container.value.scrollTo({
@@ -115,13 +115,13 @@ onMounted(()=>{
           behavior: 'smooth', // 添加平滑滚动效果
         })
       }
-    },0)
+    }, 0)
   })
 })
 </script>
 
 <template>
-  <div class="tabBarBox" :class="{ 'first-page': _pageStart, 'other-page': !_pageStart }">
+  <div class="tabBarBox" :class="{ 'other-page': _pageStart, 'first-page': !_pageStart }">
     <section class="leftSection">
       <span>余心知秋的博客</span>
     </section>
@@ -151,6 +151,8 @@ onMounted(()=>{
   position: fixed;
   top: 0;
   z-index: 2;
+  color: var(--tabbar-text-color);
+  border-bottom: 1px solid var(--tabbar-border-bottom-color);
 
   .leftSection {
     font-size: 24px;
@@ -208,10 +210,10 @@ onMounted(()=>{
 }
 
 .first-page {
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--tabbar-first-page-color);
 }
 
 .other-page {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--tabbar-other-page-color);
 }
 </style>

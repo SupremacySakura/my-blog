@@ -1,0 +1,90 @@
+:root {
+
+  /* 导航栏 */
+  --tabbar-first-page-color: rgba(255, 255, 255, 0.1);
+  --tabbar-other-page-color: rgba(255, 255, 255, 1);
+  --tabbar-text-color: rgba(0, 0, 0, 1);
+  --tabbar-border-bottom-color: rgba(0, 0, 0, 0.1);
+
+  /* 底部栏 */
+  --bottombar-background-color: rgba(255, 255, 255, 1);
+  --bottombar-border-top-color: rgba(224, 224, 224, 1);
+  --bottombar-text-color: rgba(0, 0, 0, 1);
+
+  /* 首页 */
+  --home-background-color: rgba(247, 247, 247, 1);
+  --home-background-fill-color: rgba(255, 255, 255, 1);
+  --home-text-color: rgba(0, 0, 0, 1);
+  --home-head-text-color: rgba(255, 255, 255, 1);
+
+  /* 分享 */
+  --moment-background-box-color: rgba(247, 247, 247, 1);
+  --moment-left-background-color: rgba(255, 255, 255, 1);
+  --moment-left-shadow-color: rgba(255, 255, 255, 0.5);
+  --moment-left-background-box-color: rgba(247, 247, 247, 1);
+  --moment-left-text-color: rgba(0, 0, 0, 1);
+  --moment-right-background-color: rgba(255, 255, 255, 1);
+
+  /* 文章 */
+  --article-background-color: rgba(247, 247, 247, 1);
+  --article-background-fill-color: rgba(255, 255, 255, 1);
+  --article-card-background-color: rgba(240, 248, 255, 1);
+  --article-card-text-color: rgba(0, 0, 0, 1);
+
+  /* 留言板 */
+  --message-background-color: rgba(247, 247, 247, 1);
+  --message-background-fill-color: rgba(255, 255, 255, 1);
+  --message-text-color: rgba(0, 0, 0, 1);
+
+  /* 朋友 */
+  --friend-background-color: rgba(247, 247, 247, 1);
+  --friend-background-fill-color: rgba(255, 255, 255, 1);
+  --friend-card-background-color: rgba(255, 255, 255, 1);
+  --friend-text-color: rgba(0, 0, 0, 1);
+
+}
+
+.dark-theme {
+
+  /* 导航栏 */
+  --tabbar-first-page-color: rgba(27, 27, 31, 0.9);
+  --tabbar-other-page-color: rgba(27, 27, 31, 1);
+  --tabbar-text-color: rgba(255, 255, 255, 1);
+  --tabbar-border-bottom-color: rgba(255, 255, 255, 0.5);
+
+  /* 底部栏 */
+  --bottombar-background-color: rgba(27, 27, 31, 1);
+  --bottombar-border-top-color: rgba(0, 0, 0, 1);
+  --bottombar-text-color: rgba(255, 255, 255, 1);
+
+  /* 首页 */
+  --home-background-color: rgba(27, 27, 31, 1);
+  --home-background-fill-color: rgba(48, 47, 75, 1);
+  --home-text-color: rgba(255, 255, 255, 1);
+
+  /* 分享 */
+  --moment-background-box-color: rgba(27, 27, 31, 1);
+  --moment-left-background-color: rgba(48, 47, 75, 1);
+  --moment-left-shadow-color: rgba(0, 0, 0, 0.5);
+  --moment-left-background-box-color: rgba(50, 47, 59, 1);
+  --moment-left-text-color: rgba(255, 255, 255, 1);
+  --moment-right-background-color: rgba(48, 47, 75, 1);
+
+  /* 文章 */
+  --article-background-color: rgba(27, 27, 31, 1);
+  --article-background-fill-color: rgba(48, 47, 75, 1);
+  --article-card-background-color: rgba(50, 47, 59, 1);
+  --article-card-text-color: rgba(255, 255, 255, 1);
+
+  /* 留言板 */
+  --message-background-color: rgba(27, 27, 31, 1);
+  --message-background-fill-color: rgba(48, 47, 75, 1);
+  --message-text-color: rgba(255, 255, 255, 1);
+
+  /* 朋友 */
+  --friend-background-color: rgba(27, 27, 31, 1);
+  --friend-background-fill-color: rgba(48, 47, 75, 1);
+  --friend-card-background-color: rgba(50, 47, 75, 1);
+  --friend-text-color: rgba(255, 255, 255, 1);
+
+}
