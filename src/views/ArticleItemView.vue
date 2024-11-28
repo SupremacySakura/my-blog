@@ -81,9 +81,7 @@ onMounted(() => {
 .article-item-box {
   width: 100%;
   min-height: 100vh;
-  padding-top: 80px;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding: 80px 40px 0px 40px;
   background-color: var(--article-background-color);
   display: flex;
   justify-content: center;

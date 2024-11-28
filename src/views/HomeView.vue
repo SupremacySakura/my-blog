@@ -436,7 +436,7 @@ onUnmounted(() => {
             box-sizing: border-box;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
               /* 上侧阴影 */
-              inset 0px -4px 8px rgba(255, 255, 255, 0.5);
+              inset 0px -4px 8px var(--home-right-shadow-color);
 
             /* 下侧高光 */
             @media screen and (max-width:@screen-middle-mobile) {
@@ -483,7 +483,7 @@ onUnmounted(() => {
 
           @media screen and (max-width:@screen-middle-mobile) {
             width: 220px;
-            grid-template-columns: 100px 100px;
+            grid-template-columns: 105px 105px;
           }
 
           @media screen and (max-width:@screen-small-mobile) {
@@ -508,7 +508,7 @@ onUnmounted(() => {
             border: 1px solid rgba(224, 224, 224, 1);
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
               /* 上侧阴影 */
-              inset 0px -4px 8px rgba(255, 255, 255, 0.5);
+              inset 0px -4px 8px var(--home-right-shadow-color);
             /* 下侧高光 */
             display: flex;
             flex-direction: column;

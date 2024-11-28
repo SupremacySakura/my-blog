@@ -191,9 +191,7 @@ onMounted(async () => {
 .articlesBox {
   width: 100%;
   min-height: 100vh;
-  padding-top: 80px;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding: 80px 40px 0px 40px;
   box-sizing: border-box;
   display: flex;
   background-color: var(--article-background-color);
@@ -205,9 +203,7 @@ onMounted(async () => {
   }
 
   .leftSection {
-    padding-top: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 20px 10px 0px 10px;
     width: 900px;
     min-height: 100vh;
     background-color: var(--article-background-fill-color);
@@ -217,8 +213,7 @@ onMounted(async () => {
     align-items: center;
 
     @media screen and (max-width:@screen-middle-mobile) {
-      padding-left: 5px;
-      padding-right: 5px;
+      padding: 20px 5px 0px 5px;
       width: 100%;
     }
 

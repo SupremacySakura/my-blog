@@ -334,14 +334,12 @@ onMounted(async () => {
   width: 100%;
   box-sizing: border-box;
   min-height: 100vh;
-  padding-top: 100px;
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-bottom: 60px;
+  padding: 100px 40px 60px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: var(--message-background-color);
+  color: var(--message-text-color);
 
   @media screen and (max-width:@screen-mini-mobile) {
     padding-left: 20px;
@@ -436,6 +434,7 @@ onMounted(async () => {
       /* 禁止缩放 */
       outline: none;
       background-color: var(--message-background-fill-color);
+      color: var(--message-text-color);
     }
 
     div {
@@ -448,6 +447,7 @@ onMounted(async () => {
       border-radius: 50px;
       background-color: var(--message-background-fill-color);
       border: none;
+      color: var(--message-text-color);
     }
   }
 
@@ -563,6 +563,7 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     justify-content: start;
+    color: var(--message-text-color);
 
     @media screen and (max-width:@screen-mini-mobile) {
       width: 100vw;
@@ -637,5 +638,9 @@ onMounted(async () => {
       }
     }
   }
+}
+
+:deep(.el-dialog) {
+  --el-dialog-bg-color: var(--message-background-fill-color) !important;
 }
 </style>

@@ -129,8 +129,7 @@ onMounted(async () => {
       .cardItem {
         width: 200px;
         height: 100px;
-        margin-left: 20px;
-        margin-bottom: 20px;
+        margin: 0px 0px 20px 20px;
         background-color: var(--friend-card-background-color);
         display: flex;
         justify-content: space-around;

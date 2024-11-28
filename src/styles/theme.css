@@ -16,6 +16,7 @@
   --home-background-fill-color: rgba(255, 255, 255, 1);
   --home-text-color: rgba(0, 0, 0, 1);
   --home-head-text-color: rgba(255, 255, 255, 1);
+  --home-right-shadow-color: rgba(255, 255, 255, 0.5);
 
   /* 分享 */
   --moment-background-box-color: rgba(247, 247, 247, 1);
@@ -23,6 +24,7 @@
   --moment-left-shadow-color: rgba(255, 255, 255, 0.5);
   --moment-left-background-box-color: rgba(247, 247, 247, 1);
   --moment-left-text-color: rgba(0, 0, 0, 1);
+  --moment-right-text-color: rgba(0, 0, 0, 1);
   --moment-right-background-color: rgba(255, 255, 255, 1);
 
   /* 文章 */
@@ -61,6 +63,7 @@
   --home-background-color: rgba(27, 27, 31, 1);
   --home-background-fill-color: rgba(48, 47, 75, 1);
   --home-text-color: rgba(255, 255, 255, 1);
+  --home-right-shadow-color: rgba(0, 0, 0, 0.5);
 
   /* 分享 */
   --moment-background-box-color: rgba(27, 27, 31, 1);
@@ -68,6 +71,7 @@
   --moment-left-shadow-color: rgba(0, 0, 0, 0.5);
   --moment-left-background-box-color: rgba(50, 47, 59, 1);
   --moment-left-text-color: rgba(255, 255, 255, 1);
+  --moment-right-text-color: rgba(255, 255, 255, 1);
   --moment-right-background-color: rgba(48, 47, 75, 1);
 
   /* 文章 */

@@ -233,10 +233,7 @@ onMounted(async () => {
   width: 100%;
   // min-width: 1000px;
   height: 100vh;
-  padding-top: 90px;
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-bottom: 10px;
+  padding: 90px 40px 10px 40px;
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
@@ -308,7 +305,7 @@ onMounted(async () => {
         span {
           display: block;
           width: 1px;
-          height: 100%+20px;
+          height: (100%+20px);
           background-color: rgb(102.2, 177.4, 255);
         }
       }
@@ -344,7 +341,7 @@ onMounted(async () => {
 
   .rightSection {
     min-width: 180px;
-    height: 100vh-20px;
+    height: (100vh-20px);
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -352,6 +349,7 @@ onMounted(async () => {
     overflow-y: auto;
     background-color: var(--moment-right-background-color);
     margin-left: 10px;
+    color: var(--moment-right-text-color);
 
     @media screen and (max-width:@screen-middle-mobile) {
       width: 100%;
