@@ -323,6 +323,7 @@ onMounted(async () => {
 
     .moreSection {
       margin-bottom: 10px;
+      color: var(--article-card-text-color);
     }
   }
 }
@@ -341,4 +342,5 @@ onMounted(async () => {
     background-position: right -50px top 0
   }
 }
+
 </style>

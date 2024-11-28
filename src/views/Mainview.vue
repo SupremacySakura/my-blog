@@ -35,4 +35,8 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+:deep(.el-button) {
+  --el-button-bg-color: var(--el-button-background-color) !important;
+}
+</style>
