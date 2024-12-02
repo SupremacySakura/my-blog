@@ -1,10 +1,16 @@
-import http from '@/services/http'
+import { enhanceRequest } from '@/services/enhanceRequest'
 
 const getMoments = () => {
-  return http.get('/moments')
+  return enhanceRequest({
+    url: '/moments',
+    method: 'GET',
+  })
 }
 const getTechnology = () => {
-  return http.get('/moments/technology')
+  return enhanceRequest({
+    url: '/moments/technology',
+    method: 'GET',
+  })
 }
 export {
   getMoments,

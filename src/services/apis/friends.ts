@@ -1,7 +1,10 @@
-import http from '@/services/http'
+import { enhanceRequest } from '@/services/enhanceRequest'
 
 const getFriends = () => {
-  return http.get('/friends')
+  return enhanceRequest({
+    url: '/friends',
+    method: 'GET',
+  })
 }
 
 export {

@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const http = axios.create({
+const request = axios.create({
   baseURL: import.meta.env.VUE_APP_HTTP_URL,
   timeout: 10000,//请求超时时间
   headers: {
@@ -9,7 +9,7 @@ const http = axios.create({
 })
 
 //请求拦截器
-http.interceptors.request.use(
+request.interceptors.request.use(
   config => {
     //在请求前做些什么,比如发送token
     //config.headers.Authorization = 'Bearer ${token}
@@ -21,7 +21,7 @@ http.interceptors.request.use(
 )
 
 //响应拦截器
-http.interceptors.response.use(
+request.interceptors.response.use(
   response => {
     //对响应数据做些什么
     return response
@@ -31,4 +31,4 @@ http.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-export default http
+export default request

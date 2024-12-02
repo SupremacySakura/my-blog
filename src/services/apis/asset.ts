@@ -1,14 +1,22 @@
-import http from '@/services/http'
-
+import { request, enhanceRequest } from '@/services/enhanceRequest'
 const getTime = () => {
-  return http.get('/asset/time')
+  return enhanceRequest({
+    url: '/asset/time',
+    method: 'GET',
+  })
 }
 
 const getPeople = () => {
-  return http.get('/asset/people')
+  return enhanceRequest({
+    url: '/asset/people',
+    method: 'GET',
+  })
 }
 const visit = () => {
-  return http.post('/asset/get')
+  return enhanceRequest({
+    url: '/asset/get',
+    method: 'GET',
+  })
 }
 export {
   getTime,

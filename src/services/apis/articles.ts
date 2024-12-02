@@ -1,14 +1,20 @@
-import http from '@/services/http'
+import { enhanceRequest } from '@/services/enhanceRequest'
 
-const getArticles = (page:number) => {
-  return http.get('/articles',{params:{
-    page:page
-  }})
+const getArticles = (page: number) => {
+  return enhanceRequest({
+    url: '/articles',
+    method: 'GET',
+    params: {
+      page: page
+    },
+  })
 }
 const getArticlesNum = () => {
-  return http.get('/articles/number')
+  return enhanceRequest({
+    url: '/articles/number',
+    method: 'GET',
+  })
 }
-
 export {
   getArticles,
   getArticlesNum,
