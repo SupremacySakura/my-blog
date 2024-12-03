@@ -15,7 +15,7 @@ const getPeople = () => {
 const visit = () => {
   return enhanceRequest({
     url: '/asset/get',
-    method: 'GET',
+    method: 'POST',
   })
 }
 export {

@@ -380,7 +380,7 @@ onUnmounted(() => {
     .main {
       width: 60%;
       min-height: 100vh;
-      background-color: var(--home-background-fill-color);
+      background-color: var(--home-article-background-fill-color);
       padding: 10px;
       padding-top: 90px;
 
@@ -537,34 +537,4 @@ onUnmounted(() => {
   }
 }
 
-:deep(.markdown-body code) {
-  display: inline-block;
-  padding: 5px;
-  background-color: #f5f5f5;
-  /* 浅灰色背景 */
-  border: 1px solid #ddd;
-  /* 灰色边框 */
-  border-radius: 4px;
-  /* 圆角 */
-  font-family: monospace;
-  /* 等宽字体 */
-  overflow-x: auto;
-  /* 水平滚动条，适合长代码 */
-}
-
-:deep(.markdown-body pre),
-:deep(.markdown-body pre code) {
-  display: block;
-  padding: 5px;
-  background-color: #f5f5f5;
-  /* 浅灰色背景 */
-  border: 1px solid #ddd;
-  /* 灰色边框 */
-  border-radius: 4px;
-  /* 圆角 */
-  font-family: monospace;
-  /* 等宽字体 */
-  overflow-x: auto;
-  /* 水平滚动条，适合长代码 */
-}
 </style>

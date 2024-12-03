@@ -1,5 +1,4 @@
 :root {
-
   /* 导航栏 */
   --tabbar-first-page-color: rgba(255, 255, 255, 0.1);
   --tabbar-other-page-color: rgba(255, 255, 255, 1);
@@ -14,6 +13,7 @@
   /* 首页 */
   --home-background-color: rgba(247, 247, 247, 1);
   --home-background-fill-color: rgba(255, 255, 255, 1);
+  --home-article-background-fill-color: rgba(255, 255, 255, 1);
   --home-text-color: rgba(0, 0, 0, 1);
   --home-head-text-color: rgba(255, 255, 255, 1);
   --home-right-shadow-color: rgba(255, 255, 255, 0.5);
@@ -31,6 +31,7 @@
   --article-background-color: rgba(247, 247, 247, 1);
   --article-background-fill-color: rgba(255, 255, 255, 1);
   --article-card-background-color: rgba(240, 248, 255, 1);
+  --article-item-background-fill-color: rgba(255, 255, 255, 1);
   --article-card-text-color: rgba(0, 0, 0, 1);
 
   /* 留言板 */
@@ -46,11 +47,10 @@
 
   /* 公有 */
   --el-button-background-color: rgba(255, 255, 255, 1);
-
+  --code-text-color: rgba(0, 0, 0, 1);
 }
 
 .dark-theme {
-
   /* 导航栏 */
   --tabbar-first-page-color: rgba(27, 27, 31, 0.9);
   --tabbar-other-page-color: rgba(27, 27, 31, 1);
@@ -65,6 +65,7 @@
   /* 首页 */
   --home-background-color: rgba(27, 27, 31, 1);
   --home-background-fill-color: rgba(48, 47, 75, 1);
+  --home-article-background-fill-color: rgba(13, 17, 23, 1);
   --home-text-color: rgba(255, 255, 255, 1);
   --home-right-shadow-color: rgba(0, 0, 0, 0.5);
 
@@ -81,6 +82,7 @@
   --article-background-color: rgba(27, 27, 31, 1);
   --article-background-fill-color: rgba(48, 47, 75, 1);
   --article-card-background-color: rgba(50, 47, 59, 1);
+  --article-item-background-fill-color: rgba(13, 17, 23, 1);
   --article-card-text-color: rgba(255, 255, 255, 1);
 
   /* 留言板 */
@@ -96,4 +98,5 @@
 
   /* 公有 */
   --el-button-background-color: rgba(50, 47, 75, 1);
+  --code-text-color: rgba(255, 255, 255, 1);
 }
