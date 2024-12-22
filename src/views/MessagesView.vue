@@ -163,17 +163,19 @@ const showList = useTemplateRef("showList")
 const count = ref(0)
 watchEffect(() => {
   count.value
-  if (showList.value) {
+  if (showList.value && board.value) {
     nextTick(() => {
-      if (showList.value) {
-        showList.value.map((item, index) => {
-          if (item.getAnimations().length === 0 && item) {
+      if (showList.value && board.value instanceof HTMLElement && board.value) {
+        const boardWidth = board.value.offsetWidth || 0;
+        (showList.value as HTMLDivElement[]).map((item, index) => {
+          const itemWidth = item.offsetWidth || 0;
+          if (item.getAnimations().length === 0 && item && !isNaN(boardWidth) && !isNaN(itemWidth)) {
             item.style.top = `${random(0, 670)}px`
-            item.style.right = `${-item.offsetWidth}px`
+            item.style.right = `${-itemWidth}px`
             const animateMessage = () => {
               item.animate([
                 { transform: 'translateX(0)' }, // 起始状态
-                { transform: `translateX(-${(board.value as HTMLElement).offsetWidth + item.offsetWidth}px)` } // 结束状态
+                { transform: `translateX(-${boardWidth + itemWidth}px)` } // 结束状态
               ], {
                 duration: random(6000, 12000),
                 iterations: 1 // 无限循环
