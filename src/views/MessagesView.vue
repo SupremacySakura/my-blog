@@ -106,9 +106,7 @@ const handleChooseUserHeadPortrait = (event: any) => {
   if (file && file.type.startsWith('image/')) {
     const reader = new FileReader()
     reader.onload = (e) => {
-      if (e.target != null) {
-        userHeadPortrait.value = e.target.result as string
-      }
+      userHeadPortrait.value = e.target?.result as string
     }
     reader.readAsDataURL(file)
   } else {
@@ -120,12 +118,23 @@ const handleChooseUserHeadPortrait = (event: any) => {
  */
 const handlePublish = async () => {
   const time = dayjs().format('YYYY-MM-DD HH:mm:ss') // 自定义时间格式
-  const params = {
-    userHeadPortrait: userHeadPortrait.value,
-    name: name.value,
-    content: content.value,
-    time: time,
-    address: address.value
+  let params
+  if (userHeadPortrait.value === user) {
+    params = {
+      userHeadPortrait: '',
+      name: name.value,
+      content: content.value,
+      time: time,
+      address: address.value
+    }
+  } else {
+    params = {
+      userHeadPortrait: userHeadPortrait.value,
+      name: name.value,
+      content: content.value,
+      time: time,
+      address: address.value
+    }
   }
   if (!name.value) {
     ElMessage.error('请填写你的昵称')
