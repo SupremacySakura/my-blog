@@ -322,6 +322,8 @@ onMounted(async () => {
           align-items: center;
 
           .userHeadPortrait {
+            min-width: 50px;
+            min-height: 50px;
             width: 50px;
             height: 50px;
             border-radius: 50px;
@@ -329,6 +331,7 @@ onMounted(async () => {
           }
 
           time {
+            min-width: 115px;
             color: rgb(166.2, 168.6, 173.4);
             font-size: 12px;
           }
