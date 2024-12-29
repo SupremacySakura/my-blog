@@ -285,7 +285,7 @@ onMounted(async () => {
       }
 
       .info {
-        width: 360px;
+        width: 380px;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -335,19 +335,20 @@ onMounted(async () => {
 
           .label {
             display: flex;
+            max-width: 10em;
+            flex-wrap: wrap;
             li {
               width: auto;
               display: inline-block;
               box-sizing: content-box;
               font-size: 16px;
               padding: 0 5px;
-              line-height: 20px;
               border-radius: 5px;
               background-color: rgba(255, 255, 255, 1);
               color: rgba(255, 0, 0, 1);
               margin-left: 5px;
+              margin-top: 5px;
               text-align: center;
-
             }
 
             .hidden {
