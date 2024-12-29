@@ -45,6 +45,7 @@ const handleGetArticles = async () => {
     return
   }
   const res = await getArticles(page.value)
+  console.log(res)
   if (+res.data.code === 200) {
     //处理数据
     res.data.data.forEach((item: any) => {
@@ -172,6 +173,11 @@ onMounted(async () => {
               @load="onImageLoad(item, EArticlePhotoType.userHeadPortrait)" />
             <span>{{ item.name }}</span>
             <time>{{ item.time }}</time>
+            <ul class="label">
+              <li v-for="(subItem, subIndex) of item.label" :key="subItem" :class="{ 'hidden': subIndex >= 2 }">
+                <span v-if="subIndex < 2">{{ subItem }}</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -298,9 +304,17 @@ onMounted(async () => {
 
         .abstract {
           width: 100%;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          line-clamp: 3;
+          /* 设置显示的行数 */
           overflow: hidden;
-          white-space: nowrap;
           text-overflow: ellipsis;
+          line-height: 1.5;
+          /* 根据需要调整 */
+          max-height: calc(1.5em * 3);
+          /* 行高 * 行数 */
         }
 
         .author {
@@ -311,11 +325,34 @@ onMounted(async () => {
             width: 50px;
             height: 50px;
             border-radius: 50px;
+            margin-right: 5px;
           }
 
           time {
             color: rgb(166.2, 168.6, 173.4);
             font-size: 12px;
+          }
+
+          .label {
+            display: flex;
+            li {
+              width: auto;
+              display: inline-block;
+              box-sizing: content-box;
+              font-size: 16px;
+              padding: 0 5px;
+              line-height: 20px;
+              border-radius: 5px;
+              background-color: rgba(255, 255, 255, 1);
+              color: rgba(255, 0, 0, 1);
+              margin-left: 5px;
+              text-align: center;
+
+            }
+
+            .hidden {
+              display: none;
+            }
           }
         }
       }
@@ -342,5 +379,4 @@ onMounted(async () => {
     background-position: right -50px top 0
   }
 }
-
 </style>

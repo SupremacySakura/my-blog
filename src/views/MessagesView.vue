@@ -272,7 +272,7 @@ onMounted(async () => {
     <!-- 评论区展示 -->
     <section class="messagesShow">
       <div class="showTop">
-        <h4>评论数量:{{ messagesList.length }}</h4>
+        <h4>评论数量:{{ messageNum }}</h4>
       </div>
       <div class="messagesItem" v-for="item of messagesList" :key="item.id">
         <section class="leftSection">

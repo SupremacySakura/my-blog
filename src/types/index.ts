@@ -8,6 +8,7 @@ interface iArticleItem {
   name: string,
   time: string,
   cover: string,
+  label:string[],
   loading: boolean[],  // 第一项表示头像加载,第二项表示封面加载
 }
 //声明加载文章图片枚举

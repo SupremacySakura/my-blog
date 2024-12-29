@@ -69,6 +69,11 @@ onMounted(() => {
     <section class="article-item">
       <el-button round @click="handleGoBack()">返回</el-button>
       <h1>{{ article?.head }}</h1>
+      <ul class="label">
+        <li v-for="item of article?.label" :key="item">
+          {{ item }}
+        </li>
+      </ul>
       <div ref="articleBody" class="markdown-body"></div>
       <div v-if="!article">404 NOT FOUND</div>
     </section>
@@ -100,7 +105,28 @@ onMounted(() => {
     @media screen and (max-width:@screen-middle-mobile) {
       width: 95%;
     }
+    h1{
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    .label {
+      display: flex;
+      margin: 10px 0px;
+
+      li {
+        width: auto;
+        display: inline-block;
+        box-sizing: content-box;
+        font-size: 14px;
+        padding: 0 5px;
+        line-height: 20px;
+        border-radius: 5px;
+        background-color: rgba(236, 245, 255, 1);
+        color: rgba(64, 158, 255, 1);
+        margin-left: 5px;
+        text-align: center;
+      }
+    }
   }
 }
-
 </style>

@@ -48,6 +48,7 @@
   /* 公有 */
   --el-button-background-color: rgba(255, 255, 255, 1);
   --code-text-color: rgba(0, 0, 0, 1);
+  --el-color-white: rgba(0, 0, 0, 1); 
 }
 
 .dark-theme {
@@ -99,4 +100,5 @@
   /* 公有 */
   --el-button-background-color: rgba(50, 47, 75, 1);
   --code-text-color: rgba(255, 255, 255, 1);
+  --el-color-white: rgba(255, 255, 255, 1);
 }
