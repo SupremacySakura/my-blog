@@ -258,7 +258,6 @@ onMounted(async () => {
     box-shadow: inset 0px 8px 16px rgba(0, 0, 0, 0.2),
       /* 上侧阴影 */
       inset 0px -8px 16px var(--moment-left-shadow-color);
-
     /* 下侧高光 */
     color: var(--moment-left-text-color);
 
@@ -350,11 +349,19 @@ onMounted(async () => {
     background-color: var(--moment-right-background-color);
     margin-left: 10px;
     color: var(--moment-right-text-color);
+    box-shadow: inset 0px 8px 16px rgba(0, 0, 0, 0.2),
+      /* 上侧阴影 */
+      inset 0px -8px 16px var(--moment-left-shadow-color);
 
+    /* 下侧高光 */
     @media screen and (max-width:@screen-middle-mobile) {
       width: 100%;
       min-height: 1000px;
       margin-left: 0px;
+    }
+
+    h2 {
+      margin-top: 20px;
     }
 
     .box {

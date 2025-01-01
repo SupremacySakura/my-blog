@@ -243,7 +243,7 @@ onMounted(async () => {
       transform: scale(1);
       transition: transform 0.8s ease;
       margin-bottom: 30px;
-
+      cursor: pointer;
       @media screen and (max-width:@screen-middle-mobile) {
         width: 95%;
       }

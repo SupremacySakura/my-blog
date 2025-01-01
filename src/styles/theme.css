@@ -48,7 +48,10 @@
   /* 公有 */
   --el-button-background-color: rgba(255, 255, 255, 1);
   --code-text-color: rgba(0, 0, 0, 1);
-  --el-color-white: rgba(0, 0, 0, 1); 
+  --el-color-white: rgba(0, 0, 0, 1);
+  --hover-button-background-color: rgba(236, 245, 255);
+  --hover-button-text-color: rgba(64, 158, 255, 1);
+  --button-border-color: rgba(220, 223, 230, 1);
 }
 
 .dark-theme {

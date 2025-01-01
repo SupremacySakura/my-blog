@@ -529,12 +529,17 @@ onUnmounted(() => {
   .changeButton {
     width: 80px;
     height: 40px;
-    border: none;
+    border: 1px solid var(--button-border-color);
     border-radius: 40px;
     background-color: var(--home-background-fill-color);
     color: var(--home-text-color);
     margin-bottom: 20px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--hover-button-background-color);
+      color: var(--hover-button-text-color);
+    }
   }
 }
-
 </style>

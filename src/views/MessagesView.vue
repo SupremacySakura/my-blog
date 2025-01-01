@@ -278,7 +278,8 @@ onMounted(async () => {
         <section class="leftSection">
           <el-image :src="item.userHeadPortrait || user" alt="头像" class="custom-image" fit="cover" lazy
             @error="onError(item)" v-loading="item.loading[EMessagePhotoType.Message]"
-            @load="onImageLoad(item, EMessagePhotoType.Message)"></el-image>
+            @load="onImageLoad(item, EMessagePhotoType.Message)"
+            :preview-src-list="[item.userHeadPortrait || user]"></el-image>
         </section>
         <section class="rightSection">
           <h4>{{ item.name }}</h4>
@@ -457,8 +458,14 @@ onMounted(async () => {
       height: 50px;
       border-radius: 50px;
       background-color: var(--message-background-fill-color);
-      border: none;
+      border: 1px solid var(--button-border-color);
       color: var(--message-text-color);
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--hover-button-background-color);
+        color: var(--hover-button-text-color);
+      }
     }
   }
 

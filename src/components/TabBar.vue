@@ -196,7 +196,7 @@ onMounted(() => {
         line-height: 40px;
         margin: 10px;
         border-radius: 5px;
-
+        cursor: pointer;
         &:hover {
           background-color: rgba(29, 30, 31, 0.2);
         }
