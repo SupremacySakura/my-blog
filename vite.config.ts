@@ -8,7 +8,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // https://vite.dev/config/
 export default defineConfig({
-  base:'/',
+  base: '/',
   plugins: [
     vue(),
     vueDevTools(),
@@ -29,8 +29,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           // 大文件可以单独分块
-          vendor: ['vue', 'pinia', 'vue-router', 'axios','pinia-plugin-persistedstate'],
-          utils: ['dayjs', 'lodash','marked'],
+          vendor: ['vue', 'pinia', 'vue-router', 'axios', 'pinia-plugin-persistedstate'],
+          utils: ['dayjs', 'lodash', 'marked'],
           element: ['element-plus'],
           types: ['highlight.js'],
         },
@@ -40,4 +40,11 @@ export default defineConfig({
     minify: 'esbuild',
   },
   envPrefix: 'VUE_APP_',
+  css: {
+    preprocessorOptions: {
+      less: {
+        additionalData: `@import "@/styles/global.less";`, // 引入全局 Less 文件
+      },
+    },
+  },
 })

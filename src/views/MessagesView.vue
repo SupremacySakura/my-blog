@@ -360,8 +360,7 @@ onMounted(async () => {
 
   //上部留言板
   .board {
-    width: @standardWidth;
-    height: 900px * 0.8;
+    .size(@standardWidth, 900px * 0.8);
     position: relative;
     color: white;
     margin-bottom: 10px;
@@ -376,16 +375,14 @@ onMounted(async () => {
     }
 
     .backgroundImage {
-      width: 100%;
-      height: 100%;
+      .size(100%, 100%);
       position: absolute;
       border-radius: 10px;
       z-index: 0;
     }
 
     .boardDiv {
-      width: 100%;
-      height: 100%;
+      .size(100%, 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -403,9 +400,7 @@ onMounted(async () => {
       background-color: rgba(62, 62, 63, 0.5);
 
       .custom-image {
-        width: 50px;
-        height: 50px;
-        border-radius: 50px;
+        .avatar(50px);
       }
 
       .name {
@@ -422,8 +417,7 @@ onMounted(async () => {
 
   //留言发布区
   .messagesPublish {
-    width: @standardWidth;
-    height: 350px;
+    .size(@standardWidth, 350px);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -440,8 +434,7 @@ onMounted(async () => {
     }
 
     textarea {
-      width: 98%;
-      height: 200px;
+      .size(98%, 200px);
       resize: none;
       /* 禁止缩放 */
       outline: none;
@@ -454,8 +447,7 @@ onMounted(async () => {
     }
 
     button {
-      width: 100px;
-      height: 50px;
+      .size(100px, 50px);
       border-radius: 50px;
       background-color: var(--message-background-fill-color);
       border: 1px solid var(--button-border-color);
@@ -498,13 +490,11 @@ onMounted(async () => {
       color: var(--message-text-color);
 
       .leftSection {
-        width: 50px;
-        height: 100%;
+        .size(50px, 100%);
 
         .custom-image {
-          width: 50px;
-          height: 50px;
-          border-radius: 25px;
+          .size(50px, 50px);
+          border-radius: 50%;
         }
       }
 
@@ -554,8 +544,7 @@ onMounted(async () => {
 
   /* HTML: <div class="loader"></div> */
   .loader {
-    width: 120px;
-    height: 20px;
+    .size(120px, 20px);
     background:
       linear-gradient(90deg, #0001 33%, #0005 50%, #0001 66%) #f2f2f2;
     background-size: 300% 100%;
@@ -588,29 +577,24 @@ onMounted(async () => {
     }
 
     .topDiv {
-      width: 100%;
-      height: 100px;
+      .size(100%, 100px);
       display: flex;
       align-items: center;
       justify-content: center;
 
       .user {
-        width: 85px;
-        height: 85px;
-        border-radius: 85px;
+        .avatar(85px);
         border: 5px solid black;
 
         label {
           display: block;
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           border-radius: 85px;
         }
 
         div,
         img {
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           border-radius: 85px;
         }
 
@@ -629,8 +613,7 @@ onMounted(async () => {
         margin-left: 10px;
 
         input {
-          width: 200px;
-          height: 30px;
+          .size(200px, 30px);
           outline: none;
 
         }
@@ -638,8 +621,7 @@ onMounted(async () => {
     }
 
     .bottomDiv {
-      width: 100%;
-      height: 100px;
+      .size(100%, 100px);
       display: flex;
       flex-direction: column;
       justify-content: space-around;
@@ -650,8 +632,7 @@ onMounted(async () => {
       }
 
       input {
-        width: 300px;
-        height: 30px;
+        .size(300px, 30px);
         outline: none;
       }
     }

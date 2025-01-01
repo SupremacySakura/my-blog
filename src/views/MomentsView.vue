@@ -230,9 +230,7 @@ onMounted(async () => {
 @screen-small-mobile: 750px;
 
 .momentsBox {
-  width: 100%;
-  // min-width: 1000px;
-  height: 100vh;
+  .size(100%, 100vh);
   padding: 90px 40px 10px 40px;
   box-sizing: border-box;
   overflow: hidden;
@@ -248,27 +246,21 @@ onMounted(async () => {
   }
 
   .leftSection {
-    width: 900px;
-    height: 90%;
+    .size(900px, 90%);
+    .innerShadow;
     box-sizing: border-box;
     margin-bottom: 40px;
     background-color: var(--moment-left-background-color);
     border: 1px solid rgba(224, 224, 224, 1);
     overflow-y: auto;
-    box-shadow: inset 0px 8px 16px rgba(0, 0, 0, 0.2),
-      /* 上侧阴影 */
-      inset 0px -8px 16px var(--moment-left-shadow-color);
-    /* 下侧高光 */
     color: var(--moment-left-text-color);
 
     @media screen and (max-width:@screen-small-mobile) {
-      width: 100%;
-      height: 100vh;
+      .size(100%, 100vh);
     }
 
     .card {
-      width: 100%;
-      height: 300px;
+      .size(100%, 300px);
       display: grid;
       grid-template-columns: 50px 700px;
       grid-template-rows: 50px 250px;
@@ -284,9 +276,8 @@ onMounted(async () => {
         justify-content: end;
 
         span {
+          .size(20px, 20px);
           display: block;
-          width: 20px;
-          height: 20px;
           border-radius: 20px;
           background-color: rgb(102.2, 177.4, 255);
         }
@@ -314,8 +305,7 @@ onMounted(async () => {
         padding-right: 20px;
 
         section {
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           background-color: var(--moment-left-background-box-color);
           border-radius: 10px;
           padding: 10px;
@@ -327,9 +317,7 @@ onMounted(async () => {
             margin-bottom: 5px;
 
             .custom-image {
-              width: 50px;
-              height: 50px;
-              border-radius: 25px;
+              .avatar(50px);
             }
           }
 
@@ -339,6 +327,7 @@ onMounted(async () => {
   }
 
   .rightSection {
+    .innerShadow;
     min-width: 180px;
     height: (100vh-20px);
     flex-grow: 1;
@@ -349,11 +338,7 @@ onMounted(async () => {
     background-color: var(--moment-right-background-color);
     margin-left: 10px;
     color: var(--moment-right-text-color);
-    box-shadow: inset 0px 8px 16px rgba(0, 0, 0, 0.2),
-      /* 上侧阴影 */
-      inset 0px -8px 16px var(--moment-left-shadow-color);
 
-    /* 下侧高光 */
     @media screen and (max-width:@screen-middle-mobile) {
       width: 100%;
       min-height: 1000px;
@@ -365,8 +350,7 @@ onMounted(async () => {
     }
 
     .box {
-      width: 100%;
-      height: 100%;
+      .size(100%, 100%);
       padding-bottom: 50px;
       position: relative;
 
@@ -389,15 +373,13 @@ onMounted(async () => {
         }
 
         .background {
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           position: absolute;
           z-index: -1;
         }
 
         .shade {
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           position: absolute;
           z-index: -1;
           background-color: rgba(0, 0, 0, 0.4);
@@ -408,9 +390,7 @@ onMounted(async () => {
         }
 
         .icon {
-          width: 50px;
-          height: 50px;
-
+          .size(50px, 50px);
         }
       }
     }

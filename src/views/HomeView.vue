@@ -91,17 +91,14 @@ const getUsingTime = async () => {
   const res = await getTime()
   if (res.data.code === 200) {
     time.value = res.data.data
-    const startDate = new Date(time.value + 'Z')
+    const startDate = new Date(time.value)
     const endDate = new Date()
     // 计算时间间隔（以毫秒为单位）
     const timeDiff = endDate.getTime() - startDate.getTime()
-    secondsDiff.value = Math.floor(timeDiff / 1000) || 0
-    minutesDiff.value = Math.floor(secondsDiff.value / 60) || 0
-    secondsDiff.value = Math.floor(secondsDiff.value % 60) || 0
-    hoursDiff.value = Math.floor(minutesDiff.value / 60) || 0
-    minutesDiff.value = Math.floor(minutesDiff.value % 60) || 0
-    daysDiff.value = Math.floor(hoursDiff.value / 24) || 0
-    hoursDiff.value = Math.floor(hoursDiff.value % 24) || 0
+    daysDiff.value = Math.floor(timeDiff / (24 * 3600 * 1000)) || 0
+    hoursDiff.value = Math.floor(timeDiff / (3600 * 1000)) % 24 || 0
+    minutesDiff.value = Math.floor(timeDiff / (60 * 1000)) % 60 || 0
+    secondsDiff.value = Math.floor(timeDiff / 1000) % 60 || 0
   }
 }
 /**
@@ -302,14 +299,12 @@ onUnmounted(() => {
   background-color: var(--home-background-color);
 
   .background-img {
-    width: 100%;
-    height: 100vh;
+    .size(100%, 100vh);
     position: absolute;
   }
 
   .homeBox {
-    width: 100%;
-    height: 100vh;
+    .size(100%, 100vh);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -391,8 +386,7 @@ onUnmounted(() => {
 
     //右侧
     .rightSection {
-      width: 450px;
-      height: 900px;
+      .size(450px, 900px);
       display: flex;
       flex-direction: column;
       justify-content: space-around;
@@ -409,8 +403,7 @@ onUnmounted(() => {
       }
 
       .about {
-        width: 100%;
-        height: 90%;
+        .size(100%, 90%);
         padding: 10px;
         box-sizing: border-box;
         display: flex;
@@ -423,8 +416,8 @@ onUnmounted(() => {
           margin-bottom: 10px;
 
           div {
-            width: 410px;
-            height: 310px;
+            .innerShadow;
+            .size(410px, 310px);
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -434,11 +427,7 @@ onUnmounted(() => {
             border-radius: 10px;
             padding: 10px;
             box-sizing: border-box;
-            box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
-              /* 上侧阴影 */
-              inset 0px -4px 8px var(--home-right-shadow-color);
 
-            /* 下侧高光 */
             @media screen and (max-width:@screen-middle-mobile) {
               width: 220px;
             }
@@ -449,20 +438,14 @@ onUnmounted(() => {
           }
 
           .custom-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 40px;
+            .avatar(80px);
             overflow: hidden;
             padding: 0;
 
             :deep(.el-image__inner) {
-              /* 设置内部图片为圆形 */
+              .size(100%, 100%);
               border-radius: 50%;
-              width: 100%;
-              /* 确保图片充满整个容器 */
-              height: 100%;
               object-fit: cover;
-              /* 图片适应容器 */
             }
           }
 
@@ -474,8 +457,7 @@ onUnmounted(() => {
 
         //右侧下部信息
         .info {
-          width: 410px;
-          height: 310px;
+          .size(410px, 310px);
           display: grid;
           grid-template-columns: 200px 200px;
           grid-template-rows: 150px 150px;
@@ -503,13 +485,10 @@ onUnmounted(() => {
           }
 
           div {
+            .innerShadow;
             border-radius: 10px;
             background-color: var(--home-background-fill-color);
             border: 1px solid rgba(224, 224, 224, 1);
-            box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
-              /* 上侧阴影 */
-              inset 0px -4px 8px var(--home-right-shadow-color);
-            /* 下侧高光 */
             display: flex;
             flex-direction: column;
             padding: 10px;
@@ -527,8 +506,7 @@ onUnmounted(() => {
   }
 
   .changeButton {
-    width: 80px;
-    height: 40px;
+    .size(80px, 40px);
     border: 1px solid var(--button-border-color);
     border-radius: 40px;
     background-color: var(--home-background-fill-color);

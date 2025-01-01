@@ -1,0 +1,14 @@
+.innerShadow {
+    box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0px -4px 8px var(--home-right-shadow-color);
+}
+
+.size(@width: 100%, @height: 100%) {
+    width: @width;
+    height: @height;
+}
+
+.avatar(@size) {
+    .size(@size, @size);
+    border-radius: 50%;
+}

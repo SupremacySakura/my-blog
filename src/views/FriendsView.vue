@@ -127,8 +127,7 @@ onMounted(async () => {
       justify-content: start;
 
       .cardItem {
-        width: 200px;
-        height: 100px;
+        .size(200px, 100px);
         margin: 0px 0px 20px 20px;
         background-color: var(--friend-card-background-color);
         display: flex;
@@ -146,9 +145,7 @@ onMounted(async () => {
         }
 
         .user {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
+          .avatar(50px);
 
           &:hover {
             animation-name: revolve;

@@ -224,8 +224,7 @@ onMounted(async () => {
     }
 
     .card {
-      width: 800px;
-      height: 200px;
+      .size(800px, 200px);
       border-radius: 8px;
       background-color: var(--article-card-background-color);
       margin: 0 auto;
@@ -244,6 +243,7 @@ onMounted(async () => {
       transition: transform 0.8s ease;
       margin-bottom: 30px;
       cursor: pointer;
+
       @media screen and (max-width:@screen-middle-mobile) {
         width: 95%;
       }
@@ -253,20 +253,17 @@ onMounted(async () => {
       }
 
       .image {
-        width: 320px;
-        height: 180px;
+        .size(320px, 180px);
         border-radius: 8px;
 
         @media screen and (max-width:@screen-middle-mobile) {
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           position: absolute;
           z-index: 0;
         }
 
         .cover {
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           border-radius: 8px;
         }
       }
@@ -275,8 +272,7 @@ onMounted(async () => {
         display: none;
 
         @media screen and (max-width:@screen-middle-mobile) {
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           display: block;
           position: absolute;
           z-index: 0;
@@ -285,8 +281,7 @@ onMounted(async () => {
       }
 
       .info {
-        width: 380px;
-        height: 100%;
+        .size(380px, 100%);
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -294,8 +289,7 @@ onMounted(async () => {
         color: var(--article-card-text-color);
 
         @media screen and (max-width:@screen-middle-mobile) {
-          width: 100%;
-          height: 100%;
+          .size(100%, 100%);
           position: relative;
           z-index: 1;
           color: rgba(255, 255, 255, 1);
@@ -324,9 +318,7 @@ onMounted(async () => {
           .userHeadPortrait {
             min-width: 50px;
             min-height: 50px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50px;
+            .avatar(50px);
             margin-right: 5px;
           }
 
@@ -340,6 +332,7 @@ onMounted(async () => {
             display: flex;
             max-width: 10em;
             flex-wrap: wrap;
+
             li {
               width: auto;
               display: inline-block;
@@ -371,8 +364,7 @@ onMounted(async () => {
 
 /* HTML: <div class="loader"></div> */
 .loader {
-  width: 120px;
-  height: 20px;
+  .size(120px, 20px);
   background:
     linear-gradient(90deg, #0000, orange) left -50px top 0/50px 20px no-repeat lightblue;
   animation: l2 1s infinite linear;
