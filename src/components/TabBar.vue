@@ -44,23 +44,28 @@ const tabBarList: iTabBarItem[] = [
   },
   {
     id: 2,
-    text: '分享',
-    path: '/moments'
+    text: '留言板',
+    path: '/messages'
   },
   {
     id: 3,
-    text: '文章',
-    path: '/articles'
+    text: '动态',
+    path: '/moments'
   },
   {
     id: 4,
-    text: '留言板',
-    path: '/messages'
+    text: '文章',
+    path: '/articles'
   },
   {
     id: 5,
     text: '朋友们',
     path: '/friends'
+  },
+  {
+    id: 6,
+    text: '资源',
+    path: '/resources'
   }
 ]
 //父盒子
@@ -197,6 +202,7 @@ onMounted(() => {
         margin: 10px;
         border-radius: 5px;
         cursor: pointer;
+
         &:hover {
           background-color: rgba(29, 30, 31, 0.2);
         }

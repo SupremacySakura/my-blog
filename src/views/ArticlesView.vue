@@ -45,7 +45,6 @@ const handleGetArticles = async () => {
     return
   }
   const res = await getArticles(page.value)
-  console.log(res)
   if (+res.data.code === 200) {
     //处理数据
     res.data.data.forEach((item: any) => {
@@ -155,7 +154,7 @@ onMounted(async () => {
 <template>
   <div class="articlesBox">
     <!-- 文章列表展示 -->
-    <section class="leftSection">
+    <section class="mainSection">
       <section class="card" v-for="(item, index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
           <el-image :src="item.cover || test1" alt="封面" class="cover" fit="cover" lazy
@@ -192,28 +191,20 @@ onMounted(async () => {
 </template>
 
 <style lang="less" scoped>
-@screen-middle-mobile: 960px;
+@screen-middle-mobile: 1000px;
 
 .articlesBox {
-  width: 100%;
-  min-height: 100vh;
-  padding: 80px 40px 0px 40px;
-  box-sizing: border-box;
-  display: flex;
+  .standardBox;
   background-color: var(--article-background-color);
-  justify-content: center;
 
   @media screen and (max-width:@screen-middle-mobile) {
-    padding-left: 10px;
-    padding-right: 10px;
+    .standardBoxChange;
   }
 
-  .leftSection {
-    padding: 20px 10px 0px 10px;
-    width: 900px;
-    min-height: 100vh;
+  .mainSection {
+    .standardWidth;
+    .innerShadow;
     background-color: var(--article-background-fill-color);
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -228,6 +219,7 @@ onMounted(async () => {
       border-radius: 8px;
       background-color: var(--article-card-background-color);
       margin: 0 auto;
+      margin-bottom: 30px;
       display: flex;
       align-items: center;
       justify-content: space-around;
@@ -241,7 +233,6 @@ onMounted(async () => {
       /* 远处阴影 */
       transform: scale(1);
       transition: transform 0.8s ease;
-      margin-bottom: 30px;
       cursor: pointer;
 
       @media screen and (max-width:@screen-middle-mobile) {

@@ -338,7 +338,6 @@ onMounted(async () => {
 </template>
 
 <style lang="less" scoped>
-@standardWidth: 1600px * 0.8px;
 @screen-middle-mobile: 1600px * 0.8px;
 @screen-mini-mobile: 500px;
 
@@ -361,18 +360,11 @@ onMounted(async () => {
   //上部留言板
   .board {
     .size(@standardWidth, 900px * 0.8);
+    .standardWidth;
     position: relative;
     color: white;
     margin-bottom: 10px;
     overflow: hidden;
-
-    @media screen and (max-width:@screen-middle-mobile) {
-      width: 90%;
-    }
-
-    @media screen and (max-width:@screen-mini-mobile) {
-      width: 100%;
-    }
 
     .backgroundImage {
       .size(100%, 100%);

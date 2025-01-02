@@ -100,23 +100,21 @@ onMounted(async () => {
 @screen-middle-mobile: 960px;
 
 .friendsBox {
-  width: 100%;
-  min-height: 100vh;
+  .standardBox;
   background-color: var(--friend-background-color);
-  display: flex;
-  justify-content: center;
   color: var(--friend-text-color);
 
+  @media screen and (max-width:@screen-middle-mobile) {
+    .standardBoxChange;
+  }
+
   .cardBox {
-    width: 60%;
-    min-height: 100vh;
+    .standardWidth;
+    .innerShadow;
     background-color: var(--friend-background-fill-color);
-    box-sizing: border-box;
-    padding: 20px;
-    margin-top: 80px;
 
     @media screen and (max-width:@screen-middle-mobile) {
-      width: 95%;
+      width: 100%;
     }
 
     .cardList {

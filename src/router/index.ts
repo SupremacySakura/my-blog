@@ -29,14 +29,19 @@ const router = createRouter({
           component: () => import('@/views/MessagesView.vue'),
         },
         {
-          path:'/friends',
-          name:'friends',
+          path: '/friends',
+          name: 'friends',
           component: () => import('@/views/FriendsView.vue'),
         },
         {
-          path:'/show/:id',
-          name:'show',
+          path: '/show/:id',
+          name: 'show',
           component: () => import('@/views/ArticleItemView.vue'),
+        },
+        {
+          path: '/resources',
+          name: 'resources',
+          component: () => import('@/views/ResourcesView.vue'),
         }
       ]
     },

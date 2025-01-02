@@ -12,3 +12,34 @@
     .size(@size, @size);
     border-radius: 50%;
 }
+
+@standardWidth: 1600px * 0.8px;
+
+.standardWidth() {
+    width: @standardWidth;
+    box-sizing: border-box;
+    padding: 20px;
+
+    @media screen and (max-width:(1600px * 0.8px)) {
+        width: 90%;
+    }
+
+    @media screen and (max-width:500px) {
+        width: 100%;
+    }
+}
+
+.standardBox() {
+    .size(100%, 100%);
+    min-height: 100vh;
+    padding: 90px 0px 10px 0px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+}
+
+.standardBoxChange() {
+    padding-left: 10px;
+    padding-right: 10px;
+}
