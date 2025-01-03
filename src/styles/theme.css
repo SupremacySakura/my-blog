@@ -4,7 +4,8 @@
   --tabbar-other-page-color: rgba(255, 255, 255, 1);
   --tabbar-text-color: rgba(0, 0, 0, 1);
   --tabbar-border-bottom-color: rgba(0, 0, 0, 0.1);
-
+  --tabbar-background-hover-color: rgba(29, 30, 31, 0.2);
+  --tabbar-background-active-color: rgba(29, 30, 31, 0.1);
   /* 底部栏 */
   --bottombar-background-color: rgba(255, 255, 255, 1);
   --bottombar-border-top-color: rgba(224, 224, 224, 1);
@@ -52,6 +53,7 @@
   --hover-button-background-color: rgba(236, 245, 255);
   --hover-button-text-color: rgba(64, 158, 255, 1);
   --button-border-color: rgba(220, 223, 230, 1);
+  --el-border-color: rgba(255, 255, 255, 1)
 }
 
 .dark-theme {
@@ -60,7 +62,8 @@
   --tabbar-other-page-color: rgba(27, 27, 31, 1);
   --tabbar-text-color: rgba(255, 255, 255, 1);
   --tabbar-border-bottom-color: rgba(255, 255, 255, 0.5);
-
+  --tabbar-background-hover-color: rgba(255, 255, 255, 0.2);
+  --tabbar-background-active-color: rgba(255, 255, 255, 0.1);
   /* 底部栏 */
   --bottombar-background-color: rgba(27, 27, 31, 1);
   --bottombar-border-top-color: rgba(0, 0, 0, 1);
@@ -104,4 +107,6 @@
   --el-button-background-color: rgba(50, 47, 75, 1);
   --code-text-color: rgba(255, 255, 255, 1);
   --el-color-white: rgba(255, 255, 255, 1);
+  --el-border-color: rgba(0, 0, 0, 0.5);
+  --el-bg-color: rgba(27, 27, 31, 1);
 }

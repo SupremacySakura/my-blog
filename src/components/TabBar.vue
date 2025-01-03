@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef, onMounted, nextTick } from 'vue'
+import { ref, useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
 //导入vue路由相关api
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -10,10 +10,14 @@ import { useAssetStore } from '@/stores/asset'
 const { _setPageStart, _nowPath, _setNowPath } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
+//导入lodash相关API
+import { throttle } from 'lodash'
 //导入ElementPlus相关内容
+import type { DrawerProps } from 'element-plus'
+
 import {
-  ArrowLeft,
-  ArrowRight,
+  Fold,
+  Expand,
 } from '@element-plus/icons-vue'
 //路由接口
 interface iTabBarItem {
@@ -36,7 +40,7 @@ const gotoPage = (item: iTabBarItem) => {
   router.push(item.path)
 }
 //导航栏数组
-const tabBarList: iTabBarItem[] = [
+const tabBarList = ref<iTabBarItem[]>([
   {
     id: 1,
     text: '首页',
@@ -67,61 +71,58 @@ const tabBarList: iTabBarItem[] = [
     text: '资源',
     path: '/resources'
   }
-]
+])
+//隐藏导航栏数组
+const hiddenTabBarList = ref<iTabBarItem[]>([
+])
 //父盒子
 const container = useTemplateRef('container')
-//子盒子
-const containerItem = useTemplateRef('containerItem')
+const handleResize = () => {
+  if (!container.value) return
+  const offsetWidth = container.value.offsetWidth
+  const maxTabLength = Math.floor(offsetWidth / 100)  // 假设每个 tab 占 100px
+  console.log('maxTabLength', maxTabLength)
+  if (tabBarList.value.length > maxTabLength) {
+    // 如果 tabBarList 超过最大显示数量，移除一个 tab 并加入 hiddenTabBarList
+    hiddenTabBarList.value.push(tabBarList.value.pop() as iTabBarItem)
+  } else if (tabBarList.value.length < maxTabLength && hiddenTabBarList.value.length > 0) {
+    // 如果 tabBarList 少于最大显示数量，且 hiddenTabBarList 有元素，移除一个并加入 tabBarList
+    tabBarList.value.push(hiddenTabBarList.value.pop() as iTabBarItem)
+  }
+  if (tabBarList.value.length !== maxTabLength) {
+    handleResize()
+  } else {
+    return
+  }
+}
 //存储当前路由
 const nowPath = ref<iTabBarItem>({
   id: 1,
   text: '首页',
   path: '/home'
 })
-const tabLeft = () => {
-  if (container.value && containerItem.value) {
-    if (nowPath.value != tabBarList[0]) {
-      const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
-      const gotoItem = tabBarList[index - 1]
-      if (gotoItem) {
-        gotoPage(gotoItem)
-        container.value.scrollTo({
-          left: (index - 1) * 100, // 向左滚动指定的像素
-          behavior: 'smooth', // 添加平滑滚动效果
-        })
-      }
-    }
-  }
+
+const ExpandStatus = ref(false)
+const handleExpand = () => {
+  ExpandStatus.value = !ExpandStatus.value
 }
-const tabRight = () => {
-  if (container.value && containerItem.value) {
-    if (nowPath.value != tabBarList[tabBarList.length]) {
-      const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
-      const gotoItem = tabBarList[index + 1]
-      if (gotoItem) {
-        gotoPage(gotoItem)
-        container.value.scrollTo({
-          left: (index + 1) * 100, // 向左滚动指定的像素
-          behavior: 'smooth', // 添加平滑滚动效果
-        })
-      }
-    }
-  }
-}
+const direction = ref<DrawerProps['direction']>('rtl')
 onMounted(() => {
   //初始化
   nowPath.value = _nowPath
-  nextTick(() => {
-    setTimeout(() => {
-      if (container.value && containerItem.value) {
-        const index = tabBarList.findIndex((item) => item.id === nowPath.value.id)
-        container.value.scrollTo({
-          left: index * 100, // 向左滚动指定的像素
-          behavior: 'smooth', // 添加平滑滚动效果
-        })
-      }
-    }, 0)
-  })
+  if (container.value) {
+    const resizeObserver = new ResizeObserver(handleResize)
+    resizeObserver.observe(container.value)
+    // 初始化时也执行一次 resize 逻辑
+    handleResize()
+  }
+})
+onBeforeUnmount(() => {
+  // 清理副作用
+  if (container.value) {
+    const resizeObserver = new ResizeObserver(handleResize)
+    resizeObserver.disconnect()  // 移除观察器
+  }
 })
 </script>
 
@@ -131,12 +132,19 @@ onMounted(() => {
       <span>余心知秋的博客</span>
     </section>
     <section class="rightSection">
-      <el-button type="primary" :icon="ArrowLeft" circle class="changeBtn" @click="tabLeft()" />
-      <el-button type="primary" :icon="ArrowRight" circle class="changeBtn" @click="tabRight()" />
-      <ul ref="container">
+      <ul ref="container" class="tabBarList">
         <li v-for="item of tabBarList" :key="item.id" @click="gotoPage(item)"
           :class="{ 'active': route.path === item.path }" ref="containerItem">{{ item.text }}</li>
       </ul>
+      <el-button :icon="Expand" circle v-if="ExpandStatus && hiddenTabBarList.length > 0" class="openButton" />
+      <el-button :icon="Fold" circle v-else-if="!ExpandStatus && hiddenTabBarList.length > 0" @click="handleExpand()"
+        class="openButton" />
+      <el-drawer v-model="ExpandStatus" title="导航" :direction="direction">
+        <ul class="hiddenTabBarList">
+          <li v-for="item of hiddenTabBarList" :key="item.id" @click="gotoPage(item)"
+            :class="{ 'active': route.path === item.path }" ref="containerItem">{{ item.text }}</li>
+        </ul>
+      </el-drawer>
     </section>
   </div>
 </template>
@@ -144,7 +152,7 @@ onMounted(() => {
 <style lang="less" scoped>
 @screen-small-mobile: 750px;
 @screen-mini-mobile: 500px;
-
+@max-tarbbar-width: 940px;
 .tabBarBox {
   width: 100vw;
   height: 80px;
@@ -163,19 +171,13 @@ onMounted(() => {
     font-size: 24px;
     font-weight: 600;
     padding: 10px;
-
-    @media screen and (max-width:@screen-small-mobile) {
-      font-size: 20px;
-    }
   }
 
   .rightSection {
     display: flex;
     align-items: center;
 
-    @media screen and (max-width:@screen-small-mobile) {
-      width: 200px;
-    }
+
 
     .changeBtn {
       display: none;
@@ -185,13 +187,40 @@ onMounted(() => {
       }
     }
 
-    ul {
+    .tabBarList {
       display: flex;
-      scroll-behavior: smooth;
+      overflow: hidden;
 
-      @media screen and (max-width:@screen-small-mobile) {
+      @media screen and (max-width:@max-tarbbar-width) {
+        width: 600px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-100px)) {
+        width: 500px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-200px)) {
+        width: 400px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-300px)) {
+        width: 300px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-400px)) {
+        width: 200px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-500px)) {
         width: 100px;
-        overflow-x: auto;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-600px)) {
+        width: 0px;
+      }
+
+      @media screen and (min-width:@max-tarbbar-width) {
+        width: 600px;
       }
 
       li {
@@ -204,12 +233,31 @@ onMounted(() => {
         cursor: pointer;
 
         &:hover {
-          background-color: rgba(29, 30, 31, 0.2);
+          background-color: var(--tabbar-background-hover-color);
         }
       }
 
       .active {
-        background-color: rgba(29, 30, 31, 0.1);
+        background-color: var(--tabbar-background-active-color);
+      }
+    }
+
+    .hiddenTabBarList {
+      li {
+        min-width: 80px;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--tabbar-background-hover-color);
+        }
+      }
+
+      .active {
+        background-color: var(--tabbar-background-active-color);
       }
     }
   }
@@ -221,5 +269,9 @@ onMounted(() => {
 
 .other-page {
   background-color: var(--tabbar-other-page-color);
+}
+
+:deep(.openButton) {
+  margin-right: 20px
 }
 </style>
