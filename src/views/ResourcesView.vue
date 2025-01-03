@@ -147,7 +147,7 @@ onMounted(async () => {
     <div class="resourceBox">
         <!-- 技术栈展示 -->
         <section class="mainSection">
-            <h2>相关技术栈</h2>
+            <h2>资源</h2>
             <div class="box" ref="waterFallBox">
                 <div v-for="item of waterFallList" :key="item.id" class="waterFallItem"
                     :style="{ height: item.height + 'px' }" @click="handleOpen(item.src)" ref="waterFallItems">

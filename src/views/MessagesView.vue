@@ -2,7 +2,7 @@
 //导入vue相关API
 import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
 //导入默认图片
-import background from '@/assets/messageBackground.jpeg'
+import background from '@/assets/messageBackground.jpg'
 import user from '@/assets/user.png'
 //导入工具函数
 import { random } from '@/utils'
@@ -224,6 +224,9 @@ const onImageLoad = (item: iMessageItem, type: EMessagePhotoType) => {
       break
   }
 }
+const buttonShapeStyle = {
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15)'
+}
 onMounted(async () => {
   const loadingInstance = ElLoading.service(_options)
   //初始化
@@ -238,6 +241,22 @@ onMounted(async () => {
         loadingInstance.close()
       }, 0)
     })
+  }
+  if (showList.value) {
+    (showList.value as HTMLDivElement[]).forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        if (item.getAnimations().length > 0) {
+          item.getAnimations()[0].pause(); // 暂停动画
+        }
+      })
+    });
+    (showList.value as HTMLDivElement[]).forEach(item => {
+      item.addEventListener('mouseleave', () => {
+        if (item.getAnimations().length > 0) {
+          item.getAnimations()[0].play(); // 继续动画
+        }
+      })
+    });
   }
 })
 </script>
@@ -292,8 +311,8 @@ onMounted(async () => {
       </div>
     </section>
     <section class="moreSection">
-      <el-button @click="handleGetMoreMessages()"
-        v-if="messageNum > messagesList.length && isLoading === false">点击加载更多</el-button>
+      <el-button @click="handleGetMoreMessages()" v-if="messageNum > messagesList.length && isLoading === false"
+        :style="buttonShapeStyle">点击加载更多</el-button>
       <span v-else-if="isLoading === false">已经没有更多了</span>
       <div class="loader" v-else></div>
     </section>
@@ -366,6 +385,7 @@ onMounted(async () => {
     margin-bottom: 10px;
     overflow: hidden;
     padding: 0px;
+
     .backgroundImage {
       .size(100%, 100%);
       position: absolute;
@@ -390,6 +410,11 @@ onMounted(async () => {
       position: absolute;
       z-index: 1;
       background-color: rgba(62, 62, 63, 0.5);
+
+      &:hover {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        /* 模糊半径，颜色和透明度 */
+      }
 
       .custom-image {
         .avatar(50px);

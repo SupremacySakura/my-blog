@@ -131,6 +131,9 @@ const onImageLoad = (item: iArticleItem, type: EArticlePhotoType) => {
 }
 //加载更多状态
 const isLoading = ref(false)
+const buttonShapeStyle = {
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15)'
+}
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
@@ -182,7 +185,7 @@ onMounted(async () => {
       </section>
       <section class="moreSection">
         <el-button v-if="articlesList.length < articlesNum && isLoading === false"
-          @click="handleGetMore()">点击加载更多</el-button>
+          @click="handleGetMore()" :style="buttonShapeStyle">点击加载更多</el-button>
         <span v-else-if="isLoading === false">已经没有更多了</span>
         <div class="loader" v-else></div>
       </section>
@@ -224,13 +227,7 @@ onMounted(async () => {
       align-items: center;
       justify-content: space-around;
       overflow: hidden;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2),
-        /* 主阴影 */
-        0px 12px 20px rgba(0, 0, 0, 0.15),
-        /* 次阴影 */
-        0px 24px 40px rgba(0, 0, 0, 0.1);
-
-      /* 远处阴影 */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
       transform: scale(1);
       transition: transform 0.8s ease;
       cursor: pointer;

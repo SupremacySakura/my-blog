@@ -164,6 +164,7 @@ onMounted(async () => {
       .moment {
         padding-top: 10px;
         padding-right: 20px;
+       
 
         section {
           .size(100%, 100%);
@@ -171,7 +172,7 @@ onMounted(async () => {
           border-radius: 10px;
           padding: 10px;
           box-sizing: border-box;
-
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
           div:nth-child(1) {
             display: flex;
             align-items: center;
