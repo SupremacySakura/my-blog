@@ -365,7 +365,7 @@ onMounted(async () => {
     color: white;
     margin-bottom: 10px;
     overflow: hidden;
-
+    padding: 0px;
     .backgroundImage {
       .size(100%, 100%);
       position: absolute;
