@@ -251,8 +251,7 @@ onMounted(async () => {
 
 .articlesBox {
   .standardBox;
-  background-color: var(--article-background-color);
-
+  background: var(--article-background-color);
   @media screen and (max-width:@screen-middle-mobile) {
     .standardBoxChange;
   }
@@ -269,7 +268,7 @@ onMounted(async () => {
       width: auto;
       height: 30px;
       line-height: 30px;
-      background-color:rgba(247, 247, 247, 1);
+      background-color:var(--article-num-background-color);
       margin-top: 10px;
       margin-bottom: 30px;
       padding: 5px;
@@ -285,7 +284,7 @@ onMounted(async () => {
     .card {
       .size(800px, 200px);
       border-radius: 8px;
-      background-color: var(--article-card-background-color);
+      background: var(--article-card-background-color);
       margin: 0 auto;
       margin-bottom: 30px;
       display: flex;

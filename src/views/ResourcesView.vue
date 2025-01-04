@@ -177,7 +177,7 @@ onMounted(async () => {
 
 .resourceBox {
     .standardBox;
-    background-color: var(--moment-background-box-color);
+    background: var(--moment-background-box-color);
 
     @media screen and (max-width:@screen-middle-mobile) {
         .standardBoxChange;

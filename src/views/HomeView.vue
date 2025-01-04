@@ -228,8 +228,8 @@ onUnmounted(() => {
     <!-- 开始前页面 -->
     <div class="homeBox" ref="homeBox" v-show="!_pageStart">
       <section class="topSection">
-        <h1>这是我的个人博客</h1>
-        <span>极简主义 实用主义</span>
+        <h1 class='head'>这是我的个人博客</h1>
+        <span class='label'>极简主义 实用主义</span>
         <button @click="handleStart()" class="changeButton">开始</button>
         <el-switch v-model="theme" :active-action-icon="View" :inactive-action-icon="Hide"
           style="--el-switch-on-color: var(--home-background-fill-color); --el-switch-off-color: var(--home-background-fill-color)"
@@ -296,7 +296,7 @@ onUnmounted(() => {
 .box {
   width: 100%;
   min-height: 100vh;
-  background-color: var(--home-background-color);
+  background: var(--home-background-color);
 
   .background-img {
     .size(100%, 100vh);
@@ -330,7 +330,13 @@ onUnmounted(() => {
       span {
         color: white;
       }
-
+      .head{
+         width: 0;
+         overflow: hidden; 
+         white-space: nowrap; 
+         border-right: 2px solid black;
+         animation: typing 3s steps(8) 1s infinite, blink 0.8s step-end infinite,wait 0.8s 4s forwards;
+      }
     }
   }
 
@@ -342,7 +348,6 @@ onUnmounted(() => {
     padding-top: 10px;
     position: relative;
     color: var(--home-text-color);
-
     @media screen and (max-width:@screen-small-mobile) {
       flex-wrap: wrap;
     }
@@ -513,11 +518,43 @@ onUnmounted(() => {
     color: var(--home-text-color);
     margin-bottom: 20px;
     cursor: pointer;
-
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    animation: fadeIn 1s forwards;
     &:hover {
       background-color: var(--hover-button-background-color);
       color: var(--hover-button-text-color);
+      transform: translateY(-2px);
     }
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes typing {
+  to {
+    width: 8em;
+  }
+}
+@keyframes blink {
+  50% {
+    border-color: transparent; /* 光标闪烁 */
+  }
+}
+/* 定义等待动画 */
+@keyframes wait {
+  0% {
+    width: 8em; /* 保持显示的内容不变 */
+  }
+  100% {
+    width: 8em; /* 保持显示的内容不变 */
+    border-color: transparent; /* 光标闪烁 */
   }
 }
 </style>

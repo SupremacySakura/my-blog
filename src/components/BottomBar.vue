@@ -59,10 +59,22 @@ const handleClick = (item: iAboutItem) => {
   justify-content: center;
   align-items: center;
   border-top: 1px solid var(--bottombar-border-top-color);
-  background-color: var(--bottombar-background-color);
+  background: var(--bottombar-background-color);
   justify-content: space-around;
   padding: 10px;
   color: var(--bottombar-text-color);
+  box-shadow: 0px 4px 10px rgba(135, 206, 250, 0.15), 0px -10px 30px rgba(135, 206, 250, 0.3);
+  &::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: rgba(135, 206, 250, 0.4);
+      filter: blur(3px);
+      border-radius: 10px;
+    }
   @media screen and (max-width:@screen-small-mobile) {
     height: 60px;
   }

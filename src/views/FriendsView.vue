@@ -101,7 +101,7 @@ onMounted(async () => {
 
 .friendsBox {
   .standardBox;
-  background-color: var(--friend-background-color);
+  background: var(--friend-background-color);
   color: var(--friend-text-color);
 
   @media screen and (max-width:@screen-middle-mobile) {

@@ -238,6 +238,16 @@ watchEffect(() => {
             }
             animateMessage()
           }
+          item.addEventListener('mouseenter', () => {
+            if (item.getAnimations().length > 0) {
+              item.getAnimations()[0].pause(); // 暂停动画
+            }
+          })
+          item.addEventListener('mouseleave', () => {
+            if (item.getAnimations().length > 0) {
+              item.getAnimations()[0].play(); // 继续动画
+            }
+          })
         })
       }
 
@@ -281,22 +291,6 @@ onMounted(async () => {
         loadingInstance.close()
       }, 0)
     })
-  }
-  if (showList.value) {
-    (showList.value as HTMLDivElement[]).forEach(item => {
-      item.addEventListener('mouseenter', () => {
-        if (item.getAnimations().length > 0) {
-          item.getAnimations()[0].pause(); // 暂停动画
-        }
-      })
-    });
-    (showList.value as HTMLDivElement[]).forEach(item => {
-      item.addEventListener('mouseleave', () => {
-        if (item.getAnimations().length > 0) {
-          item.getAnimations()[0].play(); // 继续动画
-        }
-      })
-    });
   }
   initActiveList()
 })
@@ -420,7 +414,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--message-background-color);
+  background: var(--message-background-color);
   color: var(--message-text-color);
 
   @media screen and (max-width:@screen-mini-mobile) {
@@ -437,6 +431,8 @@ onMounted(async () => {
     margin-bottom: 10px;
     overflow: hidden;
     padding: 0px;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 
     .backgroundImage {
       .size(100%, 100%);
@@ -509,6 +505,8 @@ onMounted(async () => {
       outline: none;
       background-color: var(--message-background-fill-color);
       color: var(--message-text-color);
+      box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.1), -3px -3px 8px rgba(0, 0, 0, 0.05);
+        /* 外阴影 */
     }
 
     div {
@@ -522,10 +520,15 @@ onMounted(async () => {
       border: 1px solid var(--button-border-color);
       color: var(--message-text-color);
       cursor: pointer;
-
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2), -3px -3px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.5s ease;
       &:hover {
         background-color: var(--hover-button-background-color);
         color: var(--hover-button-text-color);
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(0, 0, 0, 0.2);
+        /* 鼠标悬停时加深阴影 */
+        transform: translateY(-2px);
+        /* 鼠标悬停时按钮上移 */
       }
     }
   }
@@ -558,11 +561,9 @@ onMounted(async () => {
       background-color: var(--message-background-fill-color);
       color: var(--message-text-color);
       transition: all 0.5s ease;
-        /* 深色蓝紫渐变 */
-     
-      /* 背景起始位置从右侧开始 */
+      box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(0, 0, 0, 0.1);
+
       &:hover {
-        transform: scale(1.1);
         background: var(--message-card-gradient);
       }
 
@@ -633,7 +634,8 @@ onMounted(async () => {
         color: rgba(0, 0, 0, 1);
         transition: all 0.5s ease;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        &:hover{
+
+        &:hover {
           transform: translateY(-5px);
           background-color: rgba(135, 206, 235, 0.5)
         }
