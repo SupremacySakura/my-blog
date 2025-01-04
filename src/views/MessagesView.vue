@@ -80,10 +80,10 @@ const handleGetMoreMessages = async (type: PageChange) => {
     return
   }
   isLoading.value = true
-  if (page.value % 4 === 0 && type === PageChange.right){
+  if (page.value % 4 === 0 && type === PageChange.right) {
     activePage.value++
   }
-  if (page.value % 4 === 1 && type === PageChange.left){
+  if (page.value % 4 === 1 && type === PageChange.left) {
     activePage.value--
   }
   page.value += type
@@ -94,14 +94,14 @@ const handleGetMoreMessages = async (type: PageChange) => {
     console.log(error)
     if (type = 1) {
       page.value--
-    }else if(type = -1){
+    } else if (type = -1) {
       page.value++
     }
   } finally {
     isLoading.value = false
   }
 }
-const handleGoToPage = async(index:number) => {
+const handleGoToPage = async (index: number) => {
   isLoading.value = true
   const oldPage = page.value
   page.value = index
@@ -119,7 +119,7 @@ const activeList = ref<number[]>([])
 const activePage = ref(1)
 const initActiveList = () => {
   activeList.value = []
-  for (let i = 1; i <= Math.ceil(messageNum.value / 5) ; i++) {
+  for (let i = 1; i <= Math.ceil(messageNum.value / 5); i++) {
     activeList.value.push(i)
   }
 }
@@ -334,7 +334,7 @@ onMounted(async () => {
       <div class="showTop">
         <h4>评论数量:{{ messageNum }}</h4>
       </div>
-      <div class="messagesItem" v-for="item of messagesList.slice((page-1)*5,page*5)" :key="item.id">
+      <div class="messagesItem" v-for="item of messagesList.slice((page - 1) * 5, page * 5)" :key="item.id">
         <section class="leftSection">
           <el-image :src="item.userHeadPortrait || user" alt="头像" class="custom-image" fit="cover" lazy
             @error="onError(item)" v-loading="item.loading[EMessagePhotoType.Message]"
@@ -353,12 +353,13 @@ onMounted(async () => {
     </section>
     <section class="moreSection">
       <ul>
-        <li @click="handleGetMoreMessages(PageChange.left)" :class="{'disabled':page === 1}">
+        <li @click="handleGetMoreMessages(PageChange.left)" :class="{ 'disabled': page === 1 }">
           <el-icon>
             <ArrowLeft />
           </el-icon>
         </li>
-        <li v-for="item of activeList.slice((activePage-1)*4,activePage*4)" :key="item" :class="{ 'active': page === item }" @click="handleGoToPage(item)">{{ item }}</li>
+        <li v-for="item of activeList.slice((activePage - 1) * 4, activePage * 4)" :key="item"
+          :class="{ 'active': page === item }" @click="handleGoToPage(item)">{{ item }}</li>
         <li @click="handleGetMoreMessages(PageChange.right)" :class="{ 'disabled': page * 5 >= messageNum }">
           <el-icon>
             <ArrowRight />
@@ -556,6 +557,14 @@ onMounted(async () => {
       border-radius: 10px;
       background-color: var(--message-background-fill-color);
       color: var(--message-text-color);
+      transition: all 0.5s ease;
+        /* 深色蓝紫渐变 */
+     
+      /* 背景起始位置从右侧开始 */
+      &:hover {
+        transform: scale(1.1);
+        background: var(--message-card-gradient);
+      }
 
       .leftSection {
         .size(50px, 100%);
@@ -613,6 +622,7 @@ onMounted(async () => {
       display: flex;
       width: 300px;
       justify-content: space-around;
+
       li {
         .size(40px, 40px);
         background-color: rgba(255, 255, 255, 1);
@@ -620,12 +630,20 @@ onMounted(async () => {
         line-height: 40px;
         cursor: pointer;
         border-radius: 5px;
+        color: rgba(0, 0, 0, 1);
+        transition: all 0.5s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        &:hover{
+          transform: translateY(-5px);
+          background-color: rgba(135, 206, 235, 0.5)
+        }
       }
 
       .active {
         background-color: rgba(135, 206, 235, 1)
       }
-      .disabled{
+
+      .disabled {
         cursor: not-allowed
       }
     }

@@ -12,6 +12,10 @@ import yxzq from '@/assets/yxzq.jpg'
 import { getArticles, getArticlesNum } from '@/services/apis/articles'
 //导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
+import {
+  ArrowLeft,
+  ArrowRight
+} from '@element-plus/icons-vue'
 //导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _options, _optionsWhite } = useAssetStore()
@@ -55,24 +59,64 @@ const handleGetArticles = async () => {
     _setArticlesList(articlesList.value)
   }
 }
+//页码切换
+enum PageChange {
+  left = -1,
+  right = 1
+}
 /**
- * 获取更多文章
+ * 加载更多文章
  */
-const handleGetMore = async () => {
-  page.value += 1
+const handleGetMore = async (type: PageChange) => {
+  if (type === PageChange.left && page.value === 1) {
+    return
+  }
+  if (type === PageChange.right && page.value * 4 >= articlesNum.value) {
+    return
+  }
   isLoading.value = true
+  if (page.value % 4 === 0 && type === PageChange.right){
+    activePage.value++
+  }
+  if (page.value % 4 === 1 && type === PageChange.left){
+    activePage.value--
+  }
+  page.value += type
   try {
     await handleGetArticles()
   } catch (error) {
     ElMessage.error('加载资源失败')
     console.log(error)
-    if (page.value > 1) {
-      page.value -= 1
+    if (type = 1) {
+      page.value--
+    }else if(type = -1){
+      page.value++
     }
   } finally {
     isLoading.value = false
   }
-
+}
+const handleGoToPage = async(index:number) => {
+  isLoading.value = true
+  const oldPage = page.value
+  page.value = index
+  try {
+    await handleGetArticles()
+  } catch (error) {
+    ElMessage.error('加载资源失败')
+    console.log(error)
+    page.value = oldPage
+  } finally {
+    isLoading.value = false
+  }
+}
+const activeList = ref<number[]>([])
+const activePage = ref(1)
+const initActiveList = () => {
+  activeList.value = []
+  for (let i = 1; i <= Math.ceil(articlesNum.value/ 4) ; i++) {
+    activeList.value.push(i)
+  }
 }
 //选中文章
 const articleItem = ref<iArticleItem>()
@@ -131,9 +175,6 @@ const onImageLoad = (item: iArticleItem, type: EArticlePhotoType) => {
 }
 //加载更多状态
 const isLoading = ref(false)
-const buttonShapeStyle = {
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15)'
-}
 onMounted(async () => {
   //初始化
   const loadingInstance = ElLoading.service(_options)
@@ -151,6 +192,7 @@ onMounted(async () => {
       }, 0)
     })
   }
+  initActiveList()
 })
 </script>
 
@@ -158,7 +200,8 @@ onMounted(async () => {
   <div class="articlesBox">
     <!-- 文章列表展示 -->
     <section class="mainSection">
-      <section class="card" v-for="(item, index) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
+      <span class="num">文章数量：{{ articlesNum }}</span>
+      <section class="card" v-for="(item) of articlesList.slice((page-1)*4,page*4)" :key="item.id" @click="handleChooseArticle(item)">
         <div class="image">
           <el-image :src="item.cover || test1" alt="封面" class="cover" fit="cover" lazy
             @error="onError(item, ErrorImage.Cover)" v-loading="item.loading[EArticlePhotoType.cover]"
@@ -184,10 +227,20 @@ onMounted(async () => {
         </div>
       </section>
       <section class="moreSection">
-        <el-button v-if="articlesList.length < articlesNum && isLoading === false"
-          @click="handleGetMore()" :style="buttonShapeStyle">点击加载更多</el-button>
-        <span v-else-if="isLoading === false">已经没有更多了</span>
-        <div class="loader" v-else></div>
+        <ul>
+        <li @click="handleGetMore(PageChange.left)" :class="{'disabled':page === 1}">
+          <el-icon>
+            <ArrowLeft />
+          </el-icon>
+        </li>
+        <li v-for="item of activeList.slice((activePage-1)*4,activePage*4)" :key="item" :class="{ 'active': page === item }" @click="handleGoToPage(item)">{{ item }}</li>
+        <li @click="handleGetMore(PageChange.right)" :class="{ 'disabled': page * 4 >= articlesNum }">
+          <el-icon>
+            <ArrowRight />
+          </el-icon>
+        </li>
+      </ul>
+        <div class="loader" v-if="isLoading === true"></div>
       </section>
     </section>
   </div>
@@ -210,8 +263,20 @@ onMounted(async () => {
     background-color: var(--article-background-fill-color);
     display: flex;
     flex-direction: column;
-    align-items: center;
-
+    align-items: center; 
+    .num{
+      display: block;
+      width: auto;
+      height: 30px;
+      line-height: 30px;
+      background-color:rgba(247, 247, 247, 1);
+      margin-top: 10px;
+      margin-bottom: 30px;
+      padding: 5px;
+      border-radius: 8px;
+      color: var(--article-card-text-color);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
     @media screen and (max-width:@screen-middle-mobile) {
       padding: 20px 5px 0px 5px;
       width: 100%;
@@ -346,6 +411,33 @@ onMounted(async () => {
     .moreSection {
       margin-bottom: 10px;
       color: var(--article-card-text-color);
+       ul {
+      display: flex;
+      width: 300px;
+      justify-content: space-around;
+      li {
+        .size(40px, 40px);
+        background-color: rgba(247, 247, 247, 1);
+        text-align: center;
+        line-height: 40px;
+        cursor: pointer;
+        border-radius: 5px;
+        color: rgba(0,0,0,1);
+        transition: all 0.5s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        &:hover{
+          transform: translateY(-5px);
+          background-color: rgba(135, 206, 235, 0.5)
+        }
+      }
+
+      .active {
+        background-color: rgba(135, 206, 235, 1)
+      }
+      .disabled{
+        cursor: not-allowed
+      }
+    }
     }
   }
 }
