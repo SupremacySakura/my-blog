@@ -10,6 +10,10 @@ import { random } from '@/utils'
 import { getMessages, postMessages, getMessagesNum } from '@/services/apis/messages'
 //导入ElementPlus组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
+import {
+  ArrowLeft,
+  ArrowRight
+} from '@element-plus/icons-vue'
 //导入dayjs库
 import dayjs from 'dayjs'
 //导入留言仓库
@@ -60,25 +64,64 @@ const handleGetMessagesNum = async () => {
     messageNum.value = res.data.data || 0
   }
 }
+//页码切换
+enum PageChange {
+  left = -1,
+  right = 1
+}
 /**
  * 加载更多留言
  */
-const handleGetMoreMessages = async () => {
+const handleGetMoreMessages = async (type: PageChange) => {
+  if (type === PageChange.left && page.value === 1) {
+    return
+  }
+  if (type === PageChange.right && page.value * 5 >= messageNum.value) {
+    return
+  }
   isLoading.value = true
-  page.value++
+  if (page.value % 4 === 0 && type === PageChange.right){
+    activePage.value++
+  }
+  if (page.value % 4 === 1 && type === PageChange.left){
+    activePage.value--
+  }
+  page.value += type
   try {
     await handleGetMessages()
   } catch (error) {
     ElMessage.error('加载资源失败')
     console.log(error)
-    if (page.value > 1) {
+    if (type = 1) {
       page.value--
+    }else if(type = -1){
+      page.value++
     }
   } finally {
     isLoading.value = false
   }
-
-
+}
+const handleGoToPage = async(index:number) => {
+  isLoading.value = true
+  const oldPage = page.value
+  page.value = index
+  try {
+    await handleGetMessages()
+  } catch (error) {
+    ElMessage.error('加载资源失败')
+    console.log(error)
+    page.value = oldPage
+  } finally {
+    isLoading.value = false
+  }
+}
+const activeList = ref<number[]>([])
+const activePage = ref(1)
+const initActiveList = () => {
+  activeList.value = []
+  for (let i = 1; i <= Math.ceil(messageNum.value / 5) ; i++) {
+    activeList.value.push(i)
+  }
 }
 //发布留言弹窗控制
 const dialogVisible = ref(false)
@@ -224,9 +267,6 @@ const onImageLoad = (item: iMessageItem, type: EMessagePhotoType) => {
       break
   }
 }
-const buttonShapeStyle = {
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15)'
-}
 onMounted(async () => {
   const loadingInstance = ElLoading.service(_options)
   //初始化
@@ -258,6 +298,7 @@ onMounted(async () => {
       })
     });
   }
+  initActiveList()
 })
 </script>
 
@@ -293,7 +334,7 @@ onMounted(async () => {
       <div class="showTop">
         <h4>评论数量:{{ messageNum }}</h4>
       </div>
-      <div class="messagesItem" v-for="item of messagesList" :key="item.id">
+      <div class="messagesItem" v-for="item of messagesList.slice((page-1)*5,page*5)" :key="item.id">
         <section class="leftSection">
           <el-image :src="item.userHeadPortrait || user" alt="头像" class="custom-image" fit="cover" lazy
             @error="onError(item)" v-loading="item.loading[EMessagePhotoType.Message]"
@@ -311,10 +352,20 @@ onMounted(async () => {
       </div>
     </section>
     <section class="moreSection">
-      <el-button @click="handleGetMoreMessages()" v-if="messageNum > messagesList.length && isLoading === false"
-        :style="buttonShapeStyle">点击加载更多</el-button>
-      <span v-else-if="isLoading === false">已经没有更多了</span>
-      <div class="loader" v-else></div>
+      <ul>
+        <li @click="handleGetMoreMessages(PageChange.left)" :class="{'disabled':page === 1}">
+          <el-icon>
+            <ArrowLeft />
+          </el-icon>
+        </li>
+        <li v-for="item of activeList.slice((activePage-1)*4,activePage*4)" :key="item" :class="{ 'active': page === item }" @click="handleGoToPage(item)">{{ item }}</li>
+        <li @click="handleGetMoreMessages(PageChange.right)" :class="{ 'disabled': page * 5 >= messageNum }">
+          <el-icon>
+            <ArrowRight />
+          </el-icon>
+        </li>
+      </ul>
+      <div class="loader" v-if="isLoading === true"></div>
     </section>
     <!-- 发表评论弹窗 -->
     <el-dialog v-model="dialogVisible">
@@ -557,11 +608,33 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    ul {
+      display: flex;
+      width: 300px;
+      justify-content: space-around;
+      li {
+        .size(40px, 40px);
+        background-color: rgba(255, 255, 255, 1);
+        text-align: center;
+        line-height: 40px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .active {
+        background-color: rgba(135, 206, 235, 1)
+      }
+      .disabled{
+        cursor: not-allowed
+      }
+    }
   }
 
   /* HTML: <div class="loader"></div> */
   .loader {
     .size(120px, 20px);
+    margin-top: 20px;
     background:
       linear-gradient(90deg, #0001 33%, #0005 50%, #0001 66%) #f2f2f2;
     background-size: 300% 100%;
