@@ -101,7 +101,9 @@ onMounted(() => {
     min-height: 100vh;
     background-color: var(--article-item-background-fill-color);
     padding: 20px;
-
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     @media screen and (max-width:@screen-middle-mobile) {
       width: 95%;
     }
