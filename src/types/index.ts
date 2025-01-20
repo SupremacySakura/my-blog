@@ -93,7 +93,11 @@ interface iRowItem {
   id: number,
   height: number,
 }
-
+//文章标签类型接口
+interface iTag {
+  id:number,
+  tag:string
+}
 export type {
   iArticleItem,
   iFriendItem,
@@ -103,6 +107,7 @@ export type {
   iMomentItem,
   iWaterFallItem,
   iRowItem,
+  iTag,
 }
 export {
   EArticlePhotoType,

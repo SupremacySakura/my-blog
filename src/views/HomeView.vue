@@ -335,7 +335,7 @@ onUnmounted(() => {
          overflow: hidden; 
          white-space: nowrap; 
          border-right: 2px solid black;
-         animation: typing 3s steps(8) 1s infinite, blink 0.8s step-end infinite,wait 0.8s 4s forwards;
+         animation: typing 3s steps(8) 1s infinite, blink 0.8s step-end infinite,wait 3.2s 4s forwards;
       }
     }
   }
@@ -551,6 +551,9 @@ onUnmounted(() => {
 @keyframes wait {
   0% {
     width: 8em; /* 保持显示的内容不变 */
+  }
+  50%{
+    border-color: 2px solid black;
   }
   100% {
     width: 8em; /* 保持显示的内容不变 */

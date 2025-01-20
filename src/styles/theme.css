@@ -13,7 +13,8 @@
   --bottombar-text-color: rgba(0, 0, 0, 1);
 
   /* 首页 */
-  --home-background-color: linear-gradient(to bottom right, #93a5cf, #e4efe9);;
+  --home-background-color: linear-gradient(to bottom right, #93a5cf, #e4efe9);
+  ;
   --home-background-fill-color: rgba(255, 255, 255, 1);
   --home-article-background-fill-color: rgba(255, 255, 255, 1);
   --home-text-color: rgba(0, 0, 0, 1);
@@ -36,13 +37,15 @@
   --article-item-background-fill-color: rgba(255, 255, 255, 1);
   --article-card-text-color: rgba(0, 0, 0, 1);
   --article-num-background-color: rgba(247, 247, 247, 1);
+  --search-box-background-color: rgba(166.2, 168.6, 173.4, 1);
   /* 留言板 */
   --message-background-color: linear-gradient(to bottom,
       rgba(255, 187, 115, 1),
       rgba(255, 206, 144, 1),
       rgba(255, 223, 170, 1),
       rgba(192, 144, 174, 1),
-      rgba(58, 102, 157, 1));;
+      rgba(58, 102, 157, 1));
+  ;
   --message-background-fill-color: rgba(255, 255, 255, 1);
   --message-text-color: rgba(0, 0, 0, 1);
   --message-card-gradient: linear-gradient(to right, rgba(163, 200, 247, 0.5), rgba(208, 166, 230, 0.5));
@@ -98,7 +101,8 @@
   --article-card-background-color: rgba(50, 47, 59, 1);
   --article-item-background-fill-color: rgba(13, 17, 23, 1);
   --article-card-text-color: rgba(255, 255, 255, 1);
-  --article-num-background-color:rgba(27, 27, 31, 1);
+  --article-num-background-color: rgba(27, 27, 31, 1);
+  --search-box-background-color: rgba(32.4, 32.7, 33.3, 1);
   /* 留言板 */
   --message-background-color: rgba(27, 27, 31, 1);
   --message-background-fill-color: rgba(48, 47, 75, 1);
