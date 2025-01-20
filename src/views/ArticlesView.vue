@@ -56,6 +56,7 @@ const handleGetArticles = async () => {
   if (articlesNum.value === articlesList.value.length) {
     return
   }
+  articlesList.value = []
   const res = await getArticleByModel[model.value]()
   if (+res.data.code === 200) {
     //处理数据
@@ -261,6 +262,9 @@ const activeTagIdList = ref<number[]>([])
  * @param id 标签id
  */
 const handleSearchByTag = async (id: number) => {
+  if(page.value !== 1){
+    page.value = 1
+  }
   articlesList.value = []
   if (activeTagIdList.value.includes(id)) {
     activeTagIdList.value = activeTagIdList.value.filter(item => item !== id)
@@ -319,7 +323,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="articleList">
-          <section class="card" v-for="(item) of articlesList.slice((page - 1) * 4, page * 4)" :key="item.id"
+          <section class="card" v-for="(item) of articlesList" :key="item.id"
             @click="handleChooseArticle(item)">
             <div class="image">
               <el-image :src="item.cover || test1" alt="封面" class="cover" fit="cover" lazy
