@@ -323,6 +323,9 @@ onMounted(async () => {
           </div>
         </div>
         <div class="articleList">
+          <section class="card" v-show='articlesList.length === 0' :style="{ fontSize: '40px', color:'var(--article-card-text-color)'}">
+            404 NOT FOUND
+          </section>
           <section class="card" v-for="(item) of articlesList" :key="item.id"
             @click="handleChooseArticle(item)">
             <div class="image">
