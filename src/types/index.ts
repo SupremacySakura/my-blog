@@ -8,7 +8,7 @@ interface iArticleItem {
   name: string,
   time: string,
   cover: string,
-  label:string[],
+  label: string[],
   loading: boolean[],  // 第一项表示头像加载,第二项表示封面加载
 }
 //声明加载文章图片枚举
@@ -24,7 +24,7 @@ interface iFriendItem {
   name: string,
   label: string,
   url: string,
-  loading:boolean,
+  loading: boolean,
 }
 
 //标签类型接口
@@ -44,7 +44,7 @@ interface iInformation {
   identity: string,
   address: string,
   userHeadPortrait: string,
-  loading:boolean,
+  loading: boolean,
 }
 
 //评论类型接口
@@ -55,7 +55,7 @@ interface iMessageItem {
   content: string,
   time: string,
   address: string,
-  loading:boolean[],//第一项表示弹幕,第二项表示留言
+  loading: boolean[],//第一项表示弹幕,第二项表示留言
 }
 enum EMessagePhotoType {
   Danmu = 0,
@@ -69,7 +69,7 @@ interface iMomentItem {
   userHeadPortrait: string,
   name: string,
   content: string,
-  loading:boolean,
+  loading: boolean,
 }
 
 //技术栈类型接口
@@ -95,8 +95,13 @@ interface iRowItem {
 }
 //文章标签类型接口
 interface iTag {
-  id:number,
-  tag:string
+  id: number,
+  tag: string
+}
+//公告类型接口
+interface iNotice {
+  id: number,
+  notice: string,
 }
 export type {
   iArticleItem,
@@ -108,6 +113,7 @@ export type {
   iWaterFallItem,
   iRowItem,
   iTag,
+  iNotice,
 }
 export {
   EArticlePhotoType,
