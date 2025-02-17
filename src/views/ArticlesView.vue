@@ -48,12 +48,16 @@ const getANum = async () => {
     }
   }
 }
+//正在加载
+const isLoadingArticles = ref(false)
 /**
  * 获取文章数据
  */
 const handleGetArticles = async () => {
+  isLoadingArticles.value = true
   await getANum()
   if (articlesNum.value === articlesList.value.length) {
+    isLoadingArticles.value = false
     return
   }
   articlesList.value = []
@@ -67,7 +71,11 @@ const handleGetArticles = async () => {
     articlesList.value = [...articlesList.value, ...res.data.data]
     _setArticlesList(articlesList.value)
   }
+  setTimeout(() => {
+    isLoadingArticles.value = false
+  }, 0)
 }
+
 //页码切换
 enum PageChange {
   left = -1,
@@ -209,7 +217,6 @@ const model = ref<SearchType>(SearchType.all)
 const getArticleByModel = {
   [SearchType.all]: async () => {
     return await getArticles(page.value)
-
   },
   [SearchType.keyWord]: async () => {
     return await getArticles(page.value, keyWord.value)
@@ -262,7 +269,7 @@ const activeTagIdList = ref<number[]>([])
  * @param id 标签id
  */
 const handleSearchByTag = async (id: number) => {
-  if(page.value !== 1){
+  if (page.value !== 1) {
     page.value = 1
   }
   articlesList.value = []
@@ -309,7 +316,8 @@ onMounted(async () => {
           <div class="search">
             <span>搜索</span>
             <div class="searchInput">
-              <el-input v-model="searchValue" style="width: 240px" placeholder="请输入关键词" />
+              <el-input v-model="searchValue" style="width: 240px" placeholder="请输入关键词"
+                @keyup.enter="handleSearchByKeyWord()" />
               <el-button :icon="Search" circle @click="handleSearchByKeyWord()" />
             </div>
           </div>
@@ -318,16 +326,19 @@ onMounted(async () => {
             <ul>
               <li v-for="(item) of tagList" :key="item.id"
                 :class="{ 'active': activeTagIdList.some((e) => e === item.id) }" @click="handleSearchByTag(item.id)">{{
-                  item.tag }}</li>
+                item.tag }}</li>
             </ul>
           </div>
         </div>
         <div class="articleList">
-          <section class="card" v-show='articlesList.length === 0' :style="{ fontSize: '40px', color:'var(--article-card-text-color)'}">
-            404 NOT FOUND
+          <section class="card" v-show='articlesList.length === 0 && isLoadingArticles === false'
+            :style="{ fontSize: '40px', color: 'var(--article-card-text-color)' }">
+            未找到相关文章
           </section>
-          <section class="card" v-for="(item) of articlesList" :key="item.id"
-            @click="handleChooseArticle(item)">
+          <section class="card" v-show="isLoadingArticles === true" :style="{ opacity: '0' }">
+
+          </section>
+          <section class="card" v-for="(item) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
             <div class="image">
               <el-image :src="item.cover || test1" alt="封面" class="cover" fit="cover" lazy
                 @error="onError(item, ErrorImage.Cover)" v-loading="item.loading[EArticlePhotoType.cover]"
@@ -650,6 +661,7 @@ onMounted(async () => {
 /* HTML: <div class="loader"></div> */
 .loader {
   .size(120px, 20px);
+  margin: 10px auto;
   background:
     linear-gradient(90deg, #0000, orange) left -50px top 0/50px 20px no-repeat lightblue;
   animation: l2 1s infinite linear;

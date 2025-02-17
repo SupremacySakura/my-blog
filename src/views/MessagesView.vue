@@ -536,6 +536,7 @@ onMounted(async () => {
   //评论展示区
   .messagesShow {
     width: @standardWidth;
+    .size(@standardWidth, 600px);
 
     @media screen and (max-width:@screen-middle-mobile) {
       width: 90%;

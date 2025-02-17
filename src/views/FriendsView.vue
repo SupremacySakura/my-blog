@@ -177,15 +177,15 @@ onMounted(async () => {
               </div>
             </div>
             <div class='formDiv'>
-              <h3>站点名称</h3>
+              <h3 class="required">站点名称</h3>
               <el-input v-model="name" style="width: 240px" placeholder="站点名称" />
             </div>
             <div class='formDiv'>
-              <h3>站点简介</h3>
+              <h3 class="required">站点简介</h3>
               <el-input v-model="label" style="width: 240px" placeholder="站点简介" />
             </div>
             <div class='formDiv'>
-              <h3>站点地址</h3>
+              <h3 class="required">站点地址</h3>
               <el-input v-model="url" style="width: 240px" placeholder="站点链接" />
             </div>
           </form>
@@ -337,6 +337,12 @@ onMounted(async () => {
           align-items: center;
         }
       }
+    }
+    .required::after{
+      content: '*';
+      color: red;
+      margin-left: 5px;
+      font-size: 14px;
     }
 }
 
