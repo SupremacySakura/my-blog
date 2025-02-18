@@ -15,7 +15,6 @@ import { getTechnology } from '@/services/apis/moments'
 //导入类型
 import type { iWaterFallItem, iRowItem } from '@/types'
 import { EWaterFallPhotoType } from '@/types'
-
 /**
  * 获取技术栈列表
  */
@@ -161,7 +160,9 @@ onMounted(async () => {
                         @load="onImageLoad(item, EWaterFallPhotoType.icon)"></el-image>
                     <span v-show="item.loading.every(item => item === false)">{{ item.text }}</span>
                     <el-tooltip class="box-item" effect="dark" placement="top-start">
-                        <template #content>{{ item.note }}</template>
+                        <template #content>
+                            {{ item.note }}
+                        </template>
                         <el-button>了解</el-button>
                     </el-tooltip>
 

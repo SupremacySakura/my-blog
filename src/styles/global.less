@@ -43,3 +43,15 @@
     padding-left: 10px;
     padding-right: 10px;
 }
+//动态下划线
+.lineWith {
+    background: linear-gradient(to right, #044, #544) no-repeat;
+    background-size: 0px 2px;
+    background-position: right bottom;
+    transition: background-size 0.5s;
+}
+
+.lineWith:hover {
+    background-size: 100% 2px;
+    background-position: left bottom;
+}

@@ -9,9 +9,9 @@ import { ElMessage, ElImage, ElLoading } from 'element-plus'
 //导入默认头像
 import user from '@/assets/user.png'
 //导入friends相关接口
-import { getFriends,postFriend,getNotice } from '@/services/apis/friends'
+import { getFriends, postFriend, getNotice } from '@/services/apis/friends'
 //导入类型
-import type { iFriendItem,iNotice } from '@/types'
+import type { iFriendItem, iNotice } from '@/types'
 //朋友列表
 const friendsList = ref<iFriendItem[]>([])
 /**
@@ -42,8 +42,8 @@ const handleGetNotice = async () => {
 //公告
 const aboutList = ref<iNotice[]>([
   {
-    id:0,
-    notice:'下面申请友链'
+    id: 0,
+    notice: '下面申请友链'
   }
 ])
 /**
@@ -86,12 +86,12 @@ const handleChooseUserHeadPortrait = (event: any) => {
 watch(avatarModel, () => {
   avatar.value = ''
 })
-const handleApply =async () => {
-  try{
+const handleApply = async () => {
+  try {
     if (!avatar.value || !name.value || !label.value || !url.value) {
       ElMessage.error('请填写完整信息')
     }
-    const res =await postFriend(
+    const res = await postFriend(
       avatar.value,
       name.value,
       label.value,
@@ -107,10 +107,10 @@ const handleApply =async () => {
     } else {
       ElMessage.error('申请失败')
     }
-  }catch(err){
+  } catch (err) {
     ElMessage.error('申请失败')
   }
-  
+
 }
 onMounted(async () => {
   //初始化
@@ -136,7 +136,7 @@ onMounted(async () => {
   <div class="friendsBox">
     <section class="cardBox">
       <div class="section">
-        <h2>友链站点</h2>
+        <h2 class="defaultCursor">友链站点</h2>
         <ul class="cardList">
           <li v-for="item of friendsList" :key="item.id" class="cardItem" @click="handleGoPage(item)">
             <el-image :src="item.userHeadPortrait || user" alt="头像" fit="cover" lazy class="user" @error="onError(item)"
@@ -149,14 +149,16 @@ onMounted(async () => {
         </ul>
       </div>
       <div class="section">
-        <h2>公告</h2>
+        <h2 class="defaultCursor">公告</h2>
         <ul class="aboutList">
-          <li v-for="item of aboutList" :key="item.id" class="aboutItem">{{ item.notice }}</li>
+          <li v-for="item of aboutList" :key="item.id" class="aboutItem">
+            <span class=" lineWith">{{ item.notice }}</span>
+          </li>
         </ul>
       </div>
       <div class="section">
-        <h2>申请友链</h2>
-        <el-button type="primary" @click="dialogVisible = true">申请</el-button>
+        <h2 class="defaultCursor">申请友链</h2>
+        <el-button type="primary" @click="dialogVisible = true" style="margin-top: 10px;">申请</el-button>
         <el-dialog v-model="dialogVisible" title="申请友链" width="90%">
           <form action="" class="friendForm">
             <div class='formDiv'>
@@ -173,7 +175,7 @@ onMounted(async () => {
                     +
                   </div>
                 </label>
-                <el-button @click="() => { avatar = '' }" :style="{marginTop:'10px'}">去除头像</el-button>
+                <el-button @click="() => { avatar = '' }" :style="{ marginTop: '10px' }">去除头像</el-button>
               </div>
             </div>
             <div class='formDiv'>
@@ -288,7 +290,10 @@ onMounted(async () => {
         width: 100%;
 
         .aboutItem {
+          font-size: 20px;
+          margin-top: 10px;
           margin-bottom: 10px;
+          cursor: default;
         }
       }
     }
@@ -305,45 +310,50 @@ onMounted(async () => {
     transform: rotate(360deg);
   }
 }
-.friendForm{
+
+.friendForm {
   display: flex;
   flex-direction: column;
-  height:60vh;
+  height: 60vh;
   justify-content: space-around;
-  min-height:500px;
+  min-height: 500px;
+
   .formDiv {
-      display: flex;
-      flex-direction: column;
-  
-      .user {
-        .avatar(85px);
-        border: 1px solid black;
-  
-        label {
-          display: block;
-          .size(100%, 100%);
-          border-radius: 85px;
-        }
-  
-        div,
-        img {
-          .size(100%, 100%);
-          border-radius: 85px;
-        }
-  
-        div {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+    display: flex;
+    flex-direction: column;
+
+    .user {
+      .avatar(85px);
+      border: 1px solid black;
+
+      label {
+        display: block;
+        .size(100%, 100%);
+        border-radius: 85px;
+      }
+
+      div,
+      img {
+        .size(100%, 100%);
+        border-radius: 85px;
+      }
+
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
-    .required::after{
-      content: '*';
-      color: red;
-      margin-left: 5px;
-      font-size: 14px;
-    }
-}
+  }
 
+  .required::after {
+    content: '*';
+    color: red;
+    margin-left: 5px;
+    font-size: 14px;
+  }
+}
+.defaultCursor{
+  cursor: default;
+}
 </style>
