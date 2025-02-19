@@ -301,9 +301,13 @@ onMounted(async () => {
     <!-- 上部留言板 -->
     <section class="board" ref="board">
       <img :src="background" alt="" class="backgroundImage">
+      <div class="block"></div>
       <div class="boardDiv">
-        <h1>留言板</h1>
-        <h4>欢迎留言,你可以在这里畅所欲言</h4>
+        <h1>
+          <span>留言板</span>
+          <span>欢迎留言,你可以在这里畅所欲言</span>
+        </h1>
+
       </div>
       <div class="showItem" v-for="item of messagesList" ref="showList" :key="item.id">
         <el-image :src="item.userHeadPortrait || user" alt="头像" class="custom-image" fit="cover" lazy
@@ -441,6 +445,14 @@ onMounted(async () => {
       z-index: 0;
     }
 
+    .block {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      position: absolute;
+      z-index: 1;
+    }
+
     .boardDiv {
       .size(100%, 100%);
       display: flex;
@@ -449,6 +461,29 @@ onMounted(async () => {
       justify-content: center;
       position: absolute;
       z-index: 1;
+
+      h1 {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: absolute;
+        color: rgba(0, 0, 0, 0);
+        background: url('../assets/messageBackground.jpg');
+        background-size: 100% 100%;
+        background-clip: text;
+
+        span:first-child {
+          font-size: clamp(20px, 8vw, 100px);
+        }
+
+        span:last-child {
+          font-size: clamp(10px, 4vw, 60px);
+        }
+      }
+
     }
 
     .showItem {
@@ -506,7 +541,7 @@ onMounted(async () => {
       background-color: var(--message-background-fill-color);
       color: var(--message-text-color);
       box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.1), -3px -3px 8px rgba(0, 0, 0, 0.05);
-        /* 外阴影 */
+      /* 外阴影 */
     }
 
     div {
@@ -522,6 +557,7 @@ onMounted(async () => {
       cursor: pointer;
       box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2), -3px -3px 8px rgba(0, 0, 0, 0.1);
       transition: all 0.5s ease;
+
       &:hover {
         background-color: var(--hover-button-background-color);
         color: var(--hover-button-text-color);
