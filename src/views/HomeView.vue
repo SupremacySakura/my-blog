@@ -297,10 +297,13 @@ onUnmounted(() => {
   width: 100%;
   min-height: 100vh;
   background: var(--home-background-color);
+  transition: background-color 0.3s ease;
 
   .background-img {
     .size(100%, 100vh);
     position: absolute;
+    object-fit: cover; // 确保背景图片覆盖整个区域
+    opacity: 0.9; // 稍微降低不透明度，使文字更易读
   }
 
   .homeBox {
@@ -310,11 +313,17 @@ onUnmounted(() => {
     align-items: center;
     justify-content: center;
     position: relative;
+    backdrop-filter: blur(3px); // 添加模糊效果
 
     .topSection {
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.1); // 半透明背景
+      backdrop-filter: blur(5px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
       h1,
       span,
@@ -325,17 +334,22 @@ onUnmounted(() => {
       h1 {
         font-size: 35px;
         color: var(--home-head-text-color);
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
       span {
         color: white;
+        font-size: 18px;
+        letter-spacing: 2px;
       }
-      .head{
-         width: 0;
-         overflow: hidden; 
-         white-space: nowrap; 
-         border-right: 2px solid black;
-         animation: typing 3s steps(8) 1s infinite, blink 0.8s step-end infinite,wait 3.2s 4s forwards;
+
+      .head {
+        width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 2px solid black;
+        animation: typing 3s steps(8) 1s infinite, blink 0.8s step-end infinite, wait 3.2s 4s forwards;
       }
     }
   }
@@ -348,13 +362,16 @@ onUnmounted(() => {
     padding-top: 10px;
     position: relative;
     color: var(--home-text-color);
-    @media screen and (max-width:@screen-small-mobile) {
+    gap: 15px; // 添加间距
+
+    @media screen and (max-width: @screen-small-mobile) {
       flex-wrap: wrap;
+      gap: 10px;
     }
 
-    //左侧
+    // 左侧
     .label {
-      width: 50px;
+      width: 60px; // 稍微增加宽度
       min-height: 100vh;
       background-color: var(--home-background-fill-color);
       padding-top: 90px;
@@ -362,34 +379,60 @@ onUnmounted(() => {
       flex-direction: column;
       align-items: center;
       border-right: 2px solid var(--home-background-color);
+      border-radius: 0 10px 10px 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
 
       ul {
         li {
           display: block;
-          width: 40px;
+          width: 45px;
           text-align: center;
           white-space: wrap;
           border-radius: 5px;
-          margin-bottom: 10px;
+          margin-bottom: 15px;
+          padding: 5px 3px;
           background-color: var(--home-background-color);
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          transition: transform 0.2s ease;
+
+          &:hover {
+            transform: translateX(3px);
+          }
         }
       }
     }
 
-    //中间
+    // 中间
     .main {
       width: 60%;
       min-height: 100vh;
       background-color: var(--home-article-background-fill-color);
-      padding: 10px;
+      padding: 20px;
       padding-top: 90px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
 
-      @media screen and (max-width:@screen-small-mobile) {
+      @media screen and (max-width: @screen-small-mobile) {
         width: 70vw;
+        padding: 15px;
+        padding-top: 90px;
+      }
+
+      // 添加滚动条样式
+      :deep(.markdown-body) {
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.2);
+          border-radius: 3px;
+        }
       }
     }
 
-    //右侧
+    // 右侧
     .rightSection {
       .size(450px, 900px);
       display: flex;
@@ -399,11 +442,11 @@ onUnmounted(() => {
       position: sticky;
       top: 20px;
 
-      @media screen and (max-width:@screen-middle-mobile) {
+      @media screen and (max-width: @screen-middle-mobile) {
         width: 250px;
       }
 
-      @media screen and (max-width:@screen-small-mobile) {
+      @media screen and (max-width: @screen-small-mobile) {
         width: 450px;
       }
 
@@ -415,10 +458,12 @@ onUnmounted(() => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        gap: 20px; // 添加间距
 
         .user {
           margin-top: 10px;
           margin-bottom: 10px;
+          width: 100%;
 
           div {
             .innerShadow;
@@ -428,24 +473,37 @@ onUnmounted(() => {
             justify-content: space-around;
             align-items: center;
             background-color: var(--home-background-fill-color);
-            border: 1px solid rgba(224, 224, 224, 1);
-            border-radius: 10px;
-            padding: 10px;
+            border: 1px solid rgba(224, 224, 224, 0.5);
+            border-radius: 15px;
+            padding: 20px;
             box-sizing: border-box;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-            @media screen and (max-width:@screen-middle-mobile) {
+            &:hover {
+              transform: translateY(-5px);
+              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            @media screen and (max-width: @screen-middle-mobile) {
               width: 220px;
             }
 
-            @media screen and (max-width:@screen-small-mobile) {
+            @media screen and (max-width: @screen-small-mobile) {
               width: 90vw;
             }
           }
 
           .custom-image {
-            .avatar(80px);
+            .avatar(90px); // 稍微增大头像
             overflow: hidden;
             padding: 0;
+            border: 3px solid var(--home-background-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+
+            &:hover {
+              transform: scale(1.05);
+            }
 
             :deep(.el-image__inner) {
               .size(100%, 100%);
@@ -456,24 +514,43 @@ onUnmounted(() => {
 
           p {
             white-space: wrap;
-            font-size: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            max-width: 80%;
+            text-align: center;
+            color: var(--home-text-color);
+            opacity: 0.9;
+          }
+
+          span {
+            font-weight: 600;
+            font-size: 18px;
+            margin: 5px 0;
+          }
+
+          address {
+            font-style: normal;
+            color: var(--home-text-color);
+            opacity: 0.7;
+            font-size: 14px;
           }
         }
 
-        //右侧下部信息
+        // 右侧下部信息
         .info {
           .size(410px, 310px);
           display: grid;
           grid-template-columns: 200px 200px;
           grid-template-rows: 150px 150px;
-          gap: 10px;
+          gap: 15px;
 
-          @media screen and (max-width:@screen-middle-mobile) {
+          @media screen and (max-width: @screen-middle-mobile) {
             width: 220px;
             grid-template-columns: 105px 105px;
+            gap: 10px;
           }
 
-          @media screen and (max-width:@screen-small-mobile) {
+          @media screen and (max-width: @screen-small-mobile) {
             width: 90vw;
             grid-template-columns: 49% 49%;
           }
@@ -485,24 +562,46 @@ onUnmounted(() => {
             grid-row-end: 2;
 
             span {
-              font-size: 20px;
+              font-size: 24px;
+              font-weight: 600;
+              color: var(--home-text-color);
             }
           }
 
           div {
             .innerShadow;
-            border-radius: 10px;
+            border-radius: 15px;
             background-color: var(--home-background-fill-color);
-            border: 1px solid rgba(224, 224, 224, 1);
+            border: 1px solid rgba(224, 224, 224, 0.5);
             display: flex;
             flex-direction: column;
-            padding: 10px;
+            padding: 15px;
             justify-content: space-around;
+            transition: transform 0.3s ease;
+
+            &:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            h4 {
+              margin: 0 0 10px 0;
+              font-size: 16px;
+              color: var(--home-text-color);
+              opacity: 0.8;
+            }
 
             time {
               width: 100%;
               white-space: normal;
               overflow: hidden;
+              font-size: 15px;
+              font-weight: 500;
+            }
+
+            span {
+              font-size: 18px;
+              font-weight: 600;
             }
           }
         }
@@ -511,7 +610,7 @@ onUnmounted(() => {
   }
 
   .changeButton {
-    .size(80px, 40px);
+    .size(100px, 45px); // 稍微增大按钮
     border: 1px solid var(--button-border-color);
     border-radius: 40px;
     background-color: var(--home-background-fill-color);
@@ -521,43 +620,63 @@ onUnmounted(() => {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     animation: fadeIn 1s forwards;
+    font-weight: 500;
+    letter-spacing: 1px;
+
     &:hover {
       background-color: var(--hover-button-background-color);
       color: var(--hover-button-text-color);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(1px);
     }
   }
 }
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
+    transform: translateY(10px);
   }
 
   100% {
     opacity: 1;
+    transform: translateY(0);
   }
 }
+
 @keyframes typing {
   to {
     width: 8em;
   }
 }
+
 @keyframes blink {
   50% {
-    border-color: transparent; /* 光标闪烁 */
+    border-color: transparent;
+    /* 光标闪烁 */
   }
 }
+
 /* 定义等待动画 */
 @keyframes wait {
   0% {
-    width: 8em; /* 保持显示的内容不变 */
+    width: 8em;
+    /* 保持显示的内容不变 */
   }
-  50%{
+
+  50% {
     border-color: 2px solid black;
   }
+
   100% {
-    width: 8em; /* 保持显示的内容不变 */
-    border-color: transparent; /* 光标闪烁 */
+    width: 8em;
+    /* 保持显示的内容不变 */
+    border-color: transparent;
+    /* 光标闪烁 */
   }
 }
 </style>

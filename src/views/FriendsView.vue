@@ -207,13 +207,15 @@ onMounted(async () => {
 
 <style lang="less" scoped>
 @screen-middle-mobile: 960px;
+@screen-small-mobile: 750px;
 
 .friendsBox {
   .standardBox;
   background: var(--friend-background-color);
   color: var(--friend-text-color);
+  transition: background-color 0.3s ease;
 
-  @media screen and (max-width:@screen-middle-mobile) {
+  @media screen and (max-width: @screen-middle-mobile) {
     .standardBoxChange;
   }
 
@@ -221,86 +223,234 @@ onMounted(async () => {
     .standardWidth;
     .innerShadow;
     background-color: var(--friend-background-fill-color);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
-    @media screen and (max-width:@screen-middle-mobile) {
+    @media screen and (max-width: @screen-middle-mobile) {
       width: 100%;
+      padding: 20px 15px;
     }
 
     .section {
-      margin-bottom: 20px;
+      margin-bottom: 40px;
+      animation: fadeIn 0.6s ease-in-out forwards;
+
+      h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        position: relative;
+        display: block;
+        cursor: default;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -8px;
+          left: 0;
+          width: 50px;
+          height: 3px;
+          background: linear-gradient(90deg, var(--friend-text-color), transparent);
+          border-radius: 2px;
+        }
+      }
 
       .cardList {
         width: 100%;
-        margin-top: 10px;
+        margin-top: 20px;
         display: flex;
         flex-wrap: wrap;
-        justify-content: start;
+        justify-content: flex-start;
+        gap: 20px;
 
         .cardItem {
-          .size(200px, 100px);
-          margin: 0px 0px 20px 20px;
+          width: 220px;
+          height: 100px;
           background-color: var(--friend-card-background-color);
           display: flex;
-          justify-content: space-around;
+          justify-content: flex-start;
           align-items: center;
-          border-radius: 10px;
-          box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-          /* 添加盒子阴影 */
+          border-radius: 12px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
           cursor: pointer;
-          transform: scale(1.0);
-          transition: all 1s ease;
+          transform: translateY(0);
+          transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          padding: 0 15px;
+          position: relative;
+          overflow: hidden;
 
-          &:hover {
-            transform: scale(1.1);
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+            z-index: 1;
+            pointer-events: none;
           }
 
-          .user {
-            .avatar(50px);
+          &:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 
-            &:hover {
-              animation-name: revolve;
-              animation-duration: 1s;
-              animation-timing-function: linear;
-              /* 可选，确保动画平滑 */
+            .user {
+              animation: revolve 1s linear;
+            }
+
+            .info h4 {
+              color: var(--hover-button-background-color);
             }
           }
 
+          .user {
+            .avatar(60px);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-right: 15px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+            z-index: 2;
+          }
+
           .info {
-            width: 120px;
+            // flex: 1;
+            width: 140px;
+            z-index: 2;
 
             h4 {
               display: block;
               white-space: nowrap;
               text-overflow: ellipsis;
               overflow: hidden;
+              font-size: 16px;
+              font-weight: 600;
+              margin-bottom: 8px;
+              transition: color 0.3s ease;
             }
 
             span {
               display: block;
-              font-size: 12px;
+              font-size: 13px;
               white-space: nowrap;
               text-overflow: ellipsis;
               overflow: hidden;
+              opacity: 0.8;
+              line-height: 1.4;
             }
           }
+        }
+
+        // 添加卡片的淡入动画
+        .cardItem {
+          animation: fadeInUp 0.5s ease forwards;
+          opacity: 0;
+        }
+
+        .cardItem:nth-child(1) {
+          animation-delay: 0.1s;
+        }
+
+        .cardItem:nth-child(2) {
+          animation-delay: 0.15s;
+        }
+
+        .cardItem:nth-child(3) {
+          animation-delay: 0.2s;
+        }
+
+        .cardItem:nth-child(4) {
+          animation-delay: 0.25s;
+        }
+
+        .cardItem:nth-child(5) {
+          animation-delay: 0.3s;
+        }
+
+        .cardItem:nth-child(n+6) {
+          animation-delay: 0.35s;
         }
       }
 
       .aboutList {
         width: 100%;
+        background-color: var(--friend-card-background-color);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 
         .aboutItem {
-          font-size: 20px;
-          margin-top: 10px;
-          margin-bottom: 10px;
+          font-size: 16px;
+          margin: 10px 0;
           cursor: default;
+          padding: 10px;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          position: relative;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: translateX(5px);
+          }
+
+          &::before {
+            content: '•';
+            margin-right: 10px;
+            color: var(--hover-button-background-color);
+            font-weight: bold;
+          }
+
+          span {
+            line-height: 1.6;
+            position: relative;
+
+            &.lineWith::after {
+              content: '';
+              position: absolute;
+              bottom: -2px;
+              left: 0;
+              width: 0;
+              height: 1px;
+              background-color: var(--hover-button-background-color);
+              transition: width 0.3s ease;
+            }
+
+            &.lineWith:hover::after {
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      // 申请友链按钮样式
+      .el-button {
+        margin-top: 15px !important;
+        padding: 12px 25px !important;
+        font-size: 16px !important;
+        border-radius: 8px !important;
+        background-color: var(--hover-button-background-color) !important;
+        border-color: var(--hover-button-background-color) !important;
+        color: white !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          transform: translateY(-3px) !important;
+          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+          background-color: darken(#409eff, 10%) !important;
+          border-color: darken(#409eff, 10%) !important;
+        }
+
+        &:active {
+          transform: translateY(1px) !important;
         }
       }
     }
-
   }
 }
 
+// 旋转动画
 @keyframes revolve {
   0% {
     transform: rotate(0deg);
@@ -311,49 +461,174 @@ onMounted(async () => {
   }
 }
 
+// 淡入动画
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// 上移淡入动画
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 友链申请表单样式
 .friendForm {
   display: flex;
   flex-direction: column;
-  height: 60vh;
-  justify-content: space-around;
   min-height: 500px;
+  justify-content: space-around;
+  padding: 20px 0;
 
   .formDiv {
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--friend-text-color);
+
+      &.required::after {
+        content: '*';
+        color: #f56c6c;
+        margin-left: 5px;
+        font-size: 14px;
+      }
+    }
+
+    .el-input {
+      margin-top: 5px;
+    }
+
+    .el-switch {
+      margin-bottom: 15px;
+    }
 
     .user {
       .avatar(85px);
-      border: 1px solid black;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      margin: 10px 0;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
 
       label {
         display: block;
         .size(100%, 100%);
         border-radius: 85px;
+        cursor: pointer;
       }
 
       div,
       img {
         .size(100%, 100%);
         border-radius: 85px;
+        object-fit: cover;
       }
 
       div {
         display: flex;
         justify-content: center;
         align-items: center;
+        font-size: 30px;
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .addUser {
+        background-color: rgba(64, 158, 255, 0.1);
+        color: var(--hover-button-background-color);
+        font-size: 36px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: rgba(64, 158, 255, 0.2);
+        }
+      }
+
+      .el-button {
+        margin-top: 10px !important;
+        width: 100%;
       }
     }
   }
+}
 
-  .required::after {
-    content: '*';
-    color: red;
-    margin-left: 5px;
-    font-size: 14px;
+// 对话框底部按钮样式
+:deep(.dialog-footer) {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+
+  .el-button {
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    &:first-child {
+      background-color: #f5f7fa !important;
+      border-color: #e4e7ed !important;
+    }
+
+    &:last-child {
+      background-color: var(--hover-button-background-color) !important;
+      border-color: var(--hover-button-background-color) !important;
+      color: white !important;
+    }
   }
 }
-.defaultCursor{
+
+// 对话框样式
+:deep(.el-dialog) {
+  border-radius: 15px !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+
+  .el-dialog__header {
+    padding: 20px !important;
+    margin: 0 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+
+    .el-dialog__title {
+      font-size: 20px !important;
+      font-weight: 600 !important;
+    }
+  }
+
+  .el-dialog__body {
+    padding: 20px !important;
+  }
+
+  .el-dialog__footer {
+    padding: 15px 20px 20px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+  }
+}
+
+.defaultCursor {
   cursor: default;
 }
 </style>

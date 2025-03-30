@@ -3,6 +3,7 @@
 import { onMounted, ref, useTemplateRef, nextTick } from 'vue'
 //导入默认图片
 import backgroundImg from '@/assets/backgroundImg3.jpg'
+import github from '@/assets/github-fill.png'
 //导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading, ElTooltip } from 'element-plus'
 //导入lodash相关API
@@ -121,6 +122,13 @@ function onImageLoad(item: iWaterFallItem, photoType: EWaterFallPhotoType) {
 const onBackgroundImageError = (item: iWaterFallItem) => {
     item.photo = backgroundImg
 }
+/**
+ * 处理技术栈图标加载错误
+ * @param item 
+ */
+const onIconImageError = (item: iWaterFallItem) => {
+    item.icon = github
+}
 onMounted(async () => {
     //初始化
     const loadingInstance = ElLoading.service(_options)
@@ -155,9 +163,10 @@ onMounted(async () => {
                         @load="onImageLoad(item, EWaterFallPhotoType.photo)"
                         @error="onBackgroundImageError(item)"></el-image>
                     <div class="shade"></div>
-                    <el-image :src="item.icon" alt="图标" class="icon" fit="cover" lazy
+                    <el-image :src="item.icon || github" alt="图标" class="icon" fit="cover" lazy
                         v-loading="item.loading[EWaterFallPhotoType.icon]"
-                        @load="onImageLoad(item, EWaterFallPhotoType.icon)"></el-image>
+                        @load="onImageLoad(item, EWaterFallPhotoType.icon)"
+                        @error="onIconImageError(item)"></el-image>
                     <span v-show="item.loading.every(item => item === false)">{{ item.text }}</span>
                     <el-tooltip class="box-item" effect="dark" placement="top-start">
                         <template #content>
@@ -179,15 +188,16 @@ onMounted(async () => {
 .resourceBox {
     .standardBox;
     background: var(--moment-background-box-color);
+    transition: background-color 0.3s ease;
 
-    @media screen and (max-width:@screen-middle-mobile) {
+    @media screen and (max-width: @screen-middle-mobile) {
         .standardBoxChange;
     }
 
     .mainSection {
         .innerShadow;
         .standardWidth;
-        padding: 10px;
+        padding: 30px;
         min-width: 180px;
         display: flex;
         flex-direction: column;
@@ -195,15 +205,33 @@ onMounted(async () => {
         overflow-y: auto;
         background-color: var(--moment-right-background-color);
         color: var(--moment-right-text-color);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
-        @media screen and (max-width:@screen-middle-mobile) {
+        @media screen and (max-width: @screen-middle-mobile) {
             width: 100%;
             min-height: 1000px;
             margin-left: 0px;
+            padding: 20px 15px;
         }
 
         h2 {
-            margin-top: 20px;
+            margin: 20px 0 30px;
+            font-size: 28px;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 50%;
+                height: 3px;
+                background: linear-gradient(90deg, var(--moment-right-text-color), transparent);
+                border-radius: 2px;
+            }
         }
 
         .box {
@@ -218,41 +246,140 @@ onMounted(async () => {
                 flex-direction: column;
                 justify-content: space-around;
                 align-items: center;
-                transform: scale(1.0);
-                transition: all 0.5s ease;
-                border-radius: 5px;
+                transform: translateY(0);
+                transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                border-radius: 12px;
                 overflow: hidden;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                animation: fadeIn 0.5s ease forwards;
+                opacity: 0;
 
                 &:hover {
                     cursor: pointer;
-                    transform: scale(1.1);
-                    z-index: 1;
-                    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3),
-                        -4px -4px 12px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-10px);
+                    z-index: 10;
+                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+
+                    .icon {
+                        transform: scale(1.1);
+                    }
+
+                    span {
+                        color: var(--hover-button-text-color);
+                    }
+
+                    .el-button {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
                 }
 
                 .background {
                     .size(100%, 100%);
                     position: absolute;
                     z-index: -1;
+                    object-fit: cover;
+                    transition: transform 0.8s ease;
+
+                    &:hover {
+                        transform: scale(1.05);
+                    }
                 }
 
                 .shade {
                     .size(100%, 100%);
                     position: absolute;
-                    z-index: -1;
-                    background-color: rgba(0, 0, 0, 0.4);
+                    z-index: 0;
+                    background: linear-gradient(to bottom,
+                            rgba(0, 0, 0, 0.3) 0%,
+                            rgba(0, 0, 0, 0.7) 100%);
                 }
 
                 span {
                     color: white;
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin: 10px 0;
+                    text-align: center;
+                    padding: 0 10px;
+                    position: relative;
+                    z-index: 1;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+                    transition: all 0.3s ease;
                 }
 
                 .icon {
-                    .size(50px, 50px);
+                    .size(60px, 60px);
+                    margin-top: 20px;
+                    border-radius: 50%;
+                    border: 3px solid rgba(255, 255, 255, 0.3);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                    position: relative;
+                    z-index: 1;
+                    transition: all 0.3s ease;
+                    background-color: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(5px);
+                }
+
+                .el-button {
+                    margin: 10px 0 20px;
+                    background-color: rgba(255, 255, 255, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.4);
+                    color: white;
+                    font-weight: 500;
+                    padding: 8px 15px;
+                    border-radius: 20px;
+                    position: relative;
+                    z-index: 1;
+                    transition: all 0.3s ease;
+                    opacity: 0.7;
+                    transform: translateY(5px);
+
+                    &:hover {
+                        background-color: var(--hover-button-background-color);
+                        border-color: var(--hover-button-background-color);
+                        transform: translateY(-3px) !important;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                    }
+                }
+
+                // 为每个项目添加不同的延迟
+                &:nth-child(3n+1) {
+                    animation-delay: 0.1s;
+                }
+
+                &:nth-child(3n+2) {
+                    animation-delay: 0.2s;
+                }
+
+                &:nth-child(3n+3) {
+                    animation-delay: 0.3s;
                 }
             }
         }
     }
+}
+
+// 添加淡入动画
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// 添加工具提示样式
+:deep(.el-tooltip__popper) {
+    border-radius: 8px !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+    max-width: 300px !important;
 }
 </style>

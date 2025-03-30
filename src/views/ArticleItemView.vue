@@ -104,13 +104,16 @@ onMounted(() => {
     border-left: 1px solid black;
     border-right: 1px solid black;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
     @media screen and (max-width:@screen-middle-mobile) {
       width: 95%;
     }
-    h1{
+
+    h1 {
       margin-top: 10px;
       margin-bottom: 20px;
     }
+
     .label {
       display: flex;
       margin: 10px 0px;
