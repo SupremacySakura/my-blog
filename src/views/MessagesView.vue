@@ -440,10 +440,6 @@ onMounted(async () => {
     border-radius: 15px;
     transition: transform 0.3s ease;
 
-    &:hover {
-      transform: translateY(-5px);
-    }
-
     .backgroundImage {
       .size(100%, 100%);
       position: absolute;
@@ -515,13 +511,6 @@ onMounted(async () => {
       padding-right: 15px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
-
-      &:hover {
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        transform: scale(1.05);
-        background-color: rgba(80, 80, 80, 0.8);
-      }
-
       .custom-image {
         .avatar(50px);
         border: 2px solid rgba(255, 255, 255, 0.5);

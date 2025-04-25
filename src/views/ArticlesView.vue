@@ -318,7 +318,7 @@ onMounted(async () => {
             <div class="searchInput">
               <el-input v-model="searchValue" style="width: 240px" placeholder="请输入关键词"
                 @keyup.enter="handleSearchByKeyWord()" />
-              <el-button :icon="Search" circle @click="handleSearchByKeyWord()" />
+              <el-button :icon="Search" @click="handleSearchByKeyWord()" />
             </div>
           </div>
           <div class="tag">
@@ -709,7 +709,6 @@ onMounted(async () => {
             width: 100%;
             display: flex;
             margin-top: 15px;
-            justify-content: space-between;
             gap: 10px;
 
             input {
@@ -760,7 +759,6 @@ onMounted(async () => {
             margin-bottom: 15px;
             position: relative;
             display: inline-block;
-
             &:after {
               content: '';
               position: absolute;
@@ -777,7 +775,7 @@ onMounted(async () => {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-
+            margin-top: 10px;
             li {
               width: auto;
               display: inline-block;

@@ -10,8 +10,6 @@ import { useAssetStore } from '@/stores/asset'
 const { _setPageStart, _nowPath, _setNowPath } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
-//导入lodash相关API
-import { throttle } from 'lodash'
 //导入ElementPlus相关内容
 import type { DrawerProps } from 'element-plus'
 
@@ -136,8 +134,8 @@ onBeforeUnmount(() => {
         <li v-for="item of tabBarList" :key="item.id" @click="gotoPage(item)"
           :class="{ 'active': route.path === item.path }" ref="containerItem">{{ item.text }}</li>
       </ul>
-      <el-button :icon="Expand" circle v-if="ExpandStatus && hiddenTabBarList.length > 0" class="openButton" />
-      <el-button :icon="Fold" circle v-else-if="!ExpandStatus && hiddenTabBarList.length > 0" @click="handleExpand()"
+      <el-button :icon="Expand"  v-if="ExpandStatus && hiddenTabBarList.length > 0" class="openButton" />
+      <el-button :icon="Fold"  v-else-if="!ExpandStatus && hiddenTabBarList.length > 0" @click="handleExpand()"
         class="openButton" />
       <el-drawer v-model="ExpandStatus" title="导航" :direction="direction">
         <ul class="hiddenTabBarList">

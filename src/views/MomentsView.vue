@@ -3,7 +3,6 @@
 import { onMounted, ref, nextTick } from 'vue'
 //导入默认图片
 import yxzq from '@/assets/yxzq.jpg'
-import backgroundImg from '@/assets/backgroundImg3.jpg'
 //导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
 //导入asset仓库
@@ -199,7 +198,7 @@ onMounted(async () => {
         span {
           display: block;
           width: 2px;
-          height: calc(100% + 20px);
+          height: calc(100% + 30px);
           background: linear-gradient(to bottom, rgb(102, 177, 255), rgba(102, 177, 255, 0.3));
           border-radius: 2px;
         }
@@ -283,29 +282,6 @@ onMounted(async () => {
             word-break: break-word;
           }
         }
-      }
-    }
-
-    // 添加首个卡片的特殊样式
-    .card:first-child {
-      .point span {
-        background-color: #ff6b6b;
-        box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-      }
-
-      .line span {
-        background: linear-gradient(to bottom, #ff6b6b, rgba(255, 107, 107, 0.3));
-      }
-
-      .moment section {
-        border-left: 3px solid #ff6b6b;
-      }
-    }
-
-    // 添加最后一个卡片的特殊样式
-    .card:last-child {
-      .line span {
-        height: 50%;
       }
     }
   }

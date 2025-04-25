@@ -224,7 +224,6 @@ onUnmounted(() => {
 
 <template>
   <div class="box">
-    <img :src="backgroundImg" alt="" class="background-img" v-show="!_pageStart">
     <!-- 开始前页面 -->
     <div class="homeBox" ref="homeBox" v-show="!_pageStart">
       <section class="topSection">
@@ -321,9 +320,6 @@ onUnmounted(() => {
       align-items: center;
       padding: 20px;
       border-radius: 10px;
-      background-color: rgba(255, 255, 255, 0.1); // 半透明背景
-      backdrop-filter: blur(5px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
       h1,
       span,
@@ -357,13 +353,14 @@ onUnmounted(() => {
   .myBox {
     width: 100%;
     min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     padding-top: 10px;
     position: relative;
     color: var(--home-text-color);
     gap: 15px; // 添加间距
-
     @media screen and (max-width: @screen-small-mobile) {
       flex-wrap: wrap;
       gap: 10px;
@@ -382,7 +379,7 @@ onUnmounted(() => {
       border-radius: 0 10px 10px 0;
       box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
-
+      overflow-y: auto;
       ul {
         li {
           display: block;
@@ -412,7 +409,7 @@ onUnmounted(() => {
       padding-top: 90px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-
+      overflow-y: auto;
       @media screen and (max-width: @screen-small-mobile) {
         width: 70vw;
         padding: 15px;
@@ -457,7 +454,6 @@ onUnmounted(() => {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
         gap: 20px; // 添加间距
 
         .user {
