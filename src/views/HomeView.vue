@@ -346,8 +346,6 @@ onUnmounted(() => {
   .myBox {
     width: 100%;
     min-height: 100vh;
-    max-height: 100vh;
-    overflow: hidden;
     display: flex;
     justify-content: center;
     padding-top: 10px;
@@ -399,6 +397,7 @@ onUnmounted(() => {
     .main {
       width: 60%;
       min-height: 100vh;
+      max-height: 100vh;
       background-color: var(--home-article-background-fill-color);
       padding: 20px;
       padding-top: 90px;
