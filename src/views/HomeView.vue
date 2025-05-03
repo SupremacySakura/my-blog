@@ -231,7 +231,7 @@ onUnmounted(() => {
         <span class='label'>极简主义 实用主义</span>
         <button @click="handleStart()" class="changeButton">开始</button>
         <el-switch v-model="theme" :active-action-icon="View" :inactive-action-icon="Hide"
-          style="--el-switch-on-color: var(--home-background-fill-color); --el-switch-off-color: var(--home-background-fill-color)"
+          style="--el-switch-on-color: var(--home-switch-background-color); --el-switch-off-color: var(--home-switch-background-color);--el-switch-border-color: var(--home-switch-border-color);"
           @change="handleChangeTheme" />
       </section>
     </div>
@@ -298,13 +298,6 @@ onUnmounted(() => {
   background: var(--home-background-color);
   transition: background-color 0.3s ease;
 
-  .background-img {
-    .size(100%, 100vh);
-    position: absolute;
-    object-fit: cover; // 确保背景图片覆盖整个区域
-    opacity: 0.9; // 稍微降低不透明度，使文字更易读
-  }
-
   .homeBox {
     .size(100%, 100vh);
     display: flex;
@@ -335,7 +328,7 @@ onUnmounted(() => {
       }
 
       span {
-        color: white;
+        color: var(--home-head-text-color);
         font-size: 18px;
         letter-spacing: 2px;
       }
@@ -361,6 +354,7 @@ onUnmounted(() => {
     position: relative;
     color: var(--home-text-color);
     gap: 15px; // 添加间距
+
     @media screen and (max-width: @screen-small-mobile) {
       flex-wrap: wrap;
       gap: 10px;
@@ -380,6 +374,7 @@ onUnmounted(() => {
       box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
       overflow-y: auto;
+
       ul {
         li {
           display: block;
@@ -410,6 +405,7 @@ onUnmounted(() => {
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
       overflow-y: auto;
+
       @media screen and (max-width: @screen-small-mobile) {
         width: 70vw;
         padding: 15px;
@@ -609,8 +605,8 @@ onUnmounted(() => {
     .size(100px, 45px); // 稍微增大按钮
     border: 1px solid var(--button-border-color);
     border-radius: 40px;
-    background-color: var(--home-background-fill-color);
-    color: var(--home-text-color);
+    background-color: var(--home-button-background-color);
+    color: var(--home-button-text-color);
     margin-bottom: 20px;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

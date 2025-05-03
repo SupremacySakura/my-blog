@@ -63,18 +63,8 @@ const handleClick = (item: iAboutItem) => {
   justify-content: space-around;
   padding: 10px;
   color: var(--bottombar-text-color);
-  box-shadow: 0px 4px 10px rgba(135, 206, 250, 0.15), 0px -10px 30px rgba(135, 206, 250, 0.3);
-  &::before {
-      content: '';
-      position: absolute;
-      top: -5px;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: rgba(135, 206, 250, 0.4);
-      filter: blur(3px);
-      border-radius: 10px;
-    }
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.01), 0px -10px 30px rgba(0, 0, 0, 0.05);
+
   @media screen and (max-width:@screen-small-mobile) {
     height: 60px;
   }
@@ -100,6 +90,7 @@ const handleClick = (item: iAboutItem) => {
       align-items: center;
       background-color: skyblue;
       overflow: hidden;
+      padding-left: 10px;
 
       @media screen and (max-width:@screen-small-mobile) {
         width: 200px;
@@ -128,6 +119,7 @@ const handleClick = (item: iAboutItem) => {
 
   .rightSection {
     height: 100%;
+
     h4 {
       width: 100px;
       text-align: center;

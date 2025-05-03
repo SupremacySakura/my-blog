@@ -423,29 +423,6 @@ onMounted(async () => {
           }
         }
       }
-
-      // 申请友链按钮样式
-      .el-button {
-        margin-top: 15px !important;
-        padding: 12px 25px !important;
-        font-size: 16px !important;
-        border-radius: 8px !important;
-        background-color: var(--hover-button-background-color) !important;
-        border-color: var(--hover-button-background-color) !important;
-        color: white !important;
-        transition: all 0.3s ease !important;
-
-        &:hover {
-          transform: translateY(-3px) !important;
-          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
-          background-color: darken(#409eff, 10%) !important;
-          border-color: darken(#409eff, 10%) !important;
-        }
-
-        &:active {
-          transform: translateY(1px) !important;
-        }
-      }
     }
   }
 }

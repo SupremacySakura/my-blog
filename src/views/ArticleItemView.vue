@@ -133,7 +133,7 @@ onMounted(() => {
       font-size: 32px;
       font-weight: 600;
       line-height: 1.25;
-      color: #24292f;
+      color: var(--article-item-text-color);
     }
 
     .label {
@@ -161,94 +161,8 @@ onMounted(() => {
     }
 
     .markdown-body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      color: #24292f;
-
-      :deep(h1) {
-        font-size: 2em;
-        margin: 24px 0 16px;
-        padding-bottom: 0.3em;
-        border-bottom: 1px solid #d0d7de;
-      }
-
-      :deep(h2) {
-        font-size: 1.5em;
-        margin: 24px 0 16px;
-        padding-bottom: 0.3em;
-        border-bottom: 1px solid #d0d7de;
-      }
-
-      :deep(h3) {
-        font-size: 1.25em;
-        margin: 24px 0 16px;
-      }
-
-      :deep(p) {
-        margin: 16px 0;
-      }
-
-      :deep(a) {
-        color: #0969da;
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-
-      :deep(code) {
-        font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-        font-size: 85%;
-        padding: 0.2em 0.4em;
-        background-color: #f6f8fa;
-        border-radius: 6px;
-      }
-
-      :deep(pre) {
-        background-color: #f6f8fa;
-        border-radius: 6px;
-        padding: 16px;
-        overflow: auto;
-        margin: 16px 0;
-
-        code {
-          background-color: transparent;
-          padding: 0;
-        }
-      }
-
-      :deep(blockquote) {
-        margin: 16px 0;
-        padding: 0 16px;
-        color: #57606a;
-        border-left: 4px solid #d0d7de;
-      }
-
-      :deep(table) {
-        border-spacing: 0;
-        border-collapse: collapse;
-        margin: 16px 0;
-        width: 100%;
-
-        th,
-        td {
-          padding: 6px 13px;
-          border: 1px solid #d0d7de;
-        }
-
-        th {
-          background-color: #f6f8fa;
-          font-weight: 600;
-        }
-      }
-
-      :deep(img) {
-        max-width: 100%;
-        box-sizing: border-box;
-        border-radius: 6px;
-      }
+      min-height: 80vh;
+      padding: 10px;
     }
 
     div[v-if="!article"] {

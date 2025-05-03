@@ -165,8 +165,7 @@ onMounted(async () => {
                     <div class="shade"></div>
                     <el-image :src="item.icon || github" alt="图标" class="icon" fit="cover" lazy
                         v-loading="item.loading[EWaterFallPhotoType.icon]"
-                        @load="onImageLoad(item, EWaterFallPhotoType.icon)"
-                        @error="onIconImageError(item)"></el-image>
+                        @load="onImageLoad(item, EWaterFallPhotoType.icon)" @error="onIconImageError(item)"></el-image>
                     <span v-show="item.loading.every(item => item === false)">{{ item.text }}</span>
                     <el-tooltip class="box-item" effect="dark" placement="top-start">
                         <template #content>
@@ -258,7 +257,7 @@ onMounted(async () => {
                     cursor: pointer;
                     transform: translateY(-10px);
                     z-index: 10;
-                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 15px 30px var(--shadow-color);
 
                     .icon {
                         transform: scale(1.1);

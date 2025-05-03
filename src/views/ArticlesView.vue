@@ -732,7 +732,7 @@ onMounted(async () => {
               padding: 0 15px;
               border-radius: 8px;
               background-color: var(--hover-button-background-color);
-              color: white;
+              color: var(--article-button-text-color);
               border: none;
               cursor: pointer;
               transition: all 0.3s ease;
@@ -759,6 +759,7 @@ onMounted(async () => {
             margin-bottom: 15px;
             position: relative;
             display: inline-block;
+
             &:after {
               content: '';
               position: absolute;
@@ -776,6 +777,7 @@ onMounted(async () => {
             flex-wrap: wrap;
             gap: 8px;
             margin-top: 10px;
+
             li {
               width: auto;
               display: inline-block;
