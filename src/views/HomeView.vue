@@ -132,7 +132,7 @@ const handleGetMyInformation = async () => {
 }
 watchEffect(() => {
   if (homeArticle.value) {
-    homeArticle.value.innerHTML = homeArticleHTML.value
+    (homeArticle.value as HTMLElement).innerHTML = homeArticleHTML.value
     nextTick(() => {
       const codeBlocks = homeArticle.value?.querySelectorAll('pre code')
       codeBlocks?.forEach((block) => {
