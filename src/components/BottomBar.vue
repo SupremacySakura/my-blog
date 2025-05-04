@@ -65,9 +65,9 @@ const handleClick = (item: iAboutItem) => {
   color: var(--bottombar-text-color);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.01), 0px -10px 30px rgba(0, 0, 0, 0.05);
 
-  @media screen and (max-width:@screen-small-mobile) {
-    height: 60px;
-  }
+  // @media screen and (max-width:@screen-small-mobile) {
+  //   height: 60px;
+  // }
 
   .leftSection {
     width: 500px;

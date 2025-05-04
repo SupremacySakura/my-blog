@@ -1,14 +1,25 @@
 <script setup lang="ts">
 //导入vue相关api
-import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
+import { ref, onMounted, useTemplateRef, watchEffect, nextTick, reactive, computed } from 'vue'
 //导入router相关api
 import { useRoute, useRouter } from 'vue-router'
+//导入工具
+import { throttle } from 'lodash'
 const route = useRoute()
 const router = useRouter()
 //导入工具
 import { hljs } from '@/utils/index'
 //导入处理markdown的库
 import { marked } from 'marked'
+const toc = ref([])
+const catalog = useTemplateRef('catalog')
+//存储数据
+const catalogMap = reactive(new Map())
+const catalogNum = computed(() => {
+  return Array.from(catalogMap.keys())
+})
+//活跃目录
+let activeAnchor = ref(0)
 marked.setOptions({
   gfm: true, // 启用 GitHub 风格的 Markdown
   breaks: true, // 支持换行符
@@ -49,6 +60,34 @@ watchEffect(async () => {
   }
 })
 /**
+ * 点击跳转
+ * @param e 事件
+ * @param target 跳转dom
+ */
+const handleGoTo = (e, target) => {
+  e.preventDefault()
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+/**
+ * 滚动事件处理
+ * @param e 鼠标滚轮事件
+ */
+const handleScroll = (e) => {
+  for (let i = 1; i < catalogNum.value.length; i++) {
+    if (e.target.scrollTop < catalogNum.value[i]) {
+      activeAnchor.value = catalogMap.get(catalogNum.value[i - 1]).id
+      break
+    }
+  }
+  const target = document.querySelector('.active')
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+const throttleSroll = throttle(handleScroll, 100)
+/**
  * 返回文章页
  */
 const handleGoBack = () => {
@@ -61,11 +100,40 @@ const handleGoBack = () => {
 onMounted(() => {
   //初始化
   article.value = _articlesList.filter(item => item.id === +route.params.id)[0]
+  console.log(article.value)
+  nextTick(() => {
+    if (articleBody.value) {
+      const headings = articleBody.value.querySelectorAll('h1,h2,h3,h4,h5,h6')
+      toc.value = Array.from(headings).map((heading, index) => {
+        const id = heading.innerText
+        heading.id = id
+        if (index === 0) {
+          activeAnchor.value = id
+        }
+        catalogMap.set(heading.offsetTop, heading)
+        return {
+          anchor: id,
+          level: parseInt(heading.tagName.substring(1)),
+          text: heading.textContent,
+          el: heading
+        }
+      })
+    }
+  })
+
 })
 </script>
 
 <template>
   <div class="article-item-box">
+    <section class="catalog" ref="catalog">
+      <a :href="`#${item.anchor}`" v-for="item in toc" :style="{
+        fontSize: `clamp(${12 + (6 - item.level)}px, ${(1 + (6 - item.level) * 0.2)}vw, ${18 + (6 - item.level)}px)`,
+        marginLeft: `clamp(${(item.level - 1) * 10}px, ${(item.level - 1) * 1.5}vw, ${(item.level - 1) * 30}px)`
+      }" @click="(e) => { handleGoTo(e, item.el) }" :class="{ 'active': item.el.id === activeAnchor }">
+        {{ item.text }}
+      </a>
+    </section>
     <section class="article-item">
       <el-button round @click="handleGoBack()">返回</el-button>
       <h1>{{ article?.head }}</h1>
@@ -74,18 +142,20 @@ onMounted(() => {
           {{ item }}
         </li>
       </ul>
-      <div ref="articleBody" class="markdown-body"></div>
+      <div ref="articleBody" class="markdown-body" @scroll="(e) => { throttleSroll(e) }"></div>
       <div v-if="!article">404 NOT FOUND</div>
     </section>
   </div>
 </template>
 
 <style lang="less" scoped>
+@screen-small-mobile: 750px;
 @screen-middle-mobile: 960px;
 
 .article-item-box {
   width: 100%;
-  min-height: 100vh;
+  height: calc(100vh - 80px);
+  box-sizing: border-box;
   padding: 80px 40px 0px 40px;
   background-color: var(--article-background-color);
   display: flex;
@@ -93,18 +163,49 @@ onMounted(() => {
   color: var(--article-card-text-color);
 
   @media screen and (max-width:@screen-middle-mobile) {
+    padding: 80px 16px 0px 16px;
+    height: calc(100vh - 80px);
+  }
+
+  .catalog {
     box-sizing: border-box;
-    padding: 60px 16px 0px 16px;
+    width: 300px;
+    height: calc(100vh - 160px);
+    overflow-y: auto;
+    background-color: var(--catalog-background-color);
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    @media screen and (max-width:@screen-small-mobile) {
+      width: 200px;
+    }
+
+    a {
+      text-decoration: none;
+      border-radius: 5px;
+      color: var(--article-item-text-color);
+      margin-top: 5px;
+      padding: 5px;
+    }
+
+    .active {
+      background-color: var(--catalog-active-background-color);
+    }
   }
 
   .article-item {
+    box-sizing: border-box;
     width: 900px;
-    min-height: 100vh;
+    height: calc(100vh - 160px);
+    overflow: hidden;
     background-color: var(--article-item-background-fill-color);
     padding: 32px;
     border: 1px solid #d0d7de;
     border-radius: 6px;
     box-shadow: 0 1px 3px rgba(27, 31, 36, 0.04);
+    display: flex;
+    flex-direction: column;
 
     @media screen and (max-width:@screen-middle-mobile) {
       width: 100%;
@@ -161,8 +262,10 @@ onMounted(() => {
     }
 
     .markdown-body {
-      min-height: 80vh;
+      flex: 1;
       padding: 10px;
+      overflow-y: auto;
+      position: relative;
     }
 
     div[v-if="!article"] {
