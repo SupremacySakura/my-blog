@@ -98,6 +98,13 @@ interface iTag {
   id: number,
   tag: string
 }
+//标题类型接口
+interface iTocItem {
+  anchor: string;
+  level: number;
+  text: string | null;
+  el: HTMLElement;
+}
 //公告类型接口
 interface iNotice {
   id: number,
@@ -114,6 +121,7 @@ export type {
   iRowItem,
   iTag,
   iNotice,
+  iTocItem,
 }
 export {
   EArticlePhotoType,

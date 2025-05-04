@@ -9,17 +9,18 @@ const route = useRoute()
 const router = useRouter()
 //导入工具
 import { hljs } from '@/utils/index'
+import type { iTocItem } from '@/types/index'
 //导入处理markdown的库
 import { marked } from 'marked'
-const toc = ref([])
-const catalog = useTemplateRef('catalog')
+const toc = ref<iTocItem[]>([])
+const catalog = useTemplateRef<HTMLElement>('catalog')
 //存储数据
 const catalogMap = reactive(new Map())
 const catalogNum = computed(() => {
   return Array.from(catalogMap.keys())
 })
 //活跃目录
-let activeAnchor = ref(0)
+let activeAnchor = ref<string>('')
 marked.setOptions({
   gfm: true, // 启用 GitHub 风格的 Markdown
   breaks: true, // 支持换行符
@@ -43,7 +44,7 @@ import type { iArticleItem } from '@/types'
 //文章
 const article = ref<iArticleItem>()
 //文章dom
-const articleBody = useTemplateRef('articleBody')
+const articleBody = useTemplateRef<HTMLElement>('articleBody')
 watchEffect(async () => {
   if (articleBody.value) {
     if (article.value) {
@@ -64,7 +65,7 @@ watchEffect(async () => {
  * @param e 事件
  * @param target 跳转dom
  */
-const handleGoTo = (e, target) => {
+const handleGoTo = (e: MouseEvent, target: HTMLElement) => {
   e.preventDefault()
   if (target) {
     target.scrollIntoView({ behavior: 'smooth' })
@@ -74,9 +75,9 @@ const handleGoTo = (e, target) => {
  * 滚动事件处理
  * @param e 鼠标滚轮事件
  */
-const handleScroll = (e) => {
+const handleScroll = (e:Event) => {
   for (let i = 1; i < catalogNum.value.length; i++) {
-    if (e.target.scrollTop < catalogNum.value[i]) {
+    if ((e.target as HTMLElement).scrollTop < catalogNum.value[i]) {
       activeAnchor.value = catalogMap.get(catalogNum.value[i - 1]).id
       break
     }
@@ -105,18 +106,18 @@ onMounted(() => {
     if (articleBody.value) {
       const headings = articleBody.value.querySelectorAll('h1,h2,h3,h4,h5,h6')
       toc.value = Array.from(headings).map((heading, index) => {
-        const id = heading.innerText
+        const id = (heading as HTMLElement).innerText
         heading.id = id
         if (index === 0) {
           activeAnchor.value = id
         }
-        catalogMap.set(heading.offsetTop, heading)
+        catalogMap.set((heading as HTMLElement).offsetTop, heading)
         return {
           anchor: id,
           level: parseInt(heading.tagName.substring(1)),
           text: heading.textContent,
           el: heading
-        }
+        } as iTocItem
       })
     }
   })
@@ -130,7 +131,7 @@ onMounted(() => {
       <a :href="`#${item.anchor}`" v-for="item in toc" :style="{
         fontSize: `clamp(${12 + (6 - item.level)}px, ${(1 + (6 - item.level) * 0.2)}vw, ${18 + (6 - item.level)}px)`,
         marginLeft: `clamp(${(item.level - 1) * 10}px, ${(item.level - 1) * 1.5}vw, ${(item.level - 1) * 30}px)`
-      }" @click="(e) => { handleGoTo(e, item.el) }" :class="{ 'active': item.el.id === activeAnchor }">
+      }" @click="(e) => { handleGoTo(e, item.el) }" :class="{ 'active': item.el.id === activeAnchor }" :key="item.anchor">
         {{ item.text }}
       </a>
     </section>
