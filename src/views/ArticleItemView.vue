@@ -5,14 +5,18 @@ import { ref, onMounted, useTemplateRef, watchEffect, nextTick, reactive, comput
 import { useRoute, useRouter } from 'vue-router'
 //导入工具
 import { throttle } from 'lodash'
+//路由相关实例
 const route = useRoute()
 const router = useRouter()
 //导入工具
 import { hljs } from '@/utils/index'
+//导入类型
 import type { iTocItem } from '@/types/index'
 //导入处理markdown的库
 import { marked } from 'marked'
+//标题索引
 const toc = ref<iTocItem[]>([])
+//标题索引容器
 const catalog = useTemplateRef<HTMLElement>('catalog')
 //存储数据
 const catalogMap = reactive(new Map())
@@ -21,6 +25,7 @@ const catalogNum = computed(() => {
 })
 //活跃目录
 let activeAnchor = ref<string>('')
+//marked初始化
 marked.setOptions({
   gfm: true, // 启用 GitHub 风格的 Markdown
   breaks: true, // 支持换行符
@@ -45,6 +50,7 @@ import type { iArticleItem } from '@/types'
 const article = ref<iArticleItem>()
 //文章dom
 const articleBody = useTemplateRef<HTMLElement>('articleBody')
+//渲染文章
 watchEffect(async () => {
   if (articleBody.value) {
     if (article.value) {
@@ -61,7 +67,7 @@ watchEffect(async () => {
   }
 })
 /**
- * 点击跳转
+ * 点击目录跳转
  * @param e 事件
  * @param target 跳转dom
  */
@@ -72,14 +78,19 @@ const handleGoTo = (e: MouseEvent, target: HTMLElement) => {
   }
 }
 /**
- * 滚动事件处理
+ * 文章滚动事件处理
  * @param e 鼠标滚轮事件
  */
-const handleScroll = (e:Event) => {
-  for (let i = 1; i < catalogNum.value.length; i++) {
-    if ((e.target as HTMLElement).scrollTop < catalogNum.value[i]) {
-      activeAnchor.value = catalogMap.get(catalogNum.value[i - 1]).id
-      break
+const handleScroll = (e: Event) => {
+  if ((e.target as HTMLElement).scrollTop <= catalogNum.value[0]) {
+    activeAnchor.value = catalogMap.get(catalogNum.value[0]).id
+  } else if ((e.target as HTMLElement).scrollTop >= catalogNum.value[catalogNum.value.length - 1]) {
+    activeAnchor.value = catalogMap.get(catalogNum.value[catalogNum.value.length - 1]).id
+  } else {
+    for (let i = 0; i < catalogNum.value.length - 1; i++) {
+      if ((e.target as HTMLElement).scrollTop >= catalogNum.value[i] && (e.target as HTMLElement).scrollTop < catalogNum.value[i + 1]) {
+        activeAnchor.value = catalogMap.get(catalogNum.value[i]).id
+      }
     }
   }
   const target = document.querySelector('.active')
@@ -87,6 +98,7 @@ const handleScroll = (e:Event) => {
     target.scrollIntoView({ behavior: 'smooth' })
   }
 }
+// 滚动事件节流处理
 const throttleSroll = throttle(handleScroll, 100)
 /**
  * 返回文章页
@@ -98,15 +110,12 @@ const handleGoBack = () => {
     loadingInstance.close()
   }, 500)
 }
-onMounted(() => {
-  //初始化
-  article.value = _articlesList.filter(item => item.id === +route.params.id)[0]
-  console.log(article.value)
+const initCatalog = () => {
   nextTick(() => {
     if (articleBody.value) {
       const headings = articleBody.value.querySelectorAll('h1,h2,h3,h4,h5,h6')
       toc.value = Array.from(headings).map((heading, index) => {
-        const id = (heading as HTMLElement).innerText
+        const id = (heading as HTMLElement).innerText + index
         heading.id = id
         if (index === 0) {
           activeAnchor.value = id
@@ -121,7 +130,11 @@ onMounted(() => {
       })
     }
   })
-
+}
+onMounted(() => {
+  //初始化
+  article.value = _articlesList.filter(item => item.id === +route.params.id)[0]
+  initCatalog()
 })
 </script>
 
@@ -131,20 +144,25 @@ onMounted(() => {
       <a :href="`#${item.anchor}`" v-for="item in toc" :style="{
         fontSize: `clamp(${12 + (6 - item.level)}px, ${(1 + (6 - item.level) * 0.2)}vw, ${18 + (6 - item.level)}px)`,
         marginLeft: `clamp(${(item.level - 1) * 10}px, ${(item.level - 1) * 1.5}vw, ${(item.level - 1) * 30}px)`
-      }" @click="(e) => { handleGoTo(e, item.el) }" :class="{ 'active': item.el.id === activeAnchor }" :key="item.anchor">
+      }" @click="(e) => { handleGoTo(e, item.el) }" :class="{ 'active': item.el.id === activeAnchor }"
+        :key="item.anchor">
         {{ item.text }}
       </a>
     </section>
     <section class="article-item">
-      <el-button round @click="handleGoBack()">返回</el-button>
-      <h1>{{ article?.head }}</h1>
+      <div>
+        <el-button round @click="handleGoBack()">返回</el-button>
+      </div>
+      <div>
+        <h1>{{ article?.head }}</h1>
+      </div>
       <ul class="label">
         <li v-for="item of article?.label" :key="item">
           {{ item }}
         </li>
       </ul>
-      <div ref="articleBody" class="markdown-body" @scroll="(e) => { throttleSroll(e) }"></div>
-      <div v-if="!article">404 NOT FOUND</div>
+      <div ref="articleBody" class="markdown-body" @scroll="(e) => { throttleSroll(e) }" v-if="article"></div>
+      <div class="not-found" v-else>404 NOT FOUND</div>
     </section>
   </div>
 </template>
@@ -269,7 +287,7 @@ onMounted(() => {
       position: relative;
     }
 
-    div[v-if="!article"] {
+    .not-found {
       text-align: center;
       padding: 48px 0;
       color: #57606a;
