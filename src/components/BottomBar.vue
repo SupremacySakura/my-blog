@@ -42,7 +42,7 @@ const handleClick = (item: iAboutItem) => {
     <section class="rightSection">
       <h4>关于我的</h4>
       <div class="imgBox">
-        <img :src="item.img" alt="" v-for="item of aboutMe" @click="handleClick(item)" :key="item">
+        <img :src="item.img" alt="" v-for="item of aboutMe" @click="handleClick(item)" :key="item.id">
       </div>
     </section>
   </div>
