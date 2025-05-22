@@ -10,6 +10,9 @@ import { useAssetStore } from '@/stores/asset'
 const { _setPageStart, _nowPath, _setNowPath } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
+import { useUserStore } from '@/stores/user'
+const { _id, _username } = storeToRefs(useUserStore())
+const { _clearInfo } = useUserStore()
 //导入ElementPlus相关内容
 import type { DrawerProps } from 'element-plus'
 
@@ -79,7 +82,6 @@ const handleResize = () => {
   if (!container.value) return
   const offsetWidth = container.value.offsetWidth
   const maxTabLength = Math.floor(offsetWidth / 100)  // 假设每个 tab 占 100px
-  console.log('maxTabLength', maxTabLength)
   if (tabBarList.value.length > maxTabLength) {
     // 如果 tabBarList 超过最大显示数量，移除一个 tab 并加入 hiddenTabBarList
     hiddenTabBarList.value.push(tabBarList.value.pop() as iTabBarItem)
@@ -105,6 +107,9 @@ const handleExpand = () => {
   ExpandStatus.value = !ExpandStatus.value
 }
 const direction = ref<DrawerProps['direction']>('rtl')
+const handleLogout = () => {
+  _clearInfo()
+}
 onMounted(() => {
   //初始化
   nowPath.value = _nowPath
@@ -129,13 +134,20 @@ onBeforeUnmount(() => {
     <section class="leftSection">
       <span>余心知秋的博客</span>
     </section>
+    <section class="middleSection">
+      <div @click="router.push('/login')" v-if="!_id" class="loginBtn">登录</div>
+      <div v-else class="userInfo">
+        <span>{{ _username }}</span>
+        <div @click="handleLogout" class="logoutBtn">登出</div>
+      </div>
+    </section>
     <section class="rightSection">
       <ul ref="container" class="tabBarList">
         <li v-for="item of tabBarList" :key="item.id" @click="gotoPage(item)"
           :class="{ 'active': route.path === item.path }" ref="containerItem">{{ item.text }}</li>
       </ul>
-      <el-button :icon="Expand"  v-if="ExpandStatus && hiddenTabBarList.length > 0" class="openButton" />
-      <el-button :icon="Fold"  v-else-if="!ExpandStatus && hiddenTabBarList.length > 0" @click="handleExpand()"
+      <el-button :icon="Expand" v-if="ExpandStatus && hiddenTabBarList.length > 0" class="openButton" />
+      <el-button :icon="Fold" v-else-if="!ExpandStatus && hiddenTabBarList.length > 0" @click="handleExpand()"
         class="openButton" />
       <el-drawer v-model="ExpandStatus" title="导航" :direction="direction">
         <ul class="hiddenTabBarList">
@@ -151,6 +163,7 @@ onBeforeUnmount(() => {
 @screen-small-mobile: 750px;
 @screen-mini-mobile: 500px;
 @max-tarbbar-width: 940px;
+
 .tabBarBox {
   width: 100vw;
   height: 80px;
@@ -169,6 +182,62 @@ onBeforeUnmount(() => {
     font-size: 24px;
     font-weight: 600;
     padding: 10px;
+  }
+
+  .middleSection {
+    .userInfo {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .loginBtn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 22px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.5);
+
+      &:hover {
+        background: linear-gradient(135deg, #5a54f1, #8a4dfc);
+        transform: scale(1.08);
+      }
+    }
+
+    .logoutBtn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 22px;
+      background: #ff3e3e;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 10px 20px rgba(255, 62, 62, 0.5);
+
+      &:hover {
+        background: #ff1e1e;
+        transform: scale(1.08);
+      }
+    }
   }
 
   .rightSection {

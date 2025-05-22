@@ -1,4 +1,7 @@
 import axios from "axios"
+import { useUserStore } from "@/stores/user"
+import { storeToRefs } from 'pinia'
+
 
 const request = axios.create({
   baseURL: import.meta.env.VUE_APP_HTTP_URL,
@@ -12,7 +15,8 @@ const request = axios.create({
 request.interceptors.request.use(
   config => {
     //在请求前做些什么,比如发送token
-    //config.headers.Authorization = 'Bearer ${token}
+    const { _token } = storeToRefs(useUserStore())
+    config.headers.Authorization = `Bearer ${_token.value}`
     return config
   },
   error => {
@@ -24,6 +28,17 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   response => {
     //对响应数据做些什么
+    // if(response.data.isLogin){
+    //   console.log('isLogin',response.data)
+    // }
+    if (response.data.isLogin) {
+      const { _setInfo } = useUserStore()
+      _setInfo(response.data.id, response.data.username)
+    }
+    if (response.data.token) {
+      const { _setInfo } = useUserStore()
+      _setInfo(response.data.data.id, response.data.data.username)
+    }
     return response
   },
   error => {
