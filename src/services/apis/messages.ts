@@ -17,10 +17,13 @@ const getMessagesNum = () => {
   })
 }
 // 请求弹幕
-const getDammu = () => {
+const getDammu = (page: number) => {
   return enhanceRequest({
     url: '/messages/dammu',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      page: page
+    },
   })
 }
 // 发送留言

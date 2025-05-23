@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 导入vue相关API
-import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
+import { ref, onMounted, useTemplateRef, watchEffect, nextTick, onUnmounted } from 'vue'
 // 导入默认图片
 import background from '@/assets/messageBackground.jpg'
 import user from '@/assets/user.png'
@@ -21,16 +21,14 @@ import { storeToRefs } from 'pinia'
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
 import { useUserStore } from '@/stores/user'
-const { _token, _user } = storeToRefs(useUserStore())
+const { _user } = storeToRefs(useUserStore())
 const { _checkLogin } = useUserStore()
 // 导入类型
 import type { iMessageItem } from '@/types'
 import { EMessagePhotoType } from '@/types'
-// 导入路由
-import { useRouter } from 'vue-router'
-const router = useRouter()
 
 // 弹幕--------------------
+let dammuPage = ref(1)
 // 弹幕数组
 const dammuList = ref<iMessageItem[]>([])
 /**
@@ -38,30 +36,31 @@ const dammuList = ref<iMessageItem[]>([])
  */
 const handleGetDammu = async () => {
   try {
-    const res = await getDammu()
+    const res = await getDammu(dammuPage.value)
     if (res.data.code === 200) {
-      dammuList.value = []
+      // dammuList.value = []
       dammuList.value = res.data.data
       dammuList.value.forEach((item) => {
         if (!item.loading) {
           item.loading = [true, true]
         }
       })
+      dammuPage.value++
     } else {
+      dammuPage.value = 0
       ElMessage.error('获取弹幕失败')
     }
   } catch (err) {
+    dammuPage.value = 0
     ElMessage.error(`获取弹幕失败,${err}`)
   }
 }
 // 弹幕dom
 const showList = useTemplateRef("showList")
 // 监听留言,添加动画
-//手动监听控制器
-const count = ref(0)
 // 渲染弹幕动画
 watchEffect(() => {
-  count.value
+  dammuPage.value
   if (showList.value && board.value) {
     nextTick(() => {
       if (showList.value && board.value instanceof HTMLElement && board.value) {
@@ -76,11 +75,9 @@ watchEffect(() => {
                 { transform: 'translateX(0)' }, // 起始状态
                 { transform: `translateX(-${boardWidth + itemWidth}px)` } // 结束状态
               ], {
-                duration: random(6000, 12000),
-                iterations: 1 // 无限循环
+                duration: random(4000, 10000),
               }).onfinish = () => {
                 item.style.top = `${random(0, 670)}px`
-                animateMessage()
               }
             }
             animateMessage()
@@ -134,9 +131,6 @@ const handleGetMessages = async () => {
         item.loading = [true, true]
       }
     })
-    console.log(messagesList.value)
-    //手动触发弹幕动画更新
-    count.value++
   }
 }
 /**
@@ -230,25 +224,20 @@ const handlePublish = async () => {
     time: time,
     user_id: _user.value?.uid
   }
-  const loadingInstance = ElLoading.service(_options)
   content.value = ''
   const resP = await postMessages(params)
   if (resP.data.code === 200) {
-    loadingInstance.close()
     ElMessage({
       message: '发布成功',
       type: 'success',
     })
   } else {
-    loadingInstance.close()
     ElMessage.error('发布失败')
   }
   const res = await getMessages(1)
   if (+res.data.code === 200) {
     messagesList.value.unshift(res.data.data[0])
     messagesList.value[0].loading = [true, true]
-    //手动触发弹幕动画更新
-    count.value++
   }
 }
 // 发布留言--------------------
@@ -276,13 +265,16 @@ const onImageLoad = (item: iMessageItem, type: EMessagePhotoType) => {
   }
 }
 // 图片懒加载--------------------
-
+let timer: number = 0
 onMounted(async () => {
   const loadingInstance = ElLoading.service(_options)
   //初始化
   try {
     await handleGetMessages()
     await handleGetDammu()
+    timer = setInterval(async () => {
+      await handleGetDammu()
+    }, 10 * 1000)
   } catch (error) {
     ElMessage.error('加载资源失败')
     console.log(error)
@@ -294,6 +286,9 @@ onMounted(async () => {
     })
   }
   initActiveList()
+})
+onUnmounted(() => {
+  clearInterval(timer)
 })
 </script>
 
