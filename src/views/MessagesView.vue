@@ -1,218 +1,64 @@
 <script setup lang="ts">
-//导入vue相关API
+// 导入vue相关API
 import { ref, onMounted, useTemplateRef, watchEffect, nextTick } from 'vue'
-//导入默认图片
+// 导入默认图片
 import background from '@/assets/messageBackground.jpg'
 import user from '@/assets/user.png'
-//导入工具函数
+// 导入工具函数
 import { random } from '@/utils'
-//导入留言相关API
-import { getMessages, postMessages, getMessagesNum } from '@/services/apis/messages'
-//导入ElementPlus组件
+// 导入网络请求API
+import { getMessages, postMessages, getMessagesNum, getDammu } from '@/services/apis/messages'
+// 导入ElementPlus组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
 import {
   ArrowLeft,
   ArrowRight
 } from '@element-plus/icons-vue'
-//导入dayjs库
+// 导入dayjs库
 import dayjs from 'dayjs'
-//导入留言仓库
-import { useMessagesStore } from '@/stores/messages'
-const { _userHeadPortrait, _name, _address, _setInfo } = useMessagesStore()
-//导入asset仓库
+// 导入仓库
+import { storeToRefs } from 'pinia'
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
-//导入类型
+import { useUserStore } from '@/stores/user'
+const { _token, _user } = storeToRefs(useUserStore())
+// 导入类型
 import type { iMessageItem } from '@/types'
 import { EMessagePhotoType } from '@/types'
-//定义评论数组
-const messagesList = ref<iMessageItem[]>([])
-//page
-const page = ref(1)
-//留言数量
-const messageNum = ref(0)
-//加载状态
-const isLoading = ref(false)
+// 导入路由
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+// 弹幕--------------------
+// 弹幕数组
+const dammuList = ref<iMessageItem[]>([])
 /**
- * 获取留言数据,并赋值给messagesList
+ * 获取弹幕
  */
-const handleGetMessages = async () => {
-  await handleGetMessagesNum()
-  const res = await getMessages(page.value)
-  if (+res.data.code === 200) {
-    messagesList.value = [...messagesList.value, ...res.data.data,].reduce((acc, current) => {
-      if (!acc.some((item: any) => item.id === current.id)) {
-        acc.push(current)
-      }
-      return acc
-    }, [])
-    messagesList.value.forEach((item) => {
-      if (!item.loading) {
-        item.loading = [true, true]
-      }
-    })
-    //手动触发弹幕动画更新
-    count.value++
-  }
-}
-/**
- * 获取留言数量
- */
-const handleGetMessagesNum = async () => {
-  const res = await getMessagesNum()
-  if (+res.data.code === 200) {
-    messageNum.value = res.data.data || 0
-  }
-}
-//页码切换
-enum PageChange {
-  left = -1,
-  right = 1
-}
-/**
- * 加载更多留言
- */
-const handleGetMoreMessages = async (type: PageChange) => {
-  if (type === PageChange.left && page.value === 1) {
-    return
-  }
-  if (type === PageChange.right && page.value * 5 >= messageNum.value) {
-    return
-  }
-  isLoading.value = true
-  if (page.value % 4 === 0 && type === PageChange.right) {
-    activePage.value++
-  }
-  if (page.value % 4 === 1 && type === PageChange.left) {
-    activePage.value--
-  }
-  page.value += type
+const handleGetDammu = async () => {
   try {
-    await handleGetMessages()
-  } catch (error) {
-    ElMessage.error('加载资源失败')
-    console.log(error)
-    if (type = 1) {
-      page.value--
-    } else if (type = -1) {
-      page.value++
+    const res = await getDammu()
+    if (res.data.code === 200) {
+      dammuList.value = []
+      dammuList.value = res.data.data
+      dammuList.value.forEach((item) => {
+        if (!item.loading) {
+          item.loading = [true, true]
+        }
+      })
+    } else {
+      ElMessage.error('获取弹幕失败')
     }
-  } finally {
-    isLoading.value = false
+  } catch (err) {
+    ElMessage.error(`获取弹幕失败,${err}`)
   }
 }
-const handleGoToPage = async (index: number) => {
-  isLoading.value = true
-  const oldPage = page.value
-  page.value = index
-  try {
-    await handleGetMessages()
-  } catch (error) {
-    ElMessage.error('加载资源失败')
-    console.log(error)
-    page.value = oldPage
-  } finally {
-    isLoading.value = false
-  }
-}
-const activeList = ref<number[]>([])
-const activePage = ref(1)
-const initActiveList = () => {
-  activeList.value = []
-  for (let i = 1; i <= Math.ceil(messageNum.value / 5); i++) {
-    activeList.value.push(i)
-  }
-}
-//发布留言弹窗控制
-const dialogVisible = ref(false)
-//发布评论信息
-const userHeadPortrait = ref(_userHeadPortrait)
-const content = ref('')
-const name = ref(_name)
-const address = ref(_address)
-/**
- * 打开基本信息填写面板
- */
-const handleOpen = () => {
-  if (content.value) {
-    dialogVisible.value = true
-  } else {
-    ElMessage.error('评论不能为空')
-  }
-}
-/**
- * 选择头像
- * @param event 
- */
-const handleChooseUserHeadPortrait = (event: any) => {
-  const file = event.target.files[0]
-  if (file && file.type.startsWith('image/')) {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      userHeadPortrait.value = e.target?.result as string
-    }
-    reader.readAsDataURL(file)
-  } else {
-    ElMessage.error('请选择一张图片')
-  }
-}
-/**
- * 发布留言
- */
-const handlePublish = async () => {
-  const time = dayjs().format('YYYY-MM-DD HH:mm:ss') // 自定义时间格式
-  let params
-  if (userHeadPortrait.value === user) {
-    params = {
-      userHeadPortrait: '',
-      name: name.value,
-      content: content.value,
-      time: time,
-      address: address.value
-    }
-  } else {
-    params = {
-      userHeadPortrait: userHeadPortrait.value,
-      name: name.value,
-      content: content.value,
-      time: time,
-      address: address.value
-    }
-  }
-  if (!name.value) {
-    ElMessage.error('请填写你的昵称')
-    return
-  }
-  const loadingInstance = ElLoading.service(_options)
-  dialogVisible.value = false
-  content.value = ''
-  const resP = await postMessages(params)
-  if (resP.data.code === 200) {
-    loadingInstance.close()
-    ElMessage({
-      message: '发布成功',
-      type: 'success',
-    })
-  } else {
-    loadingInstance.close()
-    ElMessage.error('发布失败')
-  }
-  const res = await getMessages(1)
-  if (+res.data.code === 200) {
-    messagesList.value.unshift(res.data.data[0])
-    messagesList.value[0].loading = [true, true]
-    //手动触发弹幕动画更新
-    count.value++
-  }
-  _setInfo(userHeadPortrait.value, name.value, address.value)
-}
-//留言板dom
-const board = useTemplateRef('board')
-//留言板弹幕dom
+// 弹幕dom
 const showList = useTemplateRef("showList")
 // 监听留言,添加动画
 //手动监听控制器
 const count = ref(0)
+// 渲染弹幕动画
 watchEffect(() => {
   count.value
   if (showList.value && board.value) {
@@ -256,9 +102,161 @@ watchEffect(() => {
 
   }
 })
-//处理错误图片
+// 弹幕--------------------
+
+// 留言--------------------
+// 定义评论数组
+const messagesList = ref<iMessageItem[]>([])
+// page
+const page = ref(1)
+// 留言板dom
+const board = useTemplateRef('board')
+// 留言数量
+const messageNum = ref(0)
+// 加载状态
+const isLoading = ref(false)
+/**
+ * 获取留言数据,并赋值给messagesList
+ */
+const handleGetMessages = async () => {
+  await handleGetMessagesNum()
+  const res = await getMessages(page.value)
+  if (+res.data.code === 200) {
+    messagesList.value = [...messagesList.value, ...res.data.data,].reduce((acc, current) => {
+      if (!acc.some((item: any) => item.id === current.id)) {
+        acc.push(current)
+      }
+      return acc
+    }, [])
+    messagesList.value.forEach((item) => {
+      if (!item.loading) {
+        item.loading = [true, true]
+      }
+    })
+    console.log(messagesList.value)
+    //手动触发弹幕动画更新
+    count.value++
+  }
+}
+/**
+ * 获取留言数量
+ */
+const handleGetMessagesNum = async () => {
+  const res = await getMessagesNum()
+  if (+res.data.code === 200) {
+    messageNum.value = res.data.data || 0
+  }
+}
+// 页码切换
+enum PageChange {
+  left = -1,
+  right = 1
+}
+/**
+ * 加载更多留言
+ */
+const handleGetMoreMessages = async (type: PageChange) => {
+  if (type === PageChange.left && page.value === 1) {
+    return
+  }
+  if (type === PageChange.right && page.value * 5 >= messageNum.value) {
+    return
+  }
+  isLoading.value = true
+  if (page.value % 4 === 0 && type === PageChange.right) {
+    activePage.value++
+  }
+  if (page.value % 4 === 1 && type === PageChange.left) {
+    activePage.value--
+  }
+  page.value += type
+  try {
+    await handleGetMessages()
+  } catch (error) {
+    ElMessage.error('加载资源失败')
+    console.log(error)
+    if (type = 1) {
+      page.value--
+    } else if (type = -1) {
+      page.value++
+    }
+  } finally {
+    isLoading.value = false
+  }
+}
+/**
+ * 跳转页码
+ * @param index 页面
+ */
+const handleGoToPage = async (index: number) => {
+  isLoading.value = true
+  const oldPage = page.value
+  page.value = index
+  try {
+    await handleGetMessages()
+  } catch (error) {
+    ElMessage.error('加载资源失败')
+    console.log(error)
+    page.value = oldPage
+  } finally {
+    isLoading.value = false
+  }
+}
+const activeList = ref<number[]>([])
+const activePage = ref(1)
+const initActiveList = () => {
+  activeList.value = []
+  for (let i = 1; i <= Math.ceil(messageNum.value / 5); i++) {
+    activeList.value.push(i)
+  }
+}
+// 留言--------------------
+
+// 发布留言--------------------
+// 发布留言信息
+const content = ref('')
+/**
+ * 发布留言
+ */
+const handlePublish = async () => {
+  if (!_user.value || !_token.value || !_user.value.id) {
+    ElMessage.error('请先登录')
+    router.push('/login')
+    return
+  }
+  const time = dayjs().format('YYYY-MM-DD HH:mm:ss') // 自定义时间格式
+  let params = {
+    content: content.value,
+    time: time,
+    user_id: _user.value.id
+  }
+  const loadingInstance = ElLoading.service(_options)
+  content.value = ''
+  const resP = await postMessages(params)
+  if (resP.data.code === 200) {
+    loadingInstance.close()
+    ElMessage({
+      message: '发布成功',
+      type: 'success',
+    })
+  } else {
+    loadingInstance.close()
+    ElMessage.error('发布失败')
+  }
+  const res = await getMessages(1)
+  if (+res.data.code === 200) {
+    messagesList.value.unshift(res.data.data[0])
+    messagesList.value[0].loading = [true, true]
+    //手动触发弹幕动画更新
+    count.value++
+  }
+}
+// 发布留言--------------------
+
+// 图片懒加载--------------------
+// 处理错误图片
 const onError = (item: iMessageItem) => {
-  item.userHeadPortrait = user
+  item.avatar = user
 }
 /**
  * 图片加载完成
@@ -277,11 +275,14 @@ const onImageLoad = (item: iMessageItem, type: EMessagePhotoType) => {
       break
   }
 }
+// 图片懒加载--------------------
+
 onMounted(async () => {
   const loadingInstance = ElLoading.service(_options)
   //初始化
   try {
     await handleGetMessages()
+    await handleGetDammu()
   } catch (error) {
     ElMessage.error('加载资源失败')
     console.log(error)
@@ -309,11 +310,11 @@ onMounted(async () => {
         </h1>
 
       </div>
-      <div class="showItem" v-for="item of messagesList" ref="showList" :key="item.id">
-        <el-image :src="item.userHeadPortrait || user" alt="头像" class="custom-image" fit="cover" lazy
-          @error="onError(item)" v-loading="item.loading[EMessagePhotoType.Danmu]"
+      <div class="showItem" v-for="item of dammuList" ref="showList" :key="item.id">
+        <el-image :src="item.avatar || user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
+          v-loading="item.loading[EMessagePhotoType.Danmu]"
           @load="onImageLoad(item, EMessagePhotoType.Danmu)"></el-image>
-        <span class="name">{{ item.name }}:</span>
+        <span class="name">{{ item.username }}:</span>
         <span class="content">{{ item.content }}</span>
       </div>
     </section>
@@ -324,7 +325,7 @@ onMounted(async () => {
       </div>
       <textarea name="messages" placeholder="请输入你的留言" v-model.trim="content"></textarea>
       <div>
-        <button @click="handleOpen()">发表</button>
+        <button @click="handlePublish()">发表</button>
       </div>
     </section>
     <!-- 评论区展示 -->
@@ -334,13 +335,12 @@ onMounted(async () => {
       </div>
       <div class="messagesItem" v-for="item of messagesList.slice((page - 1) * 5, page * 5)" :key="item.id">
         <section class="leftSection">
-          <el-image :src="item.userHeadPortrait || user" alt="头像" class="custom-image" fit="cover" lazy
-            @error="onError(item)" v-loading="item.loading[EMessagePhotoType.Message]"
-            @load="onImageLoad(item, EMessagePhotoType.Message)"
-            :preview-src-list="[item.userHeadPortrait || user]"></el-image>
+          <el-image :src="item.avatar || user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
+            v-loading="item.loading[EMessagePhotoType.Message]" @load="onImageLoad(item, EMessagePhotoType.Message)"
+            :preview-src-list="[item.avatar || user]"></el-image>
         </section>
         <section class="rightSection">
-          <h4>{{ item.name }}</h4>
+          <h4>{{ item.username }}</h4>
           <p>{{ item.content }}</p>
           <div>
             <time>{{ item.time }}</time>
@@ -366,43 +366,6 @@ onMounted(async () => {
       </ul>
       <div class="loader" v-if="isLoading === true"></div>
     </section>
-    <!-- 发表评论弹窗 -->
-    <el-dialog v-model="dialogVisible">
-      <section class="dialogBox">
-        <h4>基本信息填写</h4>
-        <div class="topDiv">
-          <div class="user">
-            <label for="choose">
-              <img :src="userHeadPortrait" alt="" v-if="!!userHeadPortrait">
-              <div class="addUser" v-else>
-                <input type="file" accept="image/*" @change="(e) => handleChooseUserHeadPortrait(e)" id="choose"
-                  :style="{ display: 'none' }">
-                +
-              </div>
-            </label>
-          </div>
-          <div class="name">
-            <span>昵称(必填)</span>
-            <input type="text" v-model.trim="name">
-          </div>
-        </div>
-        <div class="bottomDiv">
-          <div>
-            <span>联系地址(选填)</span>
-          </div>
-          <input type="text" v-model="address">
-        </div>
-      </section>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="handlePublish()">提交</el-button>
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button @click="userHeadPortrait = user">使用默认头像</el-button>
-          <el-button @click="userHeadPortrait = ''">删除头像</el-button>
-        </div>
-      </template>
-    </el-dialog>
-
   </div>
 </template>
 
@@ -511,6 +474,7 @@ onMounted(async () => {
       padding-right: 15px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
+
       .custom-image {
         .avatar(50px);
         border: 2px solid rgba(255, 255, 255, 0.5);

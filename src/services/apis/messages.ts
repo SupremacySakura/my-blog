@@ -1,5 +1,5 @@
 import { request, enhanceRequest } from '@/services/enhanceRequest'
-
+// 请求留言
 const getMessages = (page: number) => {
   return enhanceRequest({
     url: '/messages',
@@ -9,23 +9,27 @@ const getMessages = (page: number) => {
     },
   })
 }
+// 请求留言数量
 const getMessagesNum = () => {
   return enhanceRequest({
     url: '/messages/number',
     method: 'GET',
   })
 }
-const postMessages = (params: any) => {
-  return request.post('/messages/post', {
-    userHeadPortrait: params.userHeadPortrait,
-    name: params.name,
-    content: params.content,
-    time: params.time,
-    address: params.address,
+// 请求弹幕
+const getDammu = () => {
+  return enhanceRequest({
+    url: '/messages/dammu',
+    method: 'GET'
   })
+}
+// 发送留言
+const postMessages = (params: any) => {
+  return request.post('/messages/post', params)
 }
 export {
   getMessages,
   postMessages,
-  getMessagesNum
+  getMessagesNum,
+  getDammu,
 }

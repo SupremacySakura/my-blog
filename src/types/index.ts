@@ -1,4 +1,10 @@
-//文章类型接口
+// 路由接口
+interface iTabBarItem {
+  id: number,
+  text: string,
+  path: string,
+}
+// 文章类型接口
 interface iArticleItem {
   id: number,
   head: string,
@@ -11,13 +17,13 @@ interface iArticleItem {
   label: string[],
   loading: boolean[],  // 第一项表示头像加载,第二项表示封面加载
 }
-//声明加载文章图片枚举
+// 声明加载文章图片枚举
 enum EArticlePhotoType {
   userHeadPortrait = 0,
   cover = 1
 }
 
-//友链类型接口
+// 友链类型接口
 interface iFriendItem {
   id: number,
   userHeadPortrait: string,
@@ -27,7 +33,7 @@ interface iFriendItem {
   loading: boolean,
 }
 
-//标签类型接口
+// 标签类型接口
 interface iLabelItem {
   id: number,
   text: string,
@@ -35,7 +41,7 @@ interface iLabelItem {
   backgroundColor: string,
 }
 
-//个人信息类型接口
+// 个人信息类型接口
 interface iInformation {
   id: number,
   content: string,
@@ -47,11 +53,11 @@ interface iInformation {
   loading: boolean,
 }
 
-//评论类型接口
+// 评论类型接口
 interface iMessageItem {
   id: number,
-  userHeadPortrait: string,
-  name: string,
+  avatar: string,
+  username: string,
   content: string,
   time: string,
   address: string,
@@ -62,7 +68,7 @@ enum EMessagePhotoType {
   Message = 1,
 }
 
-//朋友圈类型接口
+// 朋友圈类型接口
 interface iMomentItem {
   id: number,
   time: string,
@@ -72,7 +78,7 @@ interface iMomentItem {
   loading: boolean,
 }
 
-//技术栈类型接口
+// 技术栈类型接口
 interface iWaterFallItem {
   id: number,
   photo: string,
@@ -88,29 +94,39 @@ enum EWaterFallPhotoType {
   icon = 1
 }
 
-//列数类型接口
+// 列数类型接口
 interface iRowItem {
   id: number,
   height: number,
 }
-//文章标签类型接口
+// 文章标签类型接口
 interface iTag {
   id: number,
   tag: string
 }
-//标题类型接口
+// 标题类型接口
 interface iTocItem {
   anchor: string;
   level: number;
   text: string | null;
   el: HTMLElement;
 }
-//公告类型接口
+// 公告类型接口
 interface iNotice {
   id: number,
   notice: string,
 }
+// 用户类型接口 
+interface iUser {
+  id: number,
+  username: string,
+  password: string,
+  avatar: string,
+  email: string,
+  address: string,
+}
 export type {
+  iTabBarItem,
   iArticleItem,
   iFriendItem,
   iLabelItem,
@@ -122,6 +138,7 @@ export type {
   iTag,
   iNotice,
   iTocItem,
+  iUser,
 }
 export {
   EArticlePhotoType,

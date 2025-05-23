@@ -1,31 +1,29 @@
 <script setup lang="ts">
+// 导入vue相关api
 import { ref, useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
-//导入vue路由相关api
+// 导入路由
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
+
+// 导入仓库
 import { storeToRefs } from 'pinia'
-//导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _setPageStart, _nowPath, _setNowPath } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
 import { useUserStore } from '@/stores/user'
-const { _id, _username } = storeToRefs(useUserStore())
+const { _user } = storeToRefs(useUserStore())
 const { _clearInfo } = useUserStore()
-//导入ElementPlus相关内容
+// 导入ElementPlus组件
 import type { DrawerProps } from 'element-plus'
-
 import {
   Fold,
   Expand,
 } from '@element-plus/icons-vue'
-//路由接口
-interface iTabBarItem {
-  id: number,
-  text: string,
-  path: string,
-}
+// 导入类型
+import type { iTabBarItem } from '@/types'
+
 /**
  * 跳转至指定路由
  * @param item 接收一个iTabBarItem类型
@@ -40,7 +38,7 @@ const gotoPage = (item: iTabBarItem) => {
   }
   router.push(item.path)
 }
-//导航栏数组
+// 导航栏数组
 const tabBarList = ref<iTabBarItem[]>([
   {
     id: 1,
@@ -73,11 +71,14 @@ const tabBarList = ref<iTabBarItem[]>([
     path: '/resources'
   }
 ])
-//隐藏导航栏数组
+// 隐藏导航栏数组
 const hiddenTabBarList = ref<iTabBarItem[]>([
 ])
-//父盒子
+// 父盒子
 const container = useTemplateRef('container')
+/**
+ * 监听盒子变化,变化后自动将路由添加到导航栏数组或隐藏导航栏数组
+ */
 const handleResize = () => {
   if (!container.value) return
   const offsetWidth = container.value.offsetWidth
@@ -95,23 +96,28 @@ const handleResize = () => {
     return
   }
 }
-//存储当前路由
+// 存储当前路由
 const nowPath = ref<iTabBarItem>({
   id: 1,
   text: '首页',
   path: '/home'
 })
-
+// 隐藏导航栏展开状态
 const ExpandStatus = ref(false)
+/**
+ * 切换隐藏导航栏展开状态
+ */
 const handleExpand = () => {
   ExpandStatus.value = !ExpandStatus.value
 }
+// 隐藏导航栏展开方向
 const direction = ref<DrawerProps['direction']>('rtl')
+// 登出
 const handleLogout = () => {
   _clearInfo()
 }
 onMounted(() => {
-  //初始化
+  // 初始化
   nowPath.value = _nowPath
   if (container.value) {
     const resizeObserver = new ResizeObserver(handleResize)
@@ -135,10 +141,29 @@ onBeforeUnmount(() => {
       <span>余心知秋的博客</span>
     </section>
     <section class="middleSection">
-      <div @click="router.push('/login')" v-if="!_id" class="loginBtn">登录</div>
-      <div v-else class="userInfo">
-        <span>{{ _username }}</span>
-        <div @click="handleLogout" class="logoutBtn">登出</div>
+      <div v-if="!_user" class="login-wrapper">
+        <el-button @click="router.push('/login')" class="login-btn" type="primary">
+          <i class="el-icon-user"></i>
+          <span>登录</span>
+        </el-button>
+      </div>
+      <div v-else class="user-info">
+        <div class="user-profile">
+          <el-image :src="_user.avatar" class="user-avatar" fit="cover">
+            <template #error>
+              <div class="avatar-placeholder">
+                {{ _user.username?.charAt(0)?.toUpperCase() }}
+              </div>
+            </template>
+          </el-image>
+          <span class="username">{{ _user.username }}</span>
+        </div>
+        <div class="logout-wrapper">
+          <el-button @click="handleLogout" class="logout-btn" type="danger" plain size="small">
+            <i class="el-icon-switch-button"></i>
+            退出登录
+          </el-button>
+        </div>
       </div>
     </section>
     <section class="rightSection">
@@ -162,7 +187,7 @@ onBeforeUnmount(() => {
 <style lang="less" scoped>
 @screen-small-mobile: 750px;
 @screen-mini-mobile: 500px;
-@max-tarbbar-width: 940px;
+@max-tarbbar-width: 1150px;
 
 .tabBarBox {
   width: 100vw;
@@ -182,36 +207,190 @@ onBeforeUnmount(() => {
     font-size: 24px;
     font-weight: 600;
     padding: 10px;
+
+    @media screen and (max-width:@max-tarbbar-width) {
+      font-size: 18px;
+    }
   }
 
   .middleSection {
-    .userInfo {
+    .user-info {
       display: flex;
-      gap: 10px;
       align-items: center;
-    }
+      gap: 16px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      transition: all 0.3s ease;
 
-    .loginBtn {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 22px;
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: #fff;
-      font-family: 'Poppins', sans-serif;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      overflow: hidden;
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.5);
+      @media screen and (max-width:@screen-small-mobile) {
+        padding: 4px 8px;
+      }
 
       &:hover {
-        background: linear-gradient(135deg, #5a54f1, #8a4dfc);
-        transform: scale(1.08);
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        transition: all 0.3s ease;
+
+        @media screen and (max-width:@screen-small-mobile) {
+          width: 30px;
+          height: 30px;
+        }
+
+        &:hover {
+          transform: scale(1.05);
+          border-color: rgba(255, 255, 255, 0.4);
+        }
+      }
+
+      .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #409eff;
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .username {
+        font-size: 14px;
+        color: var(--tabbar-text-color);
+        font-weight: 500;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        @media screen and (max-width:@screen-small-mobile) {
+          font-size: 12px;
+        }
+      }
+
+      .logout-wrapper {
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: -8px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 1px;
+          height: 20px;
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+
+      .logout-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+
+        @media screen and (max-width:@screen-small-mobile) {
+          padding: 4px 8px;
+          font-size: 11px;
+        }
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        i {
+          font-size: 14px;
+          margin-right: 2px;
+        }
+      }
+    }
+
+    .login-wrapper {
+      padding: 4px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .login-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        font-size: 15px;
+        font-weight: 500;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg,
+              transparent,
+              rgba(255, 255, 255, 0.2),
+              transparent);
+          transition: 0.5s;
+        }
+
+        &:hover {
+          background: linear-gradient(135deg, #5a54f1, #8a4dfc);
+          transform: scale(1.02);
+
+          &::before {
+            left: 100%;
+          }
+        }
+
+        &:active {
+          transform: scale(0.98);
+        }
+
+        i {
+          font-size: 16px;
+        }
+
+        span {
+          font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          letter-spacing: 0.5px;
+        }
       }
     }
 

@@ -1,19 +1,32 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue'
+// 导入vue相关API
+import { ref } from 'vue'
+// 导入路由
 import { useRouter } from 'vue-router'
-import { postLogin, getJWT, postSendVerificationCode, postRegister } from '@/services/apis/login'
-import { useUserStore } from '@/stores/user'
-import { ElMessage } from 'element-plus'
-const { _setToken } = useUserStore()
-const username = ref('')
-const password = ref('')
-const email = ref('')
-const verificationCode = ref('')
 const router = useRouter()
+// 导入网络请求API 
+import { postLogin, postSendVerificationCode, postRegister } from '@/services/apis/login'
+// 导入仓库
+import { useUserStore } from '@/stores/user'
+const { _setToken } = useUserStore()
+// 导入ElementPlus组件
+import { ElMessage } from 'element-plus'
+// 用户名
+const username = ref('')
+// 密码
+const password = ref('')
+// 邮箱
+const email = ref('')
+// 验证码
+const verificationCode = ref('')
+// 验证码剩余时间
 const restTime = ref(0)
+// 是否需要等待重新发送验证码
 const isNeedWait = ref(false)
+/**
+ * 登录
+ */
 const handleLogin = async () => {
-    // console.log(username.value, password.value)
     if (!username.value || !password.value) {
         ElMessage.error('请输入用户名和密码')
     }
@@ -23,10 +36,17 @@ const handleLogin = async () => {
         router.push('/')
     }
 }
+// 页面状态
+const nowType = ref('login')
+/**
+ * 切换页面状态: 注册 | 登录
+ */
 const handleChangeNowType = async () => {
     nowType.value = nowType.value === 'login' ? 'signUp' : 'login'
 }
-const nowType = ref('login')
+/**
+ * 注册
+ */
 const handleSignUp = async () => {
     if (!username.value) {
         return ElMessage.error('请输入用户名')
@@ -52,6 +72,9 @@ const handleSignUp = async () => {
         ElMessage.error(`注册失败${err}`)
     }
 }
+/**
+ * 发送验证码
+ */
 const handleSendVerificationCode = async () => {
     if (!email.value) {
         ElMessage.error('请输入邮箱')
@@ -78,8 +101,10 @@ const handleSendVerificationCode = async () => {
     }
 }
 </script>
+
 <template>
     <div class="login-container">
+        <!-- 登录 -->
         <div class="login-card" v-if="nowType === 'login'">
             <h2 class="login-title">欢迎登录</h2>
             <p class="login-subtitle">请登录您的账号</p>
@@ -105,6 +130,7 @@ const handleSendVerificationCode = async () => {
                 </div>
             </form>
         </div>
+        <!-- 注册 -->
         <div class="login-card" v-else>
             <h2 class="login-title">欢迎注册</h2>
             <p class="login-subtitle">请输入您的账号</p>
@@ -163,193 +189,193 @@ const handleSendVerificationCode = async () => {
     justify-content: center;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     padding: 20px;
-}
 
-.login-card {
-    background: white;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 420px;
-}
-
-.login-title {
-    font-size: 28px;
-    color: #333;
-    margin: 0 0 8px;
-    text-align: center;
-    font-weight: 600;
-}
-
-.login-subtitle {
-    color: #666;
-    text-align: center;
-    margin-bottom: 32px;
-    font-size: 14px;
-}
-
-.input-group {
-    margin-bottom: 24px;
-
-    .input-div {
-        display: flex;
-        gap: 10px;
-
-        input {
-            flex: 1;
-        }
-
-        button {
-            width: auto;
-        }
-    }
-}
-
-.input-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.label-text {
-    margin-right: 4px;
-}
-
-.required-mark {
-    color: #ff4d4f;
-    margin-left: 2px;
-}
-
-.input-field {
-    width: 100%;
-    height: 40px;
-    padding: 0 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    background: #fafafa;
-    box-sizing: border-box;
-
-    &:focus {
-        outline: none;
-        border-color: #409eff;
-        box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
+    .login-card {
         background: white;
-    }
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 420px;
 
-    &::placeholder {
-        color: #999;
-    }
-}
-
-.button-group {
-    display: flex;
-    gap: 16px;
-    margin-top: 32px;
-}
-
-.btn {
-    flex: 1;
-    height: 40px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-        transform: translateY(-1px);
-    }
-
-    &:active {
-        transform: translateY(0);
-    }
-}
-
-.btn-primary {
-    background: #409eff;
-    color: white;
-
-    &:hover {
-        background: #66b1ff;
-    }
-}
-
-.btn-secondary {
-    background: #f5f7fa;
-    color: #606266;
-    border: 1px solid #dcdfe6;
-
-    &:hover {
-        background: #e6e8eb;
-        border-color: #c0c4cc;
-    }
-}
-
-.verification-group {
-    .verification-wrapper {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-    }
-
-    .verification-input {
-        flex: 1;
-        min-width: 0; // 防止输入框溢出
-    }
-
-    .verification-btn {
-        min-width: 120px;
-        height: 40px;
-        padding: 0 16px;
-        background: #409eff;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        white-space: nowrap;
-
-        &:hover {
-            background: #66b1ff;
-            transform: translateY(-1px);
-        }
-
-        &:active {
-            transform: translateY(0);
-            background: #3a8ee6;
-        }
-    }
-
-    .countdown-timer {
-        min-width: 120px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f5f7fa;
-        border: 1px solid #e4e7ed;
-        border-radius: 8px;
-        padding: 0 16px;
-        color: #909399;
-        font-size: 14px;
-        user-select: none;
-
-        .countdown-number {
+        .login-title {
+            font-size: 28px;
+            color: #333;
+            margin: 0 0 8px;
+            text-align: center;
             font-weight: 600;
-            color: #409eff;
-            margin-right: 4px;
         }
 
-        .countdown-text {
-            color: #909399;
+        .login-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+
+            .input-label {
+                display: block;
+                margin-bottom: 8px;
+                color: #333;
+                font-size: 14px;
+                font-weight: 500;
+
+                .label-text {
+                    margin-right: 4px;
+                }
+
+                .required-mark {
+                    color: #ff4d4f;
+                    margin-left: 2px;
+                }
+            }
+
+            .input-field {
+                width: 100%;
+                height: 40px;
+                padding: 0 16px;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                background: #fafafa;
+                box-sizing: border-box;
+
+                &:focus {
+                    outline: none;
+                    border-color: #409eff;
+                    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
+                    background: white;
+                }
+
+                &::placeholder {
+                    color: #999;
+                }
+            }
+
+            .input-div {
+                display: flex;
+                gap: 10px;
+
+                input {
+                    flex: 1;
+                }
+
+                button {
+                    width: auto;
+                }
+            }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+
+            .btn {
+                flex: 1;
+                height: 40px;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    transform: translateY(-1px);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                }
+            }
+
+            .btn-primary {
+                background: #409eff;
+                color: white;
+
+                &:hover {
+                    background: #66b1ff;
+                }
+            }
+
+            .btn-secondary {
+                background: #f5f7fa;
+                color: #606266;
+                border: 1px solid #dcdfe6;
+
+                &:hover {
+                    background: #e6e8eb;
+                    border-color: #c0c4cc;
+                }
+            }
+        }
+
+        .verification-group {
+            .verification-wrapper {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+            }
+
+            .verification-input {
+                flex: 1;
+                min-width: 0; // 防止输入框溢出
+            }
+
+            .verification-btn {
+                min-width: 120px;
+                height: 40px;
+                padding: 0 16px;
+                background: #409eff;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                white-space: nowrap;
+
+                &:hover {
+                    background: #66b1ff;
+                    transform: translateY(-1px);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                    background: #3a8ee6;
+                }
+            }
+
+            .countdown-timer {
+                min-width: 120px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #f5f7fa;
+                border: 1px solid #e4e7ed;
+                border-radius: 8px;
+                padding: 0 16px;
+                color: #909399;
+                font-size: 14px;
+                user-select: none;
+
+                .countdown-number {
+                    font-weight: 600;
+                    color: #409eff;
+                    margin-right: 4px;
+                }
+
+                .countdown-text {
+                    color: #909399;
+                }
+            }
         }
     }
 }

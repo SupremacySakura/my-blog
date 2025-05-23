@@ -1,29 +1,25 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
-
+import type { iUser } from "@/types"
 export const useUserStore = defineStore('user', () => {
-    const _id = ref('')
-    const _username = ref('')
     const _token = ref('')
+    const _user = ref<iUser | null>(null)
     const _setToken = (token: string) => {
         _token.value = token
     }
-    const _setInfo = (id: string, username: string) => {
-        _id.value = id
-        _username.value = username
+    const _setInfo = (user: iUser) => {
+        _user.value = user
     }
     const _clearInfo = () => {
-        _id.value = ''
-        _username.value = ''
         _token.value = ''
+        _user.value = null
     }
     return {
         _token,
         _setToken,
         _setInfo,
-        _id,
-        _username,
         _clearInfo,
+        _user,
     }
 }, {
     persist: true

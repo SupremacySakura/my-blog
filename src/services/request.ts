@@ -2,7 +2,6 @@ import axios from "axios"
 import { useUserStore } from "@/stores/user"
 import { storeToRefs } from 'pinia'
 
-
 const request = axios.create({
   baseURL: import.meta.env.VUE_APP_HTTP_URL,
   timeout: 10000,//请求超时时间
@@ -28,16 +27,9 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   response => {
     //对响应数据做些什么
-    // if(response.data.isLogin){
-    //   console.log('isLogin',response.data)
-    // }
-    if (response.data.isLogin) {
+    if (response.data.token || response.data.isLogin) {
       const { _setInfo } = useUserStore()
-      _setInfo(response.data.id, response.data.username)
-    }
-    if (response.data.token) {
-      const { _setInfo } = useUserStore()
-      _setInfo(response.data.data.id, response.data.data.username)
+      _setInfo(response.data.data)
     }
     return response
   },
