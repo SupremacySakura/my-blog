@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { useRouter } from 'vue-router'
-import { postLogin, getJWT } from '@/services/apis/login'
+import { postLogin, getJWT, postSendVerificationCode, postRegister } from '@/services/apis/login'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 const { _setToken } = useUserStore()
 const username = ref('')
 const password = ref('')
+const email = ref('')
+const verificationCode = ref('')
 const router = useRouter()
+const restTime = ref(0)
+const isNeedWait = ref(false)
 const handleLogin = async () => {
     // console.log(username.value, password.value)
     if (!username.value || !password.value) {
@@ -19,14 +23,64 @@ const handleLogin = async () => {
         router.push('/')
     }
 }
+const handleChangeNowType = async () => {
+    nowType.value = nowType.value === 'login' ? 'signUp' : 'login'
+}
+const nowType = ref('login')
 const handleSignUp = async () => {
-    const res = await getJWT()
-    console.log(res)
+    if (!username.value) {
+        return ElMessage.error('请输入用户名')
+    }
+    if (!password.value) {
+        return ElMessage.error('请输入密码')
+    }
+    if (!email.value) {
+        return ElMessage.error('请输入邮箱')
+    }
+    if (!verificationCode.value) {
+        return ElMessage.error('请输入验证码')
+    }
+    try {
+        const res = await postRegister(username.value, password.value, email.value, verificationCode.value)
+        if (res.data.code === 200) {
+            ElMessage.success('注册成功')
+            handleChangeNowType()
+        } else {
+            ElMessage.error(res.data.message)
+        }
+    } catch (err) {
+        ElMessage.error(`注册失败${err}`)
+    }
+}
+const handleSendVerificationCode = async () => {
+    if (!email.value) {
+        ElMessage.error('请输入邮箱')
+        return
+    }
+    try {
+        const res = await postSendVerificationCode(email.value)
+        if (res.data.code === 200) {
+            ElMessage.success('发送成功')
+            isNeedWait.value = true
+            restTime.value = 60
+            let timer = setInterval(() => {
+                restTime.value--
+                if (restTime.value <= 0) {
+                    clearInterval(timer)
+                    isNeedWait.value = false
+                }
+            }, 1000)
+        } else {
+            ElMessage.error(res.data.message)
+        }
+    } catch (err) {
+        ElMessage.error(`发送验证码失败${err}`)
+    }
 }
 </script>
 <template>
     <div class="login-container">
-        <div class="login-card">
+        <div class="login-card" v-if="nowType === 'login'">
             <h2 class="login-title">欢迎登录</h2>
             <p class="login-subtitle">请登录您的账号</p>
             <form action="">
@@ -47,7 +101,55 @@ const handleSignUp = async () => {
 
                 <div class="button-group">
                     <button @click.prevent="handleLogin" class="btn btn-primary">登录</button>
-                    <button @click.prevent="handleSignUp" class="btn btn-secondary">注册</button>
+                    <button @click.prevent="handleChangeNowType" class="btn btn-secondary">去注册</button>
+                </div>
+            </form>
+        </div>
+        <div class="login-card" v-else>
+            <h2 class="login-title">欢迎注册</h2>
+            <p class="login-subtitle">请输入您的账号</p>
+            <form action="">
+                <div class="input-group">
+                    <label class="input-label">
+                        <span class="label-text">用户名</span>
+                        <span class="required-mark">*</span>
+                    </label>
+                    <input type="text" placeholder="请输入用户名" v-model="username" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">
+                        <span class="label-text">密码</span>
+                        <span class="required-mark">*</span>
+                    </label>
+                    <input type="password" placeholder="请输入密码" v-model="password" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">
+                        <span class="label-text">邮箱</span>
+                        <span class="required-mark">*</span>
+                    </label>
+                    <input type="text" placeholder="请输入邮箱" v-model="email" class="input-field">
+                </div>
+                <div class="input-group verification-group">
+                    <label class="input-label">
+                        <span class="label-text">验证码</span>
+                        <span class="required-mark">*</span>
+                    </label>
+                    <div class="verification-wrapper">
+                        <input type="text" placeholder="请输入验证码" v-model="verificationCode"
+                            class="input-field verification-input">
+                        <button @click.prevent="handleSendVerificationCode" v-if="!isNeedWait" class="verification-btn">
+                            发送验证码
+                        </button>
+                        <div v-else class="countdown-timer">
+                            <span class="countdown-number">{{ restTime }}</span>
+                            <span class="countdown-text">秒后重试</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button @click.prevent="handleSignUp" class="btn btn-primary">注册</button>
+                    <button @click.prevent="handleChangeNowType" class="btn btn-secondary">去登录</button>
                 </div>
             </form>
         </div>
@@ -89,6 +191,19 @@ const handleSignUp = async () => {
 
 .input-group {
     margin-bottom: 24px;
+
+    .input-div {
+        display: flex;
+        gap: 10px;
+
+        input {
+            flex: 1;
+        }
+
+        button {
+            width: auto;
+        }
+    }
 }
 
 .input-label {
@@ -118,6 +233,7 @@ const handleSignUp = async () => {
     transition: all 0.3s ease;
     background: #fafafa;
     box-sizing: border-box;
+
     &:focus {
         outline: none;
         border-color: #409eff;
@@ -172,6 +288,69 @@ const handleSignUp = async () => {
     &:hover {
         background: #e6e8eb;
         border-color: #c0c4cc;
+    }
+}
+
+.verification-group {
+    .verification-wrapper {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .verification-input {
+        flex: 1;
+        min-width: 0; // 防止输入框溢出
+    }
+
+    .verification-btn {
+        min-width: 120px;
+        height: 40px;
+        padding: 0 16px;
+        background: #409eff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+
+        &:hover {
+            background: #66b1ff;
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            transform: translateY(0);
+            background: #3a8ee6;
+        }
+    }
+
+    .countdown-timer {
+        min-width: 120px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f7fa;
+        border: 1px solid #e4e7ed;
+        border-radius: 8px;
+        padding: 0 16px;
+        color: #909399;
+        font-size: 14px;
+        user-select: none;
+
+        .countdown-number {
+            font-weight: 600;
+            color: #409eff;
+            margin-right: 4px;
+        }
+
+        .countdown-text {
+            color: #909399;
+        }
     }
 }
 </style>
