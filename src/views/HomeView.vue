@@ -1,30 +1,29 @@
 <script setup lang="ts">
-//导入Vue相关API
+// 导入Vue相关API
 import { onUnmounted, nextTick, onMounted, ref, useTemplateRef, watchEffect } from 'vue'
-//导入默认图片
+// 导入默认图片
 import yxzq from '@/assets/yxzq.jpg'
-import backgroundImg from '@/assets/backgroundImg.jpg'
-//导入文章相关API
+// 导入文章相关API
 import { getArticlesNum } from '@/services/apis/articles'
-//导入网站相关API
+// 导入网站相关API
 import { getTime, getPeople } from '@/services/apis/asset'
 import { getMyInformation, getMyLabels } from '@/services/apis/my'
-//导入ElementPlus相关组件
+// 导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
 import {
   Hide,
   View
 } from '@element-plus/icons-vue'
-//导入pinia相关api
+// 导入pinia相关api
 import { storeToRefs } from 'pinia'
-//导入asset仓库
+// 导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _options, _optionsWhite, _setPageStart, _setTheme } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart, _theme } = storeToRefs(assetStore)
-//导入工具
+// 导入工具
 import { hljs } from '@/utils/index'
-//导入处理markdown的库
+// 导入处理markdown的库
 import { marked } from 'marked'
 marked.setOptions({
   gfm: true, // 启用 GitHub 风格的 Markdown
@@ -36,12 +35,8 @@ marked.setOptions({
     return hljs.highlightAuto(code).value
   },
 })
-//导入类型
+// 导入类型
 import type { iLabelItem, iInformation } from '@/types'
-//开始前页面dom
-const homeBox = useTemplateRef('homeBox')
-//开始后页面dom
-const myBox = useTemplateRef('myBox')
 /**
  * 开始,进入开始后页面
  */
@@ -159,7 +154,7 @@ const myInformation = ref<iInformation>()
  */
 const onError = () => {
   if (myInformation.value) {
-    myInformation.value.userHeadPortrait = yxzq
+    myInformation.value.avatar = yxzq
   }
 }
 /**
@@ -256,10 +251,10 @@ onUnmounted(() => {
           <!-- 个人信息 -->
           <section class="user">
             <div>
-              <el-image :src="myInformation?.userHeadPortrait || yxzq" alt="头像" class="custom-image" fit="cover"
-                :preview-src-list="[myInformation?.userHeadPortrait || yxzq]" hide-on-click-modal @error="onError()"
+              <el-image :src="myInformation?.avatar || yxzq" alt="头像" class="custom-image" fit="cover"
+                :preview-src-list="[myInformation?.avatar || yxzq]" hide-on-click-modal @error="onError()"
                 v-loading="myInformation?.loading" @load="onImageLoad()" />
-              <span>{{ myInformation?.name || '余心知秋' }}</span>
+              <span>{{ myInformation?.username || '余心知秋' }}</span>
               <p>{{ myInformation?.introduce || '耗尽' }}</p>
               <span>{{ myInformation?.identity || '前端工程师' }}</span>
               <address>{{ myInformation?.address || '2712794459@qq.com' }}</address>

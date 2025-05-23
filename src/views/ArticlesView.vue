@@ -1,36 +1,36 @@
 <script setup lang="ts">
-//导入Vue相关API
+// 导入Vue相关API
 import { onMounted, ref, nextTick } from 'vue'
-//导入router相关api
+// 导入router相关api
 import { useRouter } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
 const router = useRouter()
-//导入默认图片
+// 导入默认图片
 import test1 from '@/assets/test1.jpg'
 import yxzq from '@/assets/yxzq.jpg'
-//导入文章相关API
+// 导入文章相关API
 import { getArticles, getArticlesNum, getArticleTag } from '@/services/apis/articles'
-//导入ElementPlus相关组件
+// 导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
 import {
   ArrowLeft,
   ArrowRight,
   Search
 } from '@element-plus/icons-vue'
-//导入asset仓库
+// 导入asset仓库
 import { useAssetStore } from '@/stores/asset'
 const { _options, _optionsWhite } = useAssetStore()
-//导入articles仓库
+// 导入articles仓库
 import { useArticlesStore } from '@/stores/articles'
 const { _setArticlesList } = useArticlesStore()
-//导入类型
+// 导入类型
 import type { iArticleItem, iTag } from '@/types'
 import { EArticlePhotoType } from '@/types'
-//文章数组
+// 文章数组
 const articlesList = ref<iArticleItem[]>([])
-//文章页码
+// 文章页码
 const page = ref(1)
-//发布文章数量
+// 发布文章数量
 const articlesNum = ref(0)
 /**
  * 获取文章数
@@ -48,7 +48,7 @@ const getANum = async () => {
     }
   }
 }
-//正在加载
+// 正在加载
 const isLoadingArticles = ref(false)
 /**
  * 获取文章数据
@@ -76,7 +76,7 @@ const handleGetArticles = async () => {
   }, 0)
 }
 
-//页码切换
+// 页码切换
 enum PageChange {
   left = -1,
   right = 1
@@ -131,9 +131,9 @@ const handleGoToPage = async (index: number) => {
     isLoading.value = false
   }
 }
-//页码列表
+// 页码列表
 const activeList = ref<number[]>([])
-//当前页码
+// 当前页码
 const activePage = ref(1)
 /**
  * 初始化页码列表
@@ -144,7 +144,7 @@ const initActiveList = () => {
     activeList.value.push(i)
   }
 }
-//选中文章
+// 选中文章
 const articleItem = ref<iArticleItem>()
 /**
  * 选中一篇文章
@@ -158,14 +158,14 @@ const handleChooseArticle = (item: iArticleItem) => {
       router.push({
         name: 'show',
         params: {
-          id: articleItem.value.id
+          id: articleItem.value.arid
         }
       } as RouteLocationRaw)
     }
     loadingInstance.close()
   }, 500)
 }
-//文章错误类型枚举
+// 文章错误类型枚举
 enum ErrorImage {
   Cover = 'COVER',
   UserHeadPortrait = 'USERHEADPORTRAIT'
@@ -179,7 +179,7 @@ const onError = (item: iArticleItem, type: ErrorImage) => {
   if (type === ErrorImage.Cover) {
     item.cover = test1
   } else if (type === ErrorImage.UserHeadPortrait) {
-    item.userHeadPortrait = yxzq
+    item.avatar = yxzq
   }
 }
 /**
@@ -199,21 +199,21 @@ const onImageLoad = (item: iArticleItem, type: EArticlePhotoType) => {
       break
   }
 }
-//加载更多状态
+// 加载更多状态
 const isLoading = ref(false)
-//搜索框
+// 搜索框
 const searchValue = ref('')
-//关键词
+// 关键词
 const keyWord = ref('')
-//搜索模式枚举
+// 搜索模式枚举
 enum SearchType {
   all = 0,
   keyWord = 1,
   tag = 2
 }
-//搜索模式
+// 搜索模式
 const model = ref<SearchType>(SearchType.all)
-//获取文章策略模式
+// 获取文章策略模式
 const getArticleByModel = {
   [SearchType.all]: async () => {
     return await getArticles(page.value)
@@ -225,7 +225,7 @@ const getArticleByModel = {
     return await getArticles(page.value, null, activeTagIdList.value)
   }
 }
-//获取文章数量策略模式
+// 获取文章数量策略模式
 const getArticleCountByModel = {
   [SearchType.all]: async () => {
     return await getArticlesNum()
@@ -254,7 +254,7 @@ const handleSearchByKeyWord = async () => {
   await handleGetArticles()
 }
 
-//标签列表
+// 标签列表
 const tagList = ref<iTag[]>([])
 const handleGetTagList = async () => {
   const res = await getArticleTag()
@@ -262,7 +262,7 @@ const handleGetTagList = async () => {
     tagList.value = res.data.data
   }
 }
-//活跃标签
+// 活跃标签
 const activeTagIdList = ref<number[]>([])
 /**
  * 选择标签并查询
@@ -285,7 +285,7 @@ const handleSearchByTag = async (id: number) => {
   }
   await handleGetArticles()
 }
-//初始化
+// 初始化
 onMounted(async () => {
   const loadingInstance = ElLoading.service(_options)
   try {
@@ -338,7 +338,7 @@ onMounted(async () => {
           <section class="card" v-show="isLoadingArticles === true" :style="{ opacity: '0' }">
 
           </section>
-          <section class="card" v-for="(item) of articlesList" :key="item.id" @click="handleChooseArticle(item)">
+          <section class="card" v-for="(item) of articlesList" :key="item.arid" @click="handleChooseArticle(item)">
             <div class="image">
               <el-image :src="item.cover || test1" alt="封面" class="cover" fit="cover" lazy
                 @error="onError(item, ErrorImage.Cover)" v-loading="item.loading[EArticlePhotoType.cover]"
@@ -350,11 +350,10 @@ onMounted(async () => {
               <h2>{{ item.head }}</h2>
               <span class="abstract">{{ item.digest }}</span>
               <div class="author">
-                <el-image :src="item.userHeadPortrait || yxzq" alt=""
-                  @error="onError(item, ErrorImage.UserHeadPortrait)" class="userHeadPortrait" lazy
-                  v-loading="item.loading[EArticlePhotoType.userHeadPortrait]"
+                <el-image :src="item.avatar || yxzq" alt="" @error="onError(item, ErrorImage.UserHeadPortrait)"
+                  class="userHeadPortrait" lazy v-loading="item.loading[EArticlePhotoType.userHeadPortrait]"
                   @load="onImageLoad(item, EArticlePhotoType.userHeadPortrait)" />
-                <span>{{ item.name }}</span>
+                <span>{{ item.username }}</span>
                 <time>{{ item.time }}</time>
                 <ul class="label">
                   <li v-for="(subItem, subIndex) of item.label" :key="subItem" :class="{ 'hidden': subIndex >= 2 }">

@@ -1,25 +1,29 @@
 <script setup lang="ts">
-//导入vue相关api
-import { ref, onMounted, nextTick, watch } from 'vue'
-//导入asset仓库
+// 导入vue相关api
+import { ref, onMounted, nextTick } from 'vue'
+// 导入仓库
+import { storeToRefs } from 'pinia'
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
-//导入ElementPlus相关组件
+import { useUserStore } from '@/stores/user'
+const { _checkLogin } = useUserStore()
+const { _user } = storeToRefs(useUserStore())
+// 导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
-//导入默认头像
+// 导入默认头像
 import user from '@/assets/user.png'
-//导入friends相关接口
+// 导入friends相关接口
 import { getFriends, postFriend, getNotice } from '@/services/apis/friends'
-//导入类型
+// 导入类型
 import type { iFriendItem, iNotice } from '@/types'
-//朋友列表
+// 朋友列表
 const friendsList = ref<iFriendItem[]>([])
 /**
  * 处理朋友图像加载失败
  * @param item 接收一个朋友类
  */
 const onError = (item: iFriendItem) => {
-  item.userHeadPortrait = user
+  item.avatar = user
 }
 /**
  * 获取朋友列表
@@ -33,13 +37,16 @@ const handleGetFriends = async () => {
     })
   }
 }
+/**
+ * 获取公告
+ */
 const handleGetNotice = async () => {
   const res = await getNotice()
   if (res.data.code === 200) {
     aboutList.value = res.data.data
   }
 }
-//公告
+// 公告
 const aboutList = ref<iNotice[]>([
   {
     id: 0,
@@ -62,41 +69,28 @@ const onImageLoad = (item: iFriendItem) => {
 }
 const dialogVisible = ref(false)
 
-const avatarModel = ref(true)
-const avatar = ref('')
 const name = ref('')
 const label = ref('')
 const url = ref('')
+
 /**
- * 选择头像
- * @param event 
+ * 申请友链
  */
-const handleChooseUserHeadPortrait = (event: any) => {
-  const file = event.target.files[0]
-  if (file && file.type.startsWith('image/')) {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      avatar.value = e.target?.result as string
-    }
-    reader.readAsDataURL(file)
-  } else {
-    ElMessage.error('请选择一张图片')
-  }
-}
-watch(avatarModel, () => {
-  avatar.value = ''
-})
 const handleApply = async () => {
   try {
-    if (!avatar.value || !name.value || !label.value || !url.value) {
+    if (!_checkLogin()) {
+      ElMessage.error('请先登录')
+      return
+    }
+    if (!name.value || !label.value || !url.value) {
       ElMessage.error('请填写完整信息')
+      return
     }
     const res = await postFriend(
-      avatar.value,
+      _user.value?.uid as number,
       name.value,
       label.value,
       url.value,
-      avatarModel.value
     )
     if (res.data.code === 200) {
       ElMessage({
@@ -119,8 +113,7 @@ onMounted(async () => {
     await handleGetFriends()
     await handleGetNotice()
   } catch (error) {
-    ElMessage.error('加载资源失败')
-    console.log(error)
+    ElMessage.error(`加载资源失败${error}`)
   } finally {
     nextTick(() => {
       setTimeout(() => {
@@ -128,7 +121,6 @@ onMounted(async () => {
       }, 0)
     })
   }
-
 })
 </script>
 
@@ -139,7 +131,7 @@ onMounted(async () => {
         <h2 class="defaultCursor">友链站点</h2>
         <ul class="cardList">
           <li v-for="item of friendsList" :key="item.id" class="cardItem" @click="handleGoPage(item)">
-            <el-image :src="item.userHeadPortrait || user" alt="头像" fit="cover" lazy class="user" @error="onError(item)"
+            <el-image :src="item.avatar || user" alt="头像" fit="cover" lazy class="user" @error="onError(item)"
               v-loading="item.loading" @load="onImageLoad(item)" />
             <div class="info">
               <h4>{{ item.name }}</h4>
@@ -161,23 +153,6 @@ onMounted(async () => {
         <el-button type="primary" @click="dialogVisible = true" style="margin-top: 10px;">申请</el-button>
         <el-dialog v-model="dialogVisible" title="申请友链" width="90%">
           <form action="" class="friendForm">
-            <div class='formDiv'>
-              <h3>头像</h3>
-              <el-switch v-model="avatarModel" class="mb-2" active-text="上传链接" inactive-text="上传文件" />
-              <el-input v-model="avatar" style="width: 240px" placeholder="头像地址" v-if='avatarModel' />
-              <div class="user" v-else>
-                <label for="choose">
-                  <el-image style="width: 100%; height: 100%" :src="avatar" v-if="!!avatar"
-                    :preview-src-list="[avatar]" />
-                  <div class="addUser" v-else>
-                    <input type="file" accept="image/*" @change="(e) => handleChooseUserHeadPortrait(e)" id="choose"
-                      :style="{ display: 'none' }">
-                    +
-                  </div>
-                </label>
-                <el-button @click="() => { avatar = '' }" :style="{ marginTop: '10px' }">去除头像</el-button>
-              </div>
-            </div>
             <div class='formDiv'>
               <h3 class="required">站点名称</h3>
               <el-input v-model="name" style="width: 240px" placeholder="站点名称" />
@@ -573,7 +548,7 @@ onMounted(async () => {
     &:last-child {
       background-color: var(--hover-button-background-color) !important;
       border-color: var(--hover-button-background-color) !important;
-      color: white !important;
+      color: black !important;
     }
   }
 }

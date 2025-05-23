@@ -63,7 +63,8 @@
   --hover-button-background-color: rgba(236, 245, 255);
   --hover-button-text-color: rgba(64, 158, 255, 1);
   --button-border-color: rgba(220, 223, 230, 1);
-  --el-border-color: rgba(236, 245, 255, 1)
+  --el-border-color: rgba(236, 245, 255, 1);
+  --el-text-color-primary: rgba(0, 0, 0, 1);
 }
 
 .dark-theme {
@@ -133,4 +134,5 @@
   --el-border-color: rgba(0, 0, 0, 0.5);
   --el-bg-color: rgba(27, 27, 31, 1);
   --el-color-primary: rgba(255, 255, 255, 1);
+  --el-text-color-primary: rgba(255, 255, 255, 1)
 }

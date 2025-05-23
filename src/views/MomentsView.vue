@@ -1,17 +1,17 @@
 <script setup lang="ts">
-//导入Vue相关API
+// 导入Vue相关API
 import { onMounted, ref, nextTick } from 'vue'
-//导入默认图片
+// 导入默认图片
 import yxzq from '@/assets/yxzq.jpg'
-//导入ElementPlus相关组件
+// 导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
-//导入asset仓库
+// 导入仓库
 import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
-//导入moments相关API
-import { getMoments, getTechnology } from '@/services/apis/moments'
-//导入类型
-import type { iMomentItem, iWaterFallItem } from '@/types'
+// 导入moments相关API
+import { getMoments } from '@/services/apis/moments'
+// 导入类型
+import type { iMomentItem } from '@/types'
 /**
  * 获取朋友圈列表
  */
@@ -24,14 +24,14 @@ const handleGetMoments = async () => {
     })
   }
 }
-//朋友圈数组
+// 朋友圈数组
 const momentsList = ref<iMomentItem[]>([])
 /**
  * 处理朋友圈头像显示错误
  * @param item 接收一个朋友圈类
  */
 const onUserImageError = (item: iMomentItem) => {
-  item.userHeadPortrait = yxzq
+  item.avatar = yxzq
 }
 
 /**
@@ -77,9 +77,9 @@ onMounted(async () => {
         <div class="moment">
           <section>
             <div>
-              <el-image :src="item.userHeadPortrait || yxzq" alt="头像" class="custom-image" fit="cover" lazy
+              <el-image :src="item.avatar || yxzq" alt="头像" class="custom-image" fit="cover" lazy
                 @error="onUserImageError(item)" v-loading="item.loading" @load="onMomentImageLoad(item)"></el-image>
-              <span>{{ item.name }}</span>
+              <span>{{ item.username }}</span>
             </div>
             <div>
               {{ item.content }}

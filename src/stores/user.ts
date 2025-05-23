@@ -14,12 +14,19 @@ export const useUserStore = defineStore('user', () => {
         _token.value = ''
         _user.value = null
     }
+    const _checkLogin = (): boolean => {
+        if (!_user.value || !_token.value || !_user.value.uid) {
+            return false
+        }
+        return true
+    }
     return {
         _token,
         _setToken,
         _setInfo,
         _clearInfo,
         _user,
+        _checkLogin,
     }
 }, {
     persist: true

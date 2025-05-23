@@ -22,6 +22,7 @@ import { useAssetStore } from '@/stores/asset'
 const { _options } = useAssetStore()
 import { useUserStore } from '@/stores/user'
 const { _token, _user } = storeToRefs(useUserStore())
+const { _checkLogin } = useUserStore()
 // 导入类型
 import type { iMessageItem } from '@/types'
 import { EMessagePhotoType } from '@/types'
@@ -219,16 +220,15 @@ const content = ref('')
  * 发布留言
  */
 const handlePublish = async () => {
-  if (!_user.value || !_token.value || !_user.value.id) {
+  if (!_checkLogin()) {
     ElMessage.error('请先登录')
-    router.push('/login')
     return
   }
   const time = dayjs().format('YYYY-MM-DD HH:mm:ss') // 自定义时间格式
   let params = {
     content: content.value,
     time: time,
-    user_id: _user.value.id
+    user_id: _user.value?.uid
   }
   const loadingInstance = ElLoading.service(_options)
   content.value = ''

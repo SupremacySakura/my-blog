@@ -6,13 +6,12 @@ const getFriends = () => {
     method: 'GET',
   })
 }
-const postFriend = (userHeadPortrait: string, name: string, label: string, url: string, type: boolean) => {
+const postFriend = (uid: number, name: string, label: string, url: string) => {
   return request.post('/friends/apply', {
-    userHeadPortrait: userHeadPortrait,
+    user_id: uid,
     name: name,
     label: label,
     url: url,
-    type: type
   })
 }
 const getNotice = () => {
