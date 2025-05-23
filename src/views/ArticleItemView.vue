@@ -133,7 +133,7 @@ const initCatalog = () => {
 }
 onMounted(() => {
   //初始化
-  article.value = _articlesList.filter(item => item.id === +route.params.id)[0]
+  article.value = _articlesList.filter(item => item.arid === +route.params.id)[0]
   initCatalog()
 })
 </script>
