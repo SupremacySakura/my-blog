@@ -4,9 +4,13 @@ import type { iUser } from "@/types"
 import { refreshToken } from '@/services/apis/login'
 export const useUserStore = defineStore('user', () => {
     const _token = ref('')
+    const _refreshToken = ref('')
     const _user = ref<iUser | null>(null)
     const _setToken = (token: string) => {
         _token.value = token
+    }
+    const _setRefreshToken = (refreshToken: string) => {
+        _refreshToken.value = refreshToken
     }
     const _setInfo = (user: iUser) => {
         _user.value = user
@@ -35,6 +39,8 @@ export const useUserStore = defineStore('user', () => {
         _clearInfo,
         _user,
         _checkLogin,
+        _refreshToken,
+        _setRefreshToken,
     }
 }, {
     persist: true

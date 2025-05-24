@@ -1,21 +1,23 @@
 import axios from "axios"
 import { useUserStore } from "@/stores/user"
 import { storeToRefs } from 'pinia'
-import { refreshToken } from '@/services/apis/login'
+import { refreshToken, isRefreshToken } from '@/services/apis/login'
 const request = axios.create({
   baseURL: import.meta.env.VUE_APP_HTTP_URL,
   timeout: 10000,//请求超时时间
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
 })
 
 // 请求拦截器
 request.interceptors.request.use(
   config => {
     // 在请求前做些什么,比如发送token
-    const { _token } = storeToRefs(useUserStore())
+    const { _token,_refreshToken } = storeToRefs(useUserStore())
     config.headers.Authorization = `Bearer ${_token.value}`
+    config.headers['refresh_token'] = _refreshToken.value
     return config
   },
   error => {
@@ -25,16 +27,30 @@ request.interceptors.request.use(
 
 // 响应拦截器
 request.interceptors.response.use(
-  response => {
+  async (response) => {
     // 对响应数据做些什么
-    if (response.data.token || response.data.isLogin) {
-      console.log(response.data)
+    // ✅ 获取 Authorization 头部
+    const authHeader = response.headers['authorization']
+    if (authHeader) {
+      const token = authHeader.split(' ')[1]
       const { _setInfo, _setToken } = useUserStore()
       _setInfo(response.data.data)
-      _setToken(response.data.token)
+      _setToken(token)
     }
-    if (+response.status === 403 || +response.status === 401) {
-      refreshToken()
+    const refreshHeader =response.headers['refresh_token']
+    if (refreshHeader) {
+      const token = refreshHeader
+      const { _setRefreshToken } = useUserStore()
+      _setRefreshToken(token)
+    }
+    if (+response.status === 403 || +response.status === 401 && !isRefreshToken(response.config)) {
+      const isSuccess = await refreshToken()
+      if (isSuccess.data.code === 200) {
+        const { _token } = storeToRefs(useUserStore())
+        response.config.headers.Authorization = `Bearer ${_token.value}`
+        const res = await request.request(response.config)
+        return res
+      }
     }
     return response
   },

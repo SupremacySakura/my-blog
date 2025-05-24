@@ -14,7 +14,7 @@ const postSendVerificationCode = (email: string) => {
     })
 }
 // 注册账号
-const postRegister = (username: string, password: string, email: string,code:string) => {
+const postRegister = (username: string, password: string, email: string, code: string) => {
     return request.post('/login/register', {
         username,
         password,
@@ -28,7 +28,12 @@ const getJWT = () => {
 }
 // 刷新token
 const refreshToken = () => {
-    return request.get('/login/refresh')
+    return request.post('/login/refresh', {
+        __isRefreshToken: true
+    })
+}
+const isRefreshToken = (config: any) => {
+    return !!config.__isRefreshToken
 }
 export {
     postLogin,
@@ -36,4 +41,5 @@ export {
     postSendVerificationCode,
     postRegister,
     refreshToken,
+    isRefreshToken,
 }
