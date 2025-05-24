@@ -5,7 +5,7 @@ import { ref, useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
-
+import { dealRoutes } from '@/router/route'
 // 导入仓库
 import { storeToRefs } from 'pinia'
 import { useAssetStore } from '@/stores/asset'
@@ -14,7 +14,7 @@ const assetStore = useAssetStore()
 const { _pageStart } = storeToRefs(assetStore)
 import { useUserStore } from '@/stores/user'
 const { _user } = storeToRefs(useUserStore())
-const { _clearInfo } = useUserStore()
+const { _clearInfo, _checkLogin } = useUserStore()
 // 导入ElementPlus组件
 import type { DrawerProps } from 'element-plus'
 import {
@@ -39,38 +39,7 @@ const gotoPage = (item: iTabBarItem) => {
   router.push(item.path)
 }
 // 导航栏数组
-const tabBarList = ref<iTabBarItem[]>([
-  {
-    id: 1,
-    text: '首页',
-    path: '/home'
-  },
-  {
-    id: 2,
-    text: '留言板',
-    path: '/messages'
-  },
-  {
-    id: 3,
-    text: '动态',
-    path: '/moments'
-  },
-  {
-    id: 4,
-    text: '文章',
-    path: '/articles'
-  },
-  {
-    id: 5,
-    text: '朋友们',
-    path: '/friends'
-  },
-  {
-    id: 6,
-    text: '资源',
-    path: '/resources'
-  }
-])
+const tabBarList = ref<iTabBarItem[]>(dealRoutes)
 // 隐藏导航栏数组
 const hiddenTabBarList = ref<iTabBarItem[]>([
 ])
@@ -83,25 +52,19 @@ const handleResize = () => {
   if (!container.value) return
   const offsetWidth = container.value.offsetWidth
   const maxTabLength = Math.floor(offsetWidth / 100)  // 假设每个 tab 占 100px
-  if (tabBarList.value.length > maxTabLength) {
-    // 如果 tabBarList 超过最大显示数量，移除一个 tab 并加入 hiddenTabBarList
+
+  // 如果 tabBarList 太多，移到 hiddenTabBarList
+  while (tabBarList.value.length > maxTabLength) {
     hiddenTabBarList.value.push(tabBarList.value.pop() as iTabBarItem)
-  } else if (tabBarList.value.length < maxTabLength && hiddenTabBarList.value.length > 0) {
-    // 如果 tabBarList 少于最大显示数量，且 hiddenTabBarList 有元素，移除一个并加入 tabBarList
-    tabBarList.value.push(hiddenTabBarList.value.pop() as iTabBarItem)
   }
-  if (tabBarList.value.length !== maxTabLength) {
-    handleResize()
-  } else {
-    return
+
+  // 如果 tabBarList 太少，尝试从 hiddenTabBarList 拿回来
+  while (tabBarList.value.length < maxTabLength && hiddenTabBarList.value.length > 0) {
+    tabBarList.value.push(hiddenTabBarList.value.pop() as iTabBarItem)
   }
 }
 // 存储当前路由
-const nowPath = ref<iTabBarItem>({
-  id: 1,
-  text: '首页',
-  path: '/home'
-})
+const nowPath = ref<iTabBarItem>(dealRoutes[1])
 // 隐藏导航栏展开状态
 const ExpandStatus = ref(false)
 /**
@@ -115,12 +78,16 @@ const direction = ref<DrawerProps['direction']>('rtl')
 // 登出
 const handleLogout = () => {
   _clearInfo()
+  if (route.name === 'user') {
+    router.push('/home')
+  }
 }
+let resizeObserver: ResizeObserver | null = null
 onMounted(() => {
   // 初始化
   nowPath.value = _nowPath
   if (container.value) {
-    const resizeObserver = new ResizeObserver(handleResize)
+    resizeObserver = new ResizeObserver(handleResize)
     resizeObserver.observe(container.value)
     // 初始化时也执行一次 resize 逻辑
     handleResize()
@@ -128,18 +95,20 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   // 清理副作用
-  if (container.value) {
-    const resizeObserver = new ResizeObserver(handleResize)
-    resizeObserver.disconnect()  // 移除观察器
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
   }
 })
 </script>
 
 <template>
   <div class="tabBarBox" :class="{ 'other-page': _pageStart, 'first-page': !_pageStart }">
+    <!-- 左侧 -->
     <section class="leftSection">
       <span>余心知秋的博客</span>
     </section>
+    <!-- 中间 -->
     <section class="middleSection">
       <div v-if="!_user" class="login-wrapper">
         <el-button @click="router.push('/login')" class="login-btn" type="primary">
@@ -166,10 +135,15 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </section>
+    <!-- 右侧 -->
     <section class="rightSection">
       <ul ref="container" class="tabBarList">
         <li v-for="item of tabBarList" :key="item.id" @click="gotoPage(item)"
-          :class="{ 'active': route.path === item.path }" ref="containerItem">{{ item.text }}</li>
+          :class="{ 'active': route.path === item.path }" ref="containerItem">
+          <span v-if="_checkLogin() ? true : !item.isNeedLogin">
+            {{ item.text }}
+          </span>
+        </li>
       </ul>
       <el-button :icon="Expand" v-if="ExpandStatus && hiddenTabBarList.length > 0" class="openButton" />
       <el-button :icon="Fold" v-else-if="!ExpandStatus && hiddenTabBarList.length > 0" @click="handleExpand()"
@@ -177,7 +151,11 @@ onBeforeUnmount(() => {
       <el-drawer v-model="ExpandStatus" title="导航" :direction="direction">
         <ul class="hiddenTabBarList">
           <li v-for="item of hiddenTabBarList" :key="item.id" @click="gotoPage(item)"
-            :class="{ 'active': route.path === item.path }" ref="containerItem">{{ item.text }}</li>
+            :class="{ 'active': route.path === item.path }" ref="containerItem">
+            <span v-if="_checkLogin() ? true : !item.isNeedLogin">
+              {{ item.text }}
+            </span>
+          </li>
         </ul>
       </el-drawer>
     </section>
@@ -187,7 +165,7 @@ onBeforeUnmount(() => {
 <style lang="less" scoped>
 @screen-small-mobile: 750px;
 @screen-mini-mobile: 500px;
-@max-tarbbar-width: 1150px;
+@max-tarbbar-width: 1250px;
 
 .tabBarBox {
   width: 100vw;
@@ -423,8 +401,6 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
 
-
-
     .changeBtn {
       display: none;
 
@@ -436,41 +412,42 @@ onBeforeUnmount(() => {
     .tabBarList {
       display: flex;
       overflow: hidden;
+      width: 700px;
 
       @media screen and (max-width:@max-tarbbar-width) {
-        width: 600px;
+        width: 700px;
       }
 
       @media screen and (max-width:((@max-tarbbar-width)-100px)) {
-        width: 500px;
-      }
-
-      @media screen and (max-width:((@max-tarbbar-width)-200px)) {
-        width: 400px;
-      }
-
-      @media screen and (max-width:((@max-tarbbar-width)-300px)) {
-        width: 300px;
-      }
-
-      @media screen and (max-width:((@max-tarbbar-width)-400px)) {
-        width: 200px;
-      }
-
-      @media screen and (max-width:((@max-tarbbar-width)-500px)) {
-        width: 100px;
-      }
-
-      @media screen and (max-width:((@max-tarbbar-width)-600px)) {
-        width: 0px;
-      }
-
-      @media screen and (min-width:@max-tarbbar-width) {
         width: 600px;
       }
 
+      @media screen and (max-width:((@max-tarbbar-width)-200px)) {
+        width: 500px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-300px)) {
+        width: 400px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-400px)) {
+        width: 300px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-500px)) {
+        width: 200px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-600px)) {
+        width: 100px;
+      }
+
+      @media screen and (max-width:((@max-tarbbar-width)-700px)) {
+        width: 0px;
+      }
+
       li {
-        min-width: 80px;
+        // min-width: 80px;
         height: 40px;
         text-align: center;
         line-height: 40px;
@@ -481,6 +458,11 @@ onBeforeUnmount(() => {
         &:hover {
           background-color: var(--tabbar-background-hover-color);
         }
+
+        span {
+          display: block;
+          min-width: 80px;
+        }
       }
 
       .active {
@@ -490,12 +472,17 @@ onBeforeUnmount(() => {
 
     .hiddenTabBarList {
       li {
-        min-width: 80px;
-        height: 40px;
+
         text-align: center;
         line-height: 40px;
         border-radius: 5px;
         cursor: pointer;
+
+        span {
+          display: block;
+          min-width: 80px;
+          height: 40px;
+        }
 
         &:hover {
           background-color: var(--tabbar-background-hover-color);

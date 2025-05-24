@@ -1,5 +1,6 @@
 import { enhanceRequest } from '@/services/enhanceRequest'
 
+// 请求文章
 const getArticles = (page: number, keyWord: string | null = null, tagIdList: number[] | null = null) => {
   return enhanceRequest({
     url: '/articles',
@@ -11,6 +12,7 @@ const getArticles = (page: number, keyWord: string | null = null, tagIdList: num
     },
   })
 }
+// 请求文章数量
 const getArticlesNum = (keyWord: string | null = null, tagIdList: number[] | null = null) => {
   return enhanceRequest({
     url: '/articles/number',
@@ -21,6 +23,7 @@ const getArticlesNum = (keyWord: string | null = null, tagIdList: number[] | nul
     },
   })
 }
+// 请求文章标签
 const getArticleTag = () => {
   return enhanceRequest({
     url: '/articles/tag',

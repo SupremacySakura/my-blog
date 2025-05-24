@@ -6,9 +6,6 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 // 导入网络请求API 
 import { postLogin, postSendVerificationCode, postRegister } from '@/services/apis/login'
-// 导入仓库
-import { useUserStore } from '@/stores/user'
-const { _setToken } = useUserStore()
 // 导入ElementPlus组件
 import { ElMessage } from 'element-plus'
 // 用户名
@@ -32,8 +29,10 @@ const handleLogin = async () => {
     }
     const res = await postLogin(username.value, password.value)
     if (res.data.code === 200) {
-        _setToken(res.data.token)
+        ElMessage.success(res.data.message)
         router.push('/')
+    } else {
+        ElMessage.error(res.data.message)
     }
 }
 // 页面状态

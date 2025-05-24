@@ -12,6 +12,7 @@ interface iTabBarItem {
   id: number
   text: string
   path: string
+  isNeedLogin?:boolean
 }
 // 文章类型接口
 interface iArticleItem extends iUser{

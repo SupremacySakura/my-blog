@@ -7,7 +7,7 @@ import user from '@/assets/user.png'
 // 导入工具函数
 import { random } from '@/utils'
 // 导入网络请求API
-import { getMessages, postMessages, getMessagesNum, getDammu } from '@/services/apis/messages'
+import { getMessages, postMessages, getMessagesNum, getDanmu } from '@/services/apis/messages'
 // 导入ElementPlus组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
 import {
@@ -28,39 +28,40 @@ import type { iMessageItem } from '@/types'
 import { EMessagePhotoType } from '@/types'
 
 // 弹幕--------------------
-let dammuPage = ref(1)
+let danmuPage = ref(1)
 // 弹幕数组
-const dammuList = ref<iMessageItem[]>([])
+const danmuList = ref<iMessageItem[]>([])
 /**
  * 获取弹幕
  */
-const handleGetDammu = async () => {
+const handleGetdanmu = async () => {
   try {
-    const res = await getDammu(dammuPage.value)
+    const res = await getDanmu(danmuPage.value)
     if (res.data.code === 200) {
-      // dammuList.value = []
-      dammuList.value = res.data.data
-      dammuList.value.forEach((item) => {
+      // danmuList.value = []
+      danmuList.value = res.data.data
+      danmuList.value.forEach((item) => {
         if (!item.loading) {
           item.loading = [true, true]
         }
       })
-      dammuPage.value++
+      danmuPage.value++
     } else {
-      dammuPage.value = 0
+      danmuPage.value = 0
       ElMessage.error('获取弹幕失败')
     }
   } catch (err) {
-    dammuPage.value = 0
+    danmuPage.value = 0
     ElMessage.error(`获取弹幕失败,${err}`)
   }
 }
 // 弹幕dom
 const showList = useTemplateRef("showList")
+let count = 0
 // 监听留言,添加动画
 // 渲染弹幕动画
 watchEffect(() => {
-  dammuPage.value
+  danmuPage.value
   if (showList.value && board.value) {
     nextTick(() => {
       if (showList.value && board.value instanceof HTMLElement && board.value) {
@@ -75,9 +76,20 @@ watchEffect(() => {
                 { transform: 'translateX(0)' }, // 起始状态
                 { transform: `translateX(-${boardWidth + itemWidth}px)` } // 结束状态
               ], {
-                duration: random(4000, 10000),
+                duration: random(4000, 8000),
+                delay:random(0,2000)
               }).onfinish = () => {
                 item.style.top = `${random(0, 670)}px`
+                count++
+                if (count >= danmuList.value.length) {
+                  count = 0
+                  handleGetdanmu().then(()=>{
+                    if(danmuList.value.length === 0){
+                      danmuPage.value = 1
+                      handleGetdanmu()
+                    }
+                  })
+                }
               }
             }
             animateMessage()
@@ -265,16 +277,12 @@ const onImageLoad = (item: iMessageItem, type: EMessagePhotoType) => {
   }
 }
 // 图片懒加载--------------------
-let timer: number = 0
 onMounted(async () => {
   const loadingInstance = ElLoading.service(_options)
   //初始化
   try {
     await handleGetMessages()
-    await handleGetDammu()
-    timer = setInterval(async () => {
-      await handleGetDammu()
-    }, 10 * 1000)
+    await handleGetdanmu()
   } catch (error) {
     ElMessage.error('加载资源失败')
     console.log(error)
@@ -288,7 +296,6 @@ onMounted(async () => {
   initActiveList()
 })
 onUnmounted(() => {
-  clearInterval(timer)
 })
 </script>
 
@@ -305,7 +312,7 @@ onUnmounted(() => {
         </h1>
 
       </div>
-      <div class="showItem" v-for="item of dammuList" ref="showList" :key="item.id">
+      <div class="showItem" v-for="item of danmuList" ref="showList" :key="item.id">
         <el-image :src="item.avatar || user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
           v-loading="item.loading[EMessagePhotoType.Danmu]"
           @load="onImageLoad(item, EMessagePhotoType.Danmu)"></el-image>
@@ -331,8 +338,7 @@ onUnmounted(() => {
       <div class="messagesItem" v-for="item of messagesList.slice((page - 1) * 5, page * 5)" :key="item.id">
         <section class="leftSection">
           <el-image :src="item.avatar || user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
-            v-loading="item.loading[EMessagePhotoType.Message]" @load="onImageLoad(item, EMessagePhotoType.Message)"
-            :preview-src-list="[item.avatar || user]"></el-image>
+            v-loading="item.loading[EMessagePhotoType.Message]" @load="onImageLoad(item, EMessagePhotoType.Message)"></el-image>
         </section>
         <section class="rightSection">
           <h4>{{ item.username }}</h4>

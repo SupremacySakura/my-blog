@@ -1,6 +1,7 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import type { iUser } from "@/types"
+import { refreshToken } from '@/services/apis/login'
 export const useUserStore = defineStore('user', () => {
     const _token = ref('')
     const _user = ref<iUser | null>(null)
@@ -20,6 +21,13 @@ export const useUserStore = defineStore('user', () => {
         }
         return true
     }
+    watch(_token, () => {
+        if (_token.value) {
+            setTimeout(() => {
+                refreshToken()
+            }, 9 * 1000 * 60)
+        }
+    }, { immediate: true })
     return {
         _token,
         _setToken,

@@ -17,7 +17,7 @@ const getMessagesNum = () => {
   })
 }
 // 请求弹幕
-const getDammu = (page: number) => {
+const getDanmu = (page: number) => {
   return enhanceRequest({
     url: '/messages/dammu',
     method: 'GET',
@@ -34,5 +34,5 @@ export {
   getMessages,
   postMessages,
   getMessagesNum,
-  getDammu,
+  getDanmu,
 }
