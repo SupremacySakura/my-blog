@@ -1,15 +1,18 @@
 <script setup lang="ts">
 // 导入vue相关api
-import { ref } from 'vue'
+import { ref, useTemplateRef, nextTick } from 'vue'
 // 导入仓库
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 const { _user } = storeToRefs(useUserStore())
 // 导入请求api
-import { postAvatar } from '@/services/apis/user'
+import { postAvatar, postUsername, postEmail, postAddress } from '@/services/apis/user'
 import { refreshToken } from '@/services/apis/login'
 // 导入ElmentPlus相关组件
 import { ElMessage } from 'element-plus'
+// 导入路由
+import { useRouter } from 'vue-router'
+const router = useRouter()
 // 头像
 const avatar = ref<File | null>(null)
 // 更新头像
@@ -41,6 +44,132 @@ const setAvatar = async (e: Event) => {
         }
     }
     ElMessage.error('请选择文件')
+}
+// 可选状态
+enum eChangeStatus {
+    USERNAME = 'username',
+    EMAIL = 'email',
+    ADDRESS = 'address'
+}
+// dom
+const usernameBox = useTemplateRef('username-box')
+const emailBox = useTemplateRef('email-box')
+const addressBox = useTemplateRef('address-box')
+// 更改状态
+const handleChangeStatus = (changeStatus: eChangeStatus) => {
+    switch (changeStatus) {
+        case eChangeStatus.USERNAME:
+            changeUsernameStatus.value = !changeUsernameStatus.value
+            if (changeUsernameStatus.value) {
+                nextTick(() => {
+                    usernameBox.value?.focus()
+                })
+            }
+            break
+        case eChangeStatus.EMAIL:
+            changeEmailStatus.value = !changeEmailStatus.value
+            if (changeEmailStatus.value) {
+                nextTick(() => {
+                    emailBox.value?.focus()
+                })
+            }
+            break
+        case eChangeStatus.ADDRESS:
+            changeAddressStatus.value = !changeAddressStatus.value
+            if (changeAddressStatus.value) {
+                nextTick(() => {
+                    addressBox.value?.focus()
+                })
+            }
+            break
+    }
+}
+// 用户名
+const username = ref(_user.value?.username || '')
+const changeUsernameStatus = ref(false)
+// 上传名字
+const handleChangeUsername = async () => {
+    if (username.value === _user.value?.username) {
+        handleChangeStatus(eChangeStatus.USERNAME)
+        return
+    }
+    const uid = _user.value?.uid
+    if (!uid) {
+        ElMessage.error('请先登录')
+        router.push('/login')
+        return
+    }
+    try {
+        const res = await postUsername(uid, username.value)
+        if (res.data.code === 200) {
+            await refreshToken()
+            ElMessage.success('更改成功')
+        } else {
+            ElMessage.error(`更新失败,${res.data.message}`)
+        }
+    } catch (err) {
+        ElMessage.error(`更新失败,${err}`)
+    } finally {
+        handleChangeStatus(eChangeStatus.USERNAME)
+    }
+}
+// 邮箱地址
+const email = ref(_user.value?.email || '')
+const changeEmailStatus = ref(false)
+// 上传邮箱
+const handleChangeEmail = async () => {
+    if (email.value === _user.value?.email) {
+        handleChangeStatus(eChangeStatus.EMAIL)
+        return
+    }
+    const uid = _user.value?.uid
+    if (!uid) {
+        ElMessage.error('请先登录')
+        router.push('/login')
+        return
+    }
+    try {
+        const res = await postEmail(uid, email.value)
+        if (res.data.code === 200) {
+            await refreshToken()
+            ElMessage.success('更改成功')
+        } else {
+            ElMessage.error(`更新失败,${res.data.message}`)
+        }
+    } catch (err) {
+        ElMessage.error(`更新失败,${err}`)
+    } finally {
+        handleChangeStatus(eChangeStatus.EMAIL)
+    }
+}
+// 地址
+const address = ref(_user.value?.address || '')
+const changeAddressStatus = ref(false)
+// 上传地址
+const handleChangeAddress = async () => {
+    if (address.value === _user.value?.address) {
+        handleChangeStatus(eChangeStatus.ADDRESS)
+        return
+    }
+    const uid = _user.value?.uid
+    if (!uid) {
+        ElMessage.error('请先登录')
+        router.push('/login')
+        return
+    }
+    try {
+        const res = await postAddress(uid, address.value)
+        if (res.data.code === 200) {
+            await refreshToken()
+            ElMessage.success('更改成功')
+        } else {
+            ElMessage.error(`更新失败,${res.data.message}`)
+        }
+    } catch (err) {
+        ElMessage.error(`更新失败,${err}`)
+    } finally {
+        handleChangeStatus(eChangeStatus.ADDRESS)
+    }
 }
 </script>
 
@@ -82,17 +211,38 @@ const setAvatar = async (e: Event) => {
 
                         <div class="info-group">
                             <label class="info-label">用户名</label>
-                            <div class="info-value">{{ _user?.username }}</div>
+                            <div>
+                                <div class="info-value" v-show="!changeUsernameStatus"
+                                    @click="handleChangeStatus(eChangeStatus.USERNAME)">
+                                    {{ _user?.username }}
+                                </div>
+                                <input type="text" v-show="changeUsernameStatus" v-model="username"
+                                    @blur="handleChangeUsername()" ref="username-box">
+                            </div>
                         </div>
 
                         <div class="info-group">
                             <label class="info-label">邮箱地址</label>
-                            <div class="info-value">{{ _user?.email }}</div>
+                            <div>
+                                <div class="info-value" v-show="!changeEmailStatus"
+                                    @click="handleChangeStatus(eChangeStatus.EMAIL)">
+                                    {{ _user?.email }}</div>
+                                <input type="text" v-show="changeEmailStatus" v-model="email"
+                                    @blur="handleChangeEmail()" ref="email-box">
+                            </div>
+
                         </div>
 
                         <div class="info-group">
                             <label class="info-label">所在地</label>
-                            <div class="info-value">{{ _user?.address || '未设置' }}</div>
+                            <div>
+                                <div class="info-value" v-show="!changeAddressStatus"
+                                    @click="handleChangeStatus(eChangeStatus.ADDRESS)">
+                                    {{ _user?.address || '未设置' }}</div>
+                                <input type="text" v-show="changeAddressStatus" v-model="address"
+                                    @blur="handleChangeAddress()" ref="address-box">
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -223,6 +373,27 @@ const setAvatar = async (e: Event) => {
                         font-weight: 400;
                         word-break: break-all;
                     }
+
+                    input[type="text"] {
+                        width: 220px;
+                        padding: 7px 14px;
+                        font-size: 15px;
+                        border: 1.5px solid #e6eaf0;
+                        border-radius: 6px;
+                        outline: none;
+                        background: #f7f9fb;
+                        color: #222;
+                        transition: border-color 0.2s, box-shadow 0.2s;
+                        margin-left: 0;
+                        box-sizing: border-box;
+                        box-shadow: none;
+
+                        &:focus {
+                            border-color: #409eff;
+                            background: #fff;
+                            box-shadow: 0 2px 8px rgba(64, 158, 255, 0.08);
+                        }
+                    }
                 }
             }
         }
@@ -260,6 +431,7 @@ const setAvatar = async (e: Event) => {
             padding: 24px 8px 16px 8px;
             min-width: unset;
             max-width: 98vw;
+            width: 100%;
         }
 
         .info-section {
@@ -274,6 +446,11 @@ const setAvatar = async (e: Event) => {
 
                 .info-value {
                     font-size: 14px;
+                }
+
+                input[type="text"] {
+                    width: 100%;
+                    min-width: 0;
                 }
             }
         }

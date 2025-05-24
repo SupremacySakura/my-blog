@@ -28,6 +28,7 @@ request.interceptors.response.use(
   response => {
     // 对响应数据做些什么
     if (response.data.token || response.data.isLogin) {
+      console.log(response.data)
       const { _setInfo, _setToken } = useUserStore()
       _setInfo(response.data.data)
       _setToken(response.data.token)

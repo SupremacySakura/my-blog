@@ -31,7 +31,6 @@ onMounted(() => {
     _setIsVisit(true)
   }
   visit()
-
 })
 onUnmounted(() => {
   _setIsVisit(false)
