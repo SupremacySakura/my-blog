@@ -88,19 +88,19 @@ const routes: RouteRecordRaw[] = [
     },
 ]
 const getTabBarList = (routes: RouteRecordRaw[]): iTabBarItem[] => {
-    const res = routes.map((item) => {
+    const res = []
+    for (let i = 0; i < routes.length; i++) {
+        let item = routes[i]
         if (item.meta && item.meta.id) {
-            return {
+            res.push({
                 id: item.meta.id,
                 text: item.meta.text,
                 path: item.path,
                 isNeedLogin: item.meta.isNeedLogin
-            } as iTabBarItem
-        } else {
-            return null
+            } as iTabBarItem)
         }
-    })
-    return res.filter((item) => { return item !== null })
+    }
+    return res
 }
 const dealRoutes = getTabBarList(routes[0].children as RouteRecordRaw[])
 export {

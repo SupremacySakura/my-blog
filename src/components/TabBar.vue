@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import cloneDeep from 'lodash/cloneDeep'
 // 导入vue相关api
 import { ref, useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
 // 导入路由
@@ -39,7 +40,7 @@ const gotoPage = (item: iTabBarItem) => {
   router.push(item.path)
 }
 // 导航栏数组
-const tabBarList = ref<iTabBarItem[]>(dealRoutes)
+const tabBarList = ref<iTabBarItem[]>(cloneDeep(dealRoutes))
 // 隐藏导航栏数组
 const hiddenTabBarList = ref<iTabBarItem[]>([
 ])
