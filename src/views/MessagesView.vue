@@ -77,14 +77,14 @@ watchEffect(() => {
                 { transform: `translateX(-${boardWidth + itemWidth}px)` } // 结束状态
               ], {
                 duration: random(4000, 8000),
-                delay:random(0,2000)
+                delay: random(0, 2000)
               }).onfinish = () => {
                 item.style.top = `${random(0, 670)}px`
                 count++
                 if (count >= danmuList.value.length) {
                   count = 0
-                  handleGetdanmu().then(()=>{
-                    if(danmuList.value.length === 0){
+                  handleGetdanmu().then(() => {
+                    if (danmuList.value.length === 0) {
                       danmuPage.value = 1
                       handleGetdanmu()
                     }
@@ -226,7 +226,7 @@ const content = ref('')
  * 发布留言
  */
 const handlePublish = async () => {
-  if (!_checkLogin()) {
+  if (! await _checkLogin()) {
     ElMessage.error('请先登录')
     return
   }
@@ -278,20 +278,12 @@ const onImageLoad = (item: iMessageItem, type: EMessagePhotoType) => {
 }
 // 图片懒加载--------------------
 onMounted(async () => {
-  const loadingInstance = ElLoading.service(_options)
   //初始化
   try {
     await handleGetMessages()
     await handleGetdanmu()
   } catch (error) {
-    ElMessage.error('加载资源失败')
-    console.log(error)
-  } finally {
-    nextTick(() => {
-      setTimeout(() => {
-        loadingInstance.close()
-      }, 0)
-    })
+    ElMessage.error(`加载资源失败${error}`)
   }
   initActiveList()
 })
@@ -338,7 +330,8 @@ onUnmounted(() => {
       <div class="messagesItem" v-for="item of messagesList.slice((page - 1) * 5, page * 5)" :key="item.id">
         <section class="leftSection">
           <el-image :src="item.avatar || user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
-            v-loading="item.loading[EMessagePhotoType.Message]" @load="onImageLoad(item, EMessagePhotoType.Message)"></el-image>
+            v-loading="item.loading[EMessagePhotoType.Message]"
+            @load="onImageLoad(item, EMessagePhotoType.Message)"></el-image>
         </section>
         <section class="rightSection">
           <h4>{{ item.username }}</h4>

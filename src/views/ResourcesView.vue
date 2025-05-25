@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onMounted, ref, useTemplateRef, nextTick } from 'vue'
+import { onMounted, ref, useTemplateRef, nextTick,onUnmounted } from 'vue'
 //导入默认图片
 import backgroundImg from '@/assets/backgroundImg3.jpg'
 import github from '@/assets/github-fill.png'
@@ -129,25 +129,26 @@ const onBackgroundImageError = (item: iWaterFallItem) => {
 const onIconImageError = (item: iWaterFallItem) => {
     item.icon = github
 }
+let resizeHandler: () => void
 onMounted(async () => {
     //初始化
-    const loadingInstance = ElLoading.service(_options)
     try {
         await handleGetTechnology()
         newWaterFall()
-        window.addEventListener('resize', throttle(() => { newWaterFall() }, 1000))
+        resizeHandler = throttle(() => {
+            newWaterFall()
+        }, 1000)
+
+        window.addEventListener('resize', resizeHandler)
     } catch (error) {
-        ElMessage.error('加载资源失败')
-        console.log(error)
-    } finally {
-        nextTick(() => {
-            setTimeout(() => {
-                loadingInstance.close()
-            }, 0)
-        })
+        ElMessage.error(`加载资源失败${error}`)
     }
 })
-
+onUnmounted(() => {
+    if (resizeHandler) {
+        window.removeEventListener('resize', resizeHandler)
+    }
+})
 </script>
 
 <template>

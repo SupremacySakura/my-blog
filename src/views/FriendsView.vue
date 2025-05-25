@@ -78,7 +78,7 @@ const url = ref('')
  */
 const handleApply = async () => {
   try {
-    if (!_checkLogin()) {
+    if (! await _checkLogin()) {
       ElMessage.error('请先登录')
       return
     }
@@ -108,18 +108,11 @@ const handleApply = async () => {
 }
 onMounted(async () => {
   //初始化
-  const loadingInstance = ElLoading.service(_options)
   try {
     await handleGetFriends()
     await handleGetNotice()
   } catch (error) {
     ElMessage.error(`加载资源失败${error}`)
-  } finally {
-    nextTick(() => {
-      setTimeout(() => {
-        loadingInstance.close()
-      }, 0)
-    })
   }
 })
 </script>

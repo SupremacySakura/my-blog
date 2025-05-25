@@ -84,7 +84,11 @@ const handleLogout = () => {
   }
 }
 let resizeObserver: ResizeObserver | null = null
+const isLogin = ref(false)
 onMounted(() => {
+  _checkLogin().then((res) => {
+    isLogin.value = res
+  })
   // 初始化
   nowPath.value = _nowPath
   if (container.value) {
@@ -141,7 +145,7 @@ onBeforeUnmount(() => {
       <ul ref="container" class="tabBarList">
         <li v-for="item of tabBarList" :key="item.id" @click="gotoPage(item)"
           :class="{ 'active': route.path === item.path }" ref="containerItem">
-          <span v-if="_checkLogin() ? true : !item.isNeedLogin">
+          <span v-if="isLogin ? true : !item.isNeedLogin">
             {{ item.text }}
           </span>
         </li>
@@ -153,7 +157,7 @@ onBeforeUnmount(() => {
         <ul class="hiddenTabBarList">
           <li v-for="item of hiddenTabBarList" :key="item.id" @click="gotoPage(item)"
             :class="{ 'active': route.path === item.path }" ref="containerItem">
-            <span v-if="_checkLogin() ? true : !item.isNeedLogin">
+            <span v-if="isLogin ? true : !item.isNeedLogin">
               {{ item.text }}
             </span>
           </li>

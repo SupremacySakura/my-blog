@@ -1,7 +1,7 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { iUser } from "@/types"
-import { refreshToken } from '@/services/apis/login'
+import { checkLogin } from '@/services/apis/login'
 export const useUserStore = defineStore('user', () => {
     const _token = ref('')
     const _refreshToken = ref('')
@@ -18,20 +18,20 @@ export const useUserStore = defineStore('user', () => {
     const _clearInfo = () => {
         _token.value = ''
         _user.value = null
+        _refreshToken.value = ''
     }
-    const _checkLogin = (): boolean => {
-        if (!_user.value || !_token.value || !_user.value.uid) {
+    const _checkLogin = async (): Promise<boolean> => {
+        try {
+            const res = await checkLogin()
+            if (res.data.code === 200) {
+                return true
+            } else {
+                return false
+            }
+        } catch (err) {
             return false
         }
-        return true
     }
-    watch(_token, () => {
-        if (_token.value) {
-            setTimeout(() => {
-                refreshToken()
-            }, 9 * 1000 * 60)
-        }
-    }, { immediate: true })
     return {
         _token,
         _setToken,

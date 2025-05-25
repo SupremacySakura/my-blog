@@ -287,20 +287,12 @@ const handleSearchByTag = async (id: number) => {
 }
 // 初始化
 onMounted(async () => {
-  const loadingInstance = ElLoading.service(_options)
   try {
     await handleGetArticles()
     await handleGetTagList()
     articleItem.value = articlesList.value[0]
   } catch (error) {
-    ElMessage.error('加载资源失败')
-    console.log(error)
-  } finally {
-    nextTick(() => {
-      setTimeout(() => {
-        loadingInstance.close()
-      }, 0)
-    })
+    ElMessage.error(`加载资源失败${error}`)
   }
   initActiveList()
 })

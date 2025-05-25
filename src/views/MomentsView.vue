@@ -43,18 +43,10 @@ function onMomentImageLoad(item: iMomentItem) {
 }
 onMounted(async () => {
   //初始化
-  const loadingInstance = ElLoading.service(_options)
   try {
     await handleGetMoments()
   } catch (error) {
-    ElMessage.error('加载资源失败')
-    console.log(error)
-  } finally {
-    nextTick(() => {
-      setTimeout(() => {
-        loadingInstance.close()
-      }, 0)
-    })
+    ElMessage.error(`加载资源失败${error}`)
   }
 })
 

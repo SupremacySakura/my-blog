@@ -18,7 +18,7 @@ import {
 import { storeToRefs } from 'pinia'
 // 导入asset仓库
 import { useAssetStore } from '@/stores/asset'
-const { _options, _optionsWhite, _setPageStart, _setTheme } = useAssetStore()
+const { _optionsWhite, _setPageStart, _setTheme } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart, _theme } = storeToRefs(assetStore)
 // 导入工具
@@ -176,14 +176,12 @@ watchEffect(() => {
 })
 onMounted(async () => {
   //初始化
-  const loadingInstance = ElLoading.service(_options)
-  //初始化
   try {
-    await getANum()
+    getANum()
+    handleGetMyInformation()
+    handleGetMyLabels()
+    getPeopleTimes()
     await getUsingTime()
-    await handleGetMyInformation()
-    await handleGetMyLabels()
-    await getPeopleTimes()
     //开启定时器计算时间间隔
     intervalId = setInterval(() => {
       secondsDiff.value += 1
@@ -203,12 +201,6 @@ onMounted(async () => {
   } catch (error) {
     ElMessage.error('加载资源失败')
     console.log(error)
-  } finally {
-    nextTick(() => {
-      setTimeout(() => {
-        loadingInstance.close()
-      }, 0)
-    })
   }
 })
 onUnmounted(() => {

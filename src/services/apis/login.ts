@@ -22,9 +22,9 @@ const postRegister = (username: string, password: string, email: string, code: s
         code,
     })
 }
-// 测试用
-const getJWT = () => {
-    return request.get('/login/jwt')
+// 检查是否登录
+const checkLogin = () => {
+    return request.get('/login/checkLogin')
 }
 // 刷新token
 const refreshToken = () => {
@@ -37,7 +37,7 @@ const isRefreshToken = (config: any) => {
 }
 export {
     postLogin,
-    getJWT,
+    checkLogin,
     postSendVerificationCode,
     postRegister,
     refreshToken,
