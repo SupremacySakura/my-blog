@@ -1,0 +1,56 @@
+# Node.js 依赖目录
+node_modules/
+
+# 构建输出目录
+dist/
+build/
+dist-ssr/
+
+# 日志文件
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 编译覆盖率报告
+coverage/
+
+# TypeScript 编译信息文件
+*.tsbuildinfo
+
+# 本地配置文件
+*.local
+
+# macOS 系统文件
+.DS_Store
+
+# VSCode 编辑器配置
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains IDE 配置
+.idea/
+
+# Windows 系统文件
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Cypress 测试输出
+cypress/videos/
+cypress/screenshots/
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 锁文件（根据使用的包管理器选择性忽略）
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

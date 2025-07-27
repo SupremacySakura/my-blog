@@ -1,0 +1,13 @@
+:root {
+    /* 新的设计变量 */
+    --main-background-color: #f8f9fa;
+    --component-background-color: white;
+    --primary-color: #ff7a45;
+    --primary-gradient: linear-gradient(135deg, #ff7a45 0%, #ff9c6b 100%);
+    --text-color: #333;
+    --text-secondary: #666;
+    --border-radius: 8px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+    --background-color: #f8f9fa;
+}

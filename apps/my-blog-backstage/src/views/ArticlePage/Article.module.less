@@ -1,0 +1,417 @@
+.articleBox {
+    flex-grow: 1;
+    height: 100vh;
+    padding: 10px;
+    display: flex;
+    overflow: auto;
+    background-color: var(--background-color);
+
+    @media screen and (max-width: 500px) {
+        padding: 4px;
+
+    }
+
+    @media screen and (max-width: 1400px) {
+        flex-wrap: wrap;
+    }
+
+    section {
+        height: 100%;
+        min-width: 400px;
+
+        @media screen and (max-width: 1400px) {
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+
+        @media screen and (max-width: 500px) {
+            min-width: 0px;
+            width: 100%;
+            margin-right: 2px;
+        }
+    }
+
+    .leftBox {
+        min-width: 500px;
+        display: flex;
+        flex-direction: column;
+        max-height: 100vh;
+        min-height: 500px;
+        overflow: auto;
+
+        @media screen and (max-width: 1400px) {
+            width: 100%;
+        }
+
+        .leftForm {
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+            background-color: var(--component-background-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            overflow-y: auto;
+
+            .articleInputDiv {
+                width: 80%;
+                display: flex;
+                color: var(--text-color);
+                margin-bottom: 10px;
+
+                span {
+                    width: 100px;
+                    height: 20px;
+                }
+            }
+            .articleInput{
+                max-height: 300px;
+            }
+            .inputSubmit {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+            }
+
+        }
+    }
+
+    .rightBox {
+        max-height: 100vh;
+        width: 100%;
+        background-color: var(--component-background-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+
+        @media screen and (max-width: 1400px) {
+            margin-left: 0px;
+        }
+
+        @media screen and (max-width: 500px) {
+            padding: 5px;
+        }
+
+        .articleList {
+            width: 100%;
+            height: 100%;
+            margin-top: 10px;
+            background-color: var(--component-background-color);
+            border-radius: var(--border-radius);
+            padding: 10px;
+
+            @media screen and (max-width: 500px) {
+                padding: 2px;
+            }
+
+            ul {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                overflow-y: auto;
+
+                .articleListItem {
+                    width: 90%;
+                    min-width: 360px;
+                    min-height: 200px;
+                    display: flex;
+                    align-items: center;
+                    background-color: rgba(255, 255, 255, 1);
+                    margin-top: 20px;
+                    border-radius: 10px;
+                    transition: all 0.5s ease;
+                    position: relative;
+                    box-sizing: content-box;
+
+                    @media screen and (max-width: 500px) {
+                        min-height: 180px;
+                        min-width: 0px;
+                        width: 99%;
+                    }
+
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+
+                    .block {
+                        display: flex;
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.2);
+                        z-index: 1;
+                        top: 0;
+                        left: 0;
+
+                        @media screen and (max-width: 1000px) {
+                            display: block;
+                        }
+                    }
+
+                    .articleCover {
+                        min-width: 320px;
+                        width: 320px;
+                        min-height: 180px;
+                        height: 180px;
+                        border-radius: 10px;
+                        overflow: hidden;
+                        margin-left: 10px;
+
+                        @media screen and (max-width: 1000px) {
+                            position: absolute;
+                            width: 100%;
+                            height: 200px;
+                            z-index: 0;
+                            margin-left: 0px;
+                        }
+
+                        @media screen and (max-width: 500px) {
+                            min-width: 0px;
+                            height: 180px;
+                        }
+                    }
+
+                    .articleInfo {
+                        flex-grow: 1;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        margin-left: 10px;
+                        padding: 10px;
+
+                        @media screen and (max-width: 1000px) {
+                            position: absolute;
+                            width: 100%;
+                            height: 200px;
+                            z-index: 1;
+                            color: rgba(255, 255, 255, 1);
+                        }
+
+                        @media screen and (max-width: 500px) {
+                            padding: 5px;
+                            margin-left: 0px;
+                            height: 180px;
+                        }
+
+                        .digest {
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 3;
+                            line-clamp: 3;
+                            /* 设置显示的行数 */
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            line-height: 1.5;
+                            /* 根据需要调整 */
+                            max-height: calc(1.5em * 3);
+                            /* 行高 * 行数 */
+                        }
+                    }
+                }
+            }
+
+        }
+
+        .articleShow {
+            width: 100%;
+            min-height: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 1);
+            overflow-y: auto;
+
+            .markdownBox {
+                min-height: 100%;
+                padding: 10px;
+                margin-top: 10px;
+                border-radius: 5px;
+            }
+        }
+    }
+}
+
+.labelList {
+    width: 80%;
+    display: flex;
+    margin: 10px 0px;
+
+    span {
+        color: rgba(255, 255, 255, 1);
+    }
+
+    li {
+        width: auto;
+        display: inline-block;
+        box-sizing: content-box;
+        font-size: 14px;
+        padding: 0 5px;
+        line-height: 20px;
+        border-radius: 5px;
+        background-color: rgba(236, 245, 255, 1);
+        color: rgba(64, 158, 255, 1);
+        margin-left: 5px;
+        text-align: center;
+    }
+}
+
+.leftBox,
+.rightBox {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    transition: var(--transition);
+}
+
+.sectionTitle {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.sectionTitle:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 60px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+}
+
+.leftForm {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.articleInputDiv {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    span {
+        font-weight: 500;
+        color: var(--text-color);
+    }
+
+    input,
+    textarea {
+        border-radius: var(--border-radius);
+        border: 1px solid #e8e8e8;
+        padding: 0.75rem;
+        transition: var(--transition);
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 122, 69, 0.2);
+        }
+    }
+}
+
+.labelList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+
+    span {
+        display: block;
+        width: 100%;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    li {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+}
+
+.inputSubmit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.articleList {
+    ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        list-style: none;
+        padding: 0;
+    }
+}
+
+.articleListItem {
+    position: relative;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: var(--transition);
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .articleCover {
+        height: 180px;
+        overflow: hidden;
+    }
+
+    .articleInfo {
+        padding: 1.5rem;
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .digest {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        div {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+
+            span {
+                font-weight: 500;
+            }
+
+            time {
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+            }
+        }
+    }
+}

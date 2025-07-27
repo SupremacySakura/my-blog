@@ -1,0 +1,235 @@
+/* 全局变量 */
+:root {
+    --primary-color: #ff7a45;
+    --primary-gradient: linear-gradient(135deg, #ff7a45 0%, #ff9c6b 100%);
+    --text-color: #333;
+    --text-secondary: #666;
+    --border-radius: 8px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+.shareBox {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    height: calc(100vh - 3rem);
+    /* 设置适合视口的高度 */
+    overflow-x: hidden;
+}
+
+/* 卡片式设计 */
+.momentBox,
+.technologyBox {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    padding-bottom: 0;
+    transition: var(--transition);
+    width: 100%;
+    box-sizing: border-box;
+    /* 添加独立滚动 */
+    max-height: calc(50vh - 4rem);
+    /* 各占视口高度一半减去间距 */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 标题样式 */
+.sectionTitle {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.sectionTitle:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 60px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+}
+
+/* 表单样式优化 */
+.momentForm,
+.technologyForm {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.momentInputDiv,
+.technologyInputDiv {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    span {
+        font-weight: 500;
+        color: var(--text-color);
+    }
+
+    input,
+    textarea {
+        border-radius: var(--border-radius);
+        border: 1px solid #e8e8e8;
+        padding: 0.75rem;
+        transition: var(--transition);
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 122, 69, 0.2);
+        }
+    }
+}
+
+/* 按钮样式 */
+.inputSubmit {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* 列表项样式 */
+.momentList,
+.technologyList {
+    margin-top: 2rem;
+    flex: 1;
+    overflow-y: auto;
+
+    ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        list-style: none;
+        padding: 0;
+    }
+}
+
+.momentItem,
+.technologyItem {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    position: relative;
+    transition: var(--transition);
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .momentInfo,
+    .technologyInfo {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .topBox {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        span {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+    }
+
+    time {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    p {
+        margin: 1rem 0;
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+}
+
+/* 技术栈卡片特殊样式 */
+.technologyItem {
+    overflow: hidden;
+
+    .photo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0.2;
+        transition: var(--transition);
+    }
+
+    .technologyInfo {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        .text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+    }
+
+    &:hover .photo {
+        opacity: 0.4;
+        transform: scale(1.05);
+    }
+}
+
+/* 响应式设计 */
+@media (min-width: 768px) {
+    .shareBox {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .momentBox,
+    .technologyBox {
+        flex: 1;
+        max-height: calc(100vh - 7rem);
+        /* 在水平布局时占据主要高度 */
+        height: calc(100vh - 7rem);
+    }
+
+    .momentForm,
+    .technologyForm {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* 小屏幕响应式调整 */
+@media (max-width: 768px) {
+    .shareBox {
+        padding: 1rem;
+        height: calc(100vh - 2rem);
+    }
+
+    .momentBox,
+    .technologyBox {
+        max-height: calc(50vh - 3rem);
+    }
+}

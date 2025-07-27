@@ -1,0 +1,57 @@
+.innerShadow {
+    box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0px -4px 8px var(--home-right-shadow-color);
+}
+
+.size(@width: 100%, @height: 100%) {
+    width: @width;
+    height: @height;
+}
+
+.avatar(@size) {
+    .size(@size, @size);
+    border-radius: 50%;
+}
+
+@standardWidth: 1600px * 0.8px;
+
+.standardWidth() {
+    width: @standardWidth;
+    box-sizing: border-box;
+    padding: 20px;
+
+    @media screen and (max-width:(1600px * 0.8px)) {
+        width: 90%;
+    }
+
+    @media screen and (max-width:500px) {
+        width: 100%;
+    }
+}
+
+.standardBox() {
+    .size(100%, 100%);
+    min-height: 100vh;
+    padding: 90px 0px 10px 0px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+}
+
+.standardBoxChange() {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+//动态下划线
+.lineWith {
+    background: linear-gradient(to right, #044, #544) no-repeat;
+    background-size: 0px 2px;
+    background-position: right bottom;
+    transition: background-size 0.5s;
+}
+
+.lineWith:hover {
+    background-size: 100% 2px;
+    background-position: left bottom;
+}

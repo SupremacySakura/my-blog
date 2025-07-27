@@ -1,0 +1,458 @@
+.homeBox {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem;
+    overflow-x: hidden;
+    height: calc(100vh - 3rem);
+    overflow-y: auto;
+}
+
+.homeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+
+    section {
+        font-weight: 500;
+        color: var(--text-color);
+    }
+}
+
+.homeBody {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.sectionTitle {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.sectionTitle:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 60px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+}
+
+.tagBox,
+.myArticleBox,
+.myInfoBox {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    transition: var(--transition);
+}
+
+.tagForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.tagFormInput {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    input {
+        border-radius: var(--border-radius);
+        border: 1px solid #e8e8e8;
+        padding: 0.75rem;
+        transition: var(--transition);
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 122, 69, 0.2);
+        }
+    }
+
+    .tagFormColor {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        span {
+            flex-shrink: 0;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+    }
+}
+
+.tagFormPreview {
+    margin-top: 1rem;
+
+    .tagFormPreviewBox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80px;
+        border: 1px dashed #ccc;
+        border-radius: var(--border-radius);
+        margin-bottom: 1rem;
+
+        .previewTag {
+            width: 45px;
+            text-align: center;
+            white-space: wrap;
+            border-radius: 5px;
+            padding: 5px 3px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .tagFormHandle {
+        display: flex;
+        justify-content: center;
+
+        button {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+
+            &:hover {
+                opacity: 0.9;
+                transform: translateY(-2px);
+            }
+        }
+    }
+}
+
+.tagList {
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+    }
+
+    .tagItemBox {
+        .tagItem {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+
+            .tag {
+                cursor: pointer;
+                transition: var(--transition);
+                width: 45px;
+                text-align: center;
+                white-space: wrap;
+                border-radius: 5px;
+                padding: 5px 3px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+                &:hover {
+                    transform: translateY(-2px);
+                }
+            }
+        }
+    }
+}
+
+.myArticleBox {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    transition: var(--transition);
+    height: auto;
+    width: 100%;
+    min-height: 500px;
+    max-height: 800px;
+}
+
+.myArticleInput {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .inputLabel {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+
+        span {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+    }
+}
+
+.myArticleShow {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #f9f9f9;
+    border-radius: var(--border-radius);
+    margin-top: 1rem;
+    width: 100%;
+
+    .markdownBox {
+        flex: 1;
+        padding: 1.5rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: 600px;
+        width: 100%;
+        background: white;
+        box-shadow: var(--card-shadow);
+        border-radius: var(--border-radius);
+
+        >* {
+            max-width: 100%;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        p {
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        ul,
+        ol {
+            padding-left: 2rem;
+            margin: 1rem 0;
+        }
+
+        pre {
+            background: #f6f8fa;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        code {
+            background: #f6f8fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            display: block;
+            overflow-x: auto;
+        }
+    }
+}
+
+.myInfoBox {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .myInfoForm {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        width: 100%;
+
+        .myInfoHead {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .infoInput {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+
+            span {
+                font-weight: 500;
+                color: var(--text-color);
+            }
+
+            input,
+            textarea {
+                width: 100%;
+                min-width: 300px;
+                border-radius: var(--border-radius);
+                border: 1px solid #e8e8e8;
+                padding: 0.75rem;
+                transition: var(--transition);
+
+                &:focus {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 2px rgba(255, 122, 69, 0.2);
+                }
+            }
+        }
+
+        .infoButton {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 1rem;
+        }
+    }
+
+    .myInfoShow {
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+        padding: 2rem;
+
+        .myInfoShowBox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0.8rem;
+
+            span {
+                font-weight: 600;
+                color: var(--text-color);
+            }
+
+            p {
+                font-style: italic;
+                color: var(--text-secondary);
+            }
+
+            address {
+                margin-top: 1rem;
+                font-size: 0.9rem;
+                color: var(--text-secondary);
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .tagForm {
+        flex-direction: row;
+
+        .tagFormInput {
+            flex: 1;
+        }
+
+        .tagFormPreview {
+            min-width: 250px;
+        }
+    }
+
+    .myInfoBox {
+        flex-direction: row;
+
+        .myInfoForm {
+            flex: 2;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 1.5rem;
+
+            .myInfoHead,
+            .infoButton {
+                grid-column: span 2;
+            }
+        }
+
+        .myInfoShow {
+            flex: 1;
+            margin-left: 1.5rem;
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    .homeBox {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .homeBody {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .myArticleBox,
+    .tagBox,
+    .myInfoBox {
+        width: 100%;
+    }
+
+    .myArticleBox {
+        min-height: 400px;
+        max-height: 700px;
+    }
+
+    .myArticleShow .markdownBox {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .homeBox {
+        padding: 0.75rem;
+    }
+
+    .myArticleBox,
+    .tagBox,
+    .myInfoBox {
+        padding: 1rem;
+    }
+
+    .myArticleShow .markdownBox {
+        padding: 0.75rem;
+    }
+}

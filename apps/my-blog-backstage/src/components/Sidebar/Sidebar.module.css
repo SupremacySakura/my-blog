@@ -1,0 +1,25 @@
+.sidebar-box {
+  min-width: 200px;
+  width: 20%;
+  max-width: 400px;
+  background-color: #2d2721;
+  padding: 10px;
+  color: #ffffff;
+}
+.sidebar-box h2 {
+  margin-bottom: 10px;
+}
+.sidebar-box .sidebar-list {
+  width: 100%;
+}
+.sidebar-box .sidebar-list .list-item {
+  width: 80%;
+  height: 50px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.sidebar-box .sidebar-list .list-item.active-item {
+  background-color: #ff7805;
+  color: #ffffff;
+}

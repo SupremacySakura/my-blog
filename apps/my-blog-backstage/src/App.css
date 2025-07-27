@@ -1,0 +1,49 @@
+html,
+body {
+    overflow: hidden;
+    /* 防止整体页面滚动 */
+    height: 100%;
+    max-width: 100vw;
+    /* 限制最大宽度为视口宽度 */
+}
+
+.app-box {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    /* 防止容器滚动 */
+}
+
+/* 确保所有页面容器采用相同的滚动策略 */
+.page-container {
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+:root {
+    --primary-color: #ff7a45;
+    --primary-gradient: linear-gradient(135deg, #ff7a45 0%, #ff9c6b 100%);
+    --text-color: #333;
+    --text-secondary: #666;
+    --border-radius: 8px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+    --background-color: #f8f9fa;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.markdown-body {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
