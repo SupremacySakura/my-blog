@@ -10,6 +10,8 @@ import { getTime, getPeople } from '@/services/apis/asset'
 import { getMyInformation, getMyLabels } from '@/services/apis/my'
 // 导入ElementPlus相关组件
 import { ElMessage, ElImage, ElLoading } from 'element-plus'
+// 导入飞书文档组件
+import FeiShuDoc from '../components/FeiShuDoc.vue'
 import {
   Hide,
   View
@@ -21,20 +23,6 @@ import { useAssetStore } from '@/stores/asset'
 const { _optionsWhite, _setPageStart, _setTheme } = useAssetStore()
 const assetStore = useAssetStore()
 const { _pageStart, _theme } = storeToRefs(assetStore)
-// 导入工具
-import { hljs } from '@/utils/index'
-// 导入处理markdown的库
-import { marked } from 'marked'
-marked.setOptions({
-  gfm: true, // 启用 GitHub 风格的 Markdown
-  breaks: true, // 支持换行符
-  highlight: (code, lang) => {
-    if (lang && hljs.getLanguage(lang)) {
-      return hljs.highlight(code, { language: lang }).value
-    }
-    return hljs.highlightAuto(code).value
-  },
-})
 // 导入类型
 import type { iLabelItem, iInformation } from '@/types'
 /**
@@ -109,9 +97,6 @@ const getPeopleTimes = async () => {
 const articlesNum = ref(0)
 //计算时间定时器
 let intervalId: number
-//主页文章
-const homeArticleHTML = ref('')
-const homeArticle = useTemplateRef('homeArticle')
 /**
  * 获取个人信息
  */
@@ -122,20 +107,9 @@ const handleGetMyInformation = async () => {
     if (myInformation.value) {
       myInformation.value.loading = true
     }
-    homeArticleHTML.value = await marked(res.data.data.content)
   }
 }
-watchEffect(() => {
-  if (homeArticle.value) {
-    (homeArticle.value as HTMLElement).innerHTML = homeArticleHTML.value
-    nextTick(() => {
-      const codeBlocks = homeArticle.value?.querySelectorAll('pre code')
-      codeBlocks?.forEach((block) => {
-        hljs.highlightElement(block as HTMLElement); // 手动高亮每个代码块
-      })
-    })
-  }
-})
+
 //个人标签列表
 const labelList = ref<iLabelItem[]>([])
 /**
@@ -164,7 +138,6 @@ const onImageLoad = () => {
   if (myInformation.value) {
     myInformation.value.loading = false
   }
-
 }
 //主题
 const handleChangeTheme = () => {
@@ -235,6 +208,7 @@ onUnmounted(() => {
       <!-- 中间文章 -->
       <section class="main">
         <div ref="homeArticle" class="markdown-body">
+          <FeiShuDoc :article_url="myInformation?.content"></FeiShuDoc>
         </div>
       </section>
       <!-- 右边简介 -->
@@ -281,12 +255,14 @@ onUnmounted(() => {
 
 .box {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   background: var(--home-background-color);
   transition: background-color 0.3s ease;
+  padding-top: 80px;
+  box-sizing: border-box;
 
   .homeBox {
-    .size(100%, 100vh);
+    .size(100%, calc(100vh - 160px));
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -332,13 +308,12 @@ onUnmounted(() => {
 
   .myBox {
     width: 100%;
-    min-height: 100vh;
+    height: calc(100vh - 160px);
     display: flex;
     justify-content: center;
-    padding-top: 10px;
-    position: relative;
     color: var(--home-text-color);
     gap: 15px; // 添加间距
+    overflow: hidden;
 
     @media screen and (max-width: @screen-small-mobile) {
       flex-wrap: wrap;
@@ -348,9 +323,9 @@ onUnmounted(() => {
     // 左侧
     .label {
       width: 60px; // 稍微增加宽度
-      min-height: 100vh;
+      height: 100%;
       background-color: var(--home-background-fill-color);
-      padding-top: 90px;
+      padding-top: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -383,11 +358,8 @@ onUnmounted(() => {
     // 中间
     .main {
       width: 60%;
-      min-height: 100vh;
-      max-height: 100vh;
       background-color: var(--home-article-background-fill-color);
       padding: 20px;
-      padding-top: 90px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
       overflow-y: auto;
@@ -398,28 +370,19 @@ onUnmounted(() => {
         padding-top: 90px;
       }
 
-      // 添加滚动条样式
-      :deep(.markdown-body) {
-        &::-webkit-scrollbar {
-          width: 6px;
-        }
-
-        &::-webkit-scrollbar-thumb {
-          background-color: rgba(0, 0, 0, 0.2);
-          border-radius: 3px;
-        }
+      .markdown-body {
+        height: 100%;
       }
     }
 
     // 右侧
     .rightSection {
-      .size(450px, 900px);
+      .size(450px, 100%);
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      justify-content: space-evenly;
       align-items: center;
       position: sticky;
-      top: 20px;
 
       @media screen and (max-width: @screen-middle-mobile) {
         width: 250px;
@@ -430,13 +393,23 @@ onUnmounted(() => {
       }
 
       .about {
-        .size(100%, 90%);
-        padding: 10px;
+        .size(415px, 95%);
+        overflow: hidden;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        // justify-content: space-between;
         gap: 20px; // 添加间距
+        margin-bottom: 5px;
+        overflow-y: auto;
+
+        @media screen and (max-width: @screen-middle-mobile) {
+          width: 220px;
+        }
+
+        @media screen and (max-width: @screen-small-mobile) {
+          width: 90%;
+        }
 
         .user {
           margin-top: 10px;
@@ -445,7 +418,7 @@ onUnmounted(() => {
 
           div {
             .innerShadow;
-            .size(410px, 310px);
+            .size(100%, 310px);
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -467,7 +440,7 @@ onUnmounted(() => {
             }
 
             @media screen and (max-width: @screen-small-mobile) {
-              width: 90vw;
+              width: 90%;
             }
           }
 
@@ -516,7 +489,7 @@ onUnmounted(() => {
 
         // 右侧下部信息
         .info {
-          .size(410px, 310px);
+          .size(415px, 310px);
           display: grid;
           grid-template-columns: 200px 200px;
           grid-template-rows: 150px 150px;
@@ -529,7 +502,7 @@ onUnmounted(() => {
           }
 
           @media screen and (max-width: @screen-small-mobile) {
-            width: 90vw;
+            width: 90%;
             grid-template-columns: 49% 49%;
           }
 
