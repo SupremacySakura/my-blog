@@ -41,14 +41,18 @@ app.use(cors(
     exposedHeaders: ['Authorization', 'refresh_token'] // 允许前端访问的响应头字段
   }
 ))
-app.use('/login', loginRouter)
-app.use('/asset', indexRouter)
-app.use('/messages', messagesRouter)
-app.use('/articles', articlesRouter)
-app.use('/moments', momentsRouter)
-app.use('/my', myRouter)
-app.use('/friends', friendsRouter)
-app.use('/user', userRouter)
+const apiRouter = express.Router()
+
+apiRouter.use('/login', loginRouter)
+apiRouter.use('/asset', indexRouter)
+apiRouter.use('/messages', messagesRouter)
+apiRouter.use('/articles', articlesRouter)
+apiRouter.use('/moments', momentsRouter)
+apiRouter.use('/my', myRouter)
+apiRouter.use('/friends', friendsRouter)
+apiRouter.use('/user', userRouter)
+
+app.use('/api', apiRouter)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404))
