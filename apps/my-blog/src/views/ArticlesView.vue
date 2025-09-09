@@ -380,7 +380,7 @@ onMounted(async () => {
 
 <style lang="less" scoped>
 @screen-middle-mobile: 1000px;
-@screen-small-mobile: 750px;
+@screen-small-mobile: 760px;
 
 .articlesBox {
   .standardBox;
@@ -491,7 +491,7 @@ onMounted(async () => {
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             margin-left: 15px;
 
-            @media screen and (max-width: @screen-middle-mobile) {
+            @media screen and (max-width: @screen-small-mobile) {
               .size(100%, 100%);
               position: absolute;
               z-index: 0;
@@ -509,7 +509,7 @@ onMounted(async () => {
           .block {
             display: none;
 
-            @media screen and (max-width: @screen-middle-mobile) {
+            @media screen and (max-width: @screen-small-mobile) {
               .size(100%, 100%);
               display: block;
               position: absolute;
@@ -527,7 +527,7 @@ onMounted(async () => {
             padding: 20px;
             color: var(--article-card-text-color);
 
-            @media screen and (max-width: @screen-middle-mobile) {
+            @media screen and (max-width: @screen-small-mobile) {
               .size(100%, 100%);
               position: relative;
               z-index: 1;
@@ -541,7 +541,7 @@ onMounted(async () => {
               margin-bottom: 10px;
               transition: color 0.3s ease;
 
-              @media screen and (max-width: @screen-middle-mobile) {
+              @media screen and (max-width: @screen-small-mobile) {
                 color: white;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
               }
@@ -561,7 +561,7 @@ onMounted(async () => {
               margin-bottom: 15px;
               opacity: 0.9;
 
-              @media screen and (max-width: @screen-middle-mobile) {
+              @media screen and (max-width: @screen-small-mobile) {
                 color: rgba(255, 255, 255, 0.9);
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
               }
@@ -591,7 +591,7 @@ onMounted(async () => {
                 font-size: 13px;
                 font-style: italic;
 
-                @media screen and (max-width: @screen-middle-mobile) {
+                @media screen and (max-width: @screen-small-mobile) {
                   color: rgba(255, 255, 255, 0.7);
                 }
               }

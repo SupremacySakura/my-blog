@@ -17,8 +17,6 @@ var app = express()
 
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'jade')
 app.use(logger('dev'))
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ limit: '10mb', extended: true }))
@@ -64,7 +62,6 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500)
-  res.render('error')
 })
 const port = Number(process.env.PORT) || 5050
 app.listen(port, () => {

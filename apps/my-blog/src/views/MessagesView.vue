@@ -9,7 +9,7 @@ import { random } from '@/utils'
 // 导入网络请求API
 import { getMessages, postMessages, getMessagesNum, getDanmu } from '@/services/apis/messages'
 // 导入ElementPlus组件
-import { ElMessage, ElImage, ElLoading } from 'element-plus'
+import { ElMessage, ElImage } from 'element-plus'
 import {
   ArrowLeft,
   ArrowRight
@@ -18,8 +18,6 @@ import {
 import dayjs from 'dayjs'
 // 导入仓库
 import { storeToRefs } from 'pinia'
-import { useAssetStore } from '@/stores/asset'
-const { _options } = useAssetStore()
 import { useUserStore } from '@/stores/user'
 const { _user } = storeToRefs(useUserStore())
 const { _checkLogin } = useUserStore()

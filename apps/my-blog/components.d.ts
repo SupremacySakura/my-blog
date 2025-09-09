@@ -16,7 +16,6 @@ declare module 'vue' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     FeiShuDoc: typeof import('./src/components/FeiShuDoc.vue')['default']
-    FeiShuNote: typeof import('./src/components/FeiShuNote.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TabBar: typeof import('./src/components/TabBar.vue')['default']

@@ -1,10 +1,10 @@
-import { iArticle } from "@/types/interfaceType"
+import { iArticleUpload } from "@/types/interfaceType"
 import request from "../request"
 
 const getArticle = () => {
     return request.get('/article')
 }
-const addArticle = (article: iArticle) => {
+const addArticle = (article: iArticleUpload) => {
     return request.post('/article/addArticle', article)
 }
 const deleteArticle = (id: number) => {

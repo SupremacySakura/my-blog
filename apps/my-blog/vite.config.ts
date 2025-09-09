@@ -25,14 +25,15 @@ export default defineConfig({
     }
   },
   build: {
+    outDir: 'dist-my-blog', // 修改输出目录名字
+    emptyOutDir: true, // 打包前清空输出目录，避免文件残留
     rollupOptions: {
       output: {
         manualChunks: {
           // 大文件可以单独分块
           vendor: ['vue', 'pinia', 'vue-router', 'axios', 'pinia-plugin-persistedstate'],
-          utils: ['dayjs', 'lodash', 'marked'],
+          utils: ['dayjs', 'lodash'],
           element: ['element-plus'],
-          types: ['highlight.js'],
         },
       },
     },

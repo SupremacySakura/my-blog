@@ -8,6 +8,7 @@ package-lock.json
 
 # 输出目录
 dist/
+dist-*/
 build/
 .next/
 coverage/

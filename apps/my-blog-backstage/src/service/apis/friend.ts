@@ -1,10 +1,10 @@
-import { iFriend } from "@/types/interfaceType"
+import { iFriendUpload } from "@/types/interfaceType"
 import request from "../request"
 
 const getFriendList = () => {
     return request.get('/friend')
 }
-const addFriend = (friend: iFriend) => {
+const addFriend = (friend: iFriendUpload) => {
     return request.post('/friend/addFriend', friend)
 }
 const deleteFriend = (id: number) => {

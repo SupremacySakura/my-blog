@@ -1,10 +1,10 @@
-import { iMoment, iTechnology } from "@/types/interfaceType"
+import { iMomentUpload, iTechnology } from "@/types/interfaceType"
 import request from "../request"
 
 const getMoments = () => {
     return request.get('/share')
 }
-const addMoment = (moment: iMoment) => {
+const addMoment = (moment: iMomentUpload) => {
     return request.post('/share/addMoment', moment)
 }
 const deleteMoment = (id: number) => {

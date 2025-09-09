@@ -1,16 +1,13 @@
 <script setup lang="ts">
 //导入Vue相关API
-import { onMounted, ref, useTemplateRef, nextTick,onUnmounted } from 'vue'
+import { onMounted, ref, useTemplateRef, nextTick, onUnmounted } from 'vue'
 //导入默认图片
 import backgroundImg from '@/assets/backgroundImg3.jpg'
 import github from '@/assets/github-fill.png'
 //导入ElementPlus相关组件
-import { ElMessage, ElImage, ElLoading, ElTooltip } from 'element-plus'
+import { ElMessage, ElImage, ElTooltip } from 'element-plus'
 //导入lodash相关API
 import { throttle } from 'lodash'
-//导入asset仓库
-import { useAssetStore } from '@/stores/asset'
-const { _options } = useAssetStore()
 //导入moments相关API
 import { getTechnology } from '@/services/apis/moments'
 //导入类型
@@ -63,6 +60,11 @@ const getRowAndMargin = (item: HTMLElement, width: number) => {
         return [rows, margin]
     }
     const margin = itemWidth % width / (rows + 1)
+    if (margin < 10) {
+        const newRows = rows - 1
+        const newMargin = itemWidth % width / rows + width / rows
+        return [newRows, newMargin]
+    }
     return [rows, margin]
 }
 /**
@@ -291,8 +293,8 @@ onUnmounted(() => {
                     position: absolute;
                     z-index: 0;
                     background: linear-gradient(to bottom,
-                            rgba(0, 0, 0, 0.3) 0%,
-                            rgba(0, 0, 0, 0.7) 100%);
+                            rgba(0, 0, 0, 0.2) 0%,
+                            rgba(0, 0, 0, 0.6) 100%);
                 }
 
                 span {

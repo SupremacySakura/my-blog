@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
+    "@types/lodash": "^4.17.20",
     "@types/markdown-it": "^14.1.2",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vue/tsconfig": "^0.5.1",
