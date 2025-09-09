@@ -1,13 +1,10 @@
 <script setup lang="ts">
 // 导入Vue相关API
-import { onMounted, ref, nextTick } from 'vue'
+import { onMounted, ref } from 'vue'
 // 导入默认图片
 import yxzq from '@/assets/yxzq.jpg'
 // 导入ElementPlus相关组件
-import { ElMessage, ElImage, ElLoading } from 'element-plus'
-// 导入仓库
-import { useAssetStore } from '@/stores/asset'
-const { _options } = useAssetStore()
+import { ElMessage, ElImage } from 'element-plus'
 // 导入moments相关API
 import { getMoments } from '@/services/apis/moments'
 // 导入类型

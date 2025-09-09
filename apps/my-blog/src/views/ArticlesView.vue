@@ -19,7 +19,7 @@ import {
 } from '@element-plus/icons-vue'
 // 导入asset仓库
 import { useAssetStore } from '@/stores/asset'
-const { _options, _optionsWhite } = useAssetStore()
+const { _optionsWhite } = useAssetStore()
 // 导入articles仓库
 import { useArticlesStore } from '@/stores/articles'
 const { _setArticlesList } = useArticlesStore()

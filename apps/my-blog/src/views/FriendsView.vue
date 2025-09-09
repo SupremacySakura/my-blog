@@ -1,15 +1,13 @@
 <script setup lang="ts">
 // 导入vue相关api
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 // 导入仓库
 import { storeToRefs } from 'pinia'
-import { useAssetStore } from '@/stores/asset'
-const { _options } = useAssetStore()
 import { useUserStore } from '@/stores/user'
 const { _checkLogin } = useUserStore()
 const { _user } = storeToRefs(useUserStore())
 // 导入ElementPlus相关组件
-import { ElMessage, ElImage, ElLoading } from 'element-plus'
+import { ElMessage, ElImage } from 'element-plus'
 // 导入默认头像
 import user from '@/assets/user.png'
 // 导入friends相关接口

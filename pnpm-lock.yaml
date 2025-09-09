@@ -64,6 +64,9 @@ importers:
       '@tsconfig/node20':
         specifier: ^20.1.4
         version: 20.1.6
+      '@types/lodash':
+        specifier: ^4.17.20
+        version: 4.17.20
       '@types/markdown-it':
         specifier: ^14.1.2
         version: 14.1.2

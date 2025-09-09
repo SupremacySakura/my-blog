@@ -16,47 +16,10 @@ const updateAddress = 'UPDATE user SET address = ? WHERE uid = ?'
 router.post('/changeAvatar', verifyToken, upload.single('avatar'), async (req, res) => {
     const uid = req.body.uid // 获取文本字段 uid
     const avatarFile = req.file // 获取上传的文件
-    try {
-        const avatarUrl = await yxzqUtils.uploadResource(avatarFile.buffer, {
-            url: 'http://8.137.77.95:3100',
-            fileName: uid + '-',
-            folderName: 'user',
-            useDate: 'yes',
-        })
-        console.log(avatarUrl)
-        if (avatarUrl.code === 200) {
-            pool.query(updateUserAvatar, [avatarUrl.filePath, uid], (err, result) => {
-                if (err) {
-                    const str = {
-                        code: 400,
-                        message: '更新失败',
-                    }
-                    res.send(str)
-                    return console.log(err.message)
-                }
-                const str = {
-                    code: 200,
-                    message: '更新成功'
-                }
-                res.send(str)
-                return
-            })
-        } else {
-            const str = {
-                code: 400,
-                message: `更新失败${avatarUrl.error}`,
-            }
-            res.send(str)
-            return
-        }
-    } catch (err) {
-        const str = {
-            code: 500,
-            message: `更新失败${err}`,
-        }
-        res.send(str)
-        return
-    }
+    res.json({
+        code: 500,
+        message: '服务暂不可用',
+    })
 })
 // 修改用户名
 router.post('/changeUsername', verifyToken, async (req, res) => {

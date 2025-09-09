@@ -7,7 +7,7 @@ import BottomBar from '@/components/BottomBar.vue'
 //导入网站相关API
 import { visit } from '@/services/apis/asset'
 //导入Vue相关API
-import { onMounted, onUnmounted, watchEffect } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 //导入网站仓库
 import { useAssetStore } from '@/stores/asset'
 const { _isVisit, _setIsVisit } = useAssetStore()
