@@ -3,14 +3,14 @@ import { enhanceRequest } from '@/services/enhanceRequest'
 // 请求个人信息
 const getMyInformation = () => {
   return enhanceRequest({
-    url: '/my',
+    url: '/api/my',
     method: 'GET',
   })
 }
 // 请求个人标签
 const getMyLabels = () => {
   return enhanceRequest({
-    url: '/my/labels',
+    url: '/api/my/labels',
     method: 'GET',
   })
 }

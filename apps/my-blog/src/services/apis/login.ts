@@ -3,20 +3,20 @@ import type { AxiosRequestConfig } from 'axios'
 
 // 请求登录
 const postLogin = (username: string, password: string) => {
-    return request.post('/login', {
+    return request.post('/api/login', {
         username: username,
         password: password
     })
 }
 // 发送验证码
 const postSendVerificationCode = (email: string) => {
-    return request.post('/login/sendVerificationCode', {
+    return request.post('/api/login/sendVerificationCode', {
         email: email
     })
 }
 // 注册账号
 const postRegister = (username: string, password: string, email: string, code: string) => {
-    return request.post('/login/register', {
+    return request.post('/api/login/register', {
         username,
         password,
         email,
@@ -25,11 +25,11 @@ const postRegister = (username: string, password: string, email: string, code: s
 }
 // 检查是否登录
 const checkLogin = () => {
-    return request.get('/login/checkLogin')
+    return request.get('/api/login/checkLogin')
 }
 // 刷新token
 const refreshToken = () => {
-    return request.post('/login/refresh',null, {
+    return request.post('/api/login/refresh',null, {
         __isRefreshToken: true
     } as AxiosRequestConfig & { __isRefreshToken: boolean })
 }

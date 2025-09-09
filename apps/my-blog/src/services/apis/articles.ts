@@ -3,7 +3,7 @@ import { enhanceRequest } from '@/services/enhanceRequest'
 // 请求文章
 const getArticles = (page: number, keyWord: string | null = null, tagIdList: number[] | null = null) => {
   return enhanceRequest({
-    url: '/articles',
+    url: '/api/articles',
     method: 'GET',
     params: {
       page: page,
@@ -15,7 +15,7 @@ const getArticles = (page: number, keyWord: string | null = null, tagIdList: num
 // 请求文章数量
 const getArticlesNum = (keyWord: string | null = null, tagIdList: number[] | null = null) => {
   return enhanceRequest({
-    url: '/articles/number',
+    url: '/api/articles/number',
     method: 'GET',
     params: {
       keyWord: keyWord,
@@ -26,7 +26,7 @@ const getArticlesNum = (keyWord: string | null = null, tagIdList: number[] | nul
 // 请求文章标签
 const getArticleTag = () => {
   return enhanceRequest({
-    url: '/articles/tag',
+    url: '/api/articles/tag',
     method: 'GET',
   })
 }

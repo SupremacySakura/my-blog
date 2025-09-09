@@ -2,7 +2,7 @@ import { request, enhanceRequest } from '@/services/enhanceRequest'
 // 请求留言
 const getMessages = (page: number) => {
   return enhanceRequest({
-    url: '/messages',
+    url: '/api/messages',
     method: 'GET',
     params: {
       page: page
@@ -12,14 +12,14 @@ const getMessages = (page: number) => {
 // 请求留言数量
 const getMessagesNum = () => {
   return enhanceRequest({
-    url: '/messages/number',
+    url: '/api/messages/number',
     method: 'GET',
   })
 }
 // 请求弹幕
 const getDanmu = (page: number) => {
   return enhanceRequest({
-    url: '/messages/dammu',
+    url: '/api/messages/dammu',
     method: 'GET',
     params: {
       page: page
@@ -28,7 +28,7 @@ const getDanmu = (page: number) => {
 }
 // 发送留言
 const postMessages = (params: any) => {
-  return request.post('/messages/post', params)
+  return request.post('/api/messages/post', params)
 }
 export {
   getMessages,
