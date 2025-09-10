@@ -1,9 +1,10 @@
-const express = require('express')
-const router = express.Router()
-const { pool } = require('../utils/index')
-const jwt = require('jsonwebtoken')
-const { verifyToken, verifyRefreshToken } = require('../middlewares/index')
-const sendVerificationEmail = require('../utils/mail')
+import express, { Router, Request, Response } from "express";
+import { pool } from "../utils"; 
+import jwt from "jsonwebtoken";
+import { verifyToken, verifyRefreshToken } from "../middlewares";
+import sendVerificationEmail from "../utils/mail";
+
+const router: Router = express.Router();
 // 验证码缓存
 let verificationCodes = new Map()
 // MySQL 查询
@@ -14,15 +15,15 @@ const register = 'insert into user (username,password,email,avatar) values (?,?,
 const accessSecret = 'my-blog'
 const refreshSecret = 'my-blog-refresh'
 const accessOptions = {
-    expiresIn: '10m'
+    expiresIn: 10 * 60
 }
 const refreshOptions = {
-    expiresIn: '7d'
+    expiresIn: 7 * 24 *60 *60
 }
 // 登录接口
-router.post('/', (req, res) => {
+router.post('/', (req: Request, res: Response) => {
     const { username, password } = req.body
-    pool.query(getUserByUsername, [username], (err, result) => {
+    pool.query(getUserByUsername, [username], (err: any, result: any) => {
         if (err) {
             const str = {
                 code: 400,
@@ -65,7 +66,7 @@ router.post('/', (req, res) => {
     })
 
 })
-router.get('/checkLogin', verifyToken, (req, res) => {
+router.get('/checkLogin', verifyToken, (req: Request, res: Response) => {
     const str = {
         code: 200,
         message: '已登录'
@@ -73,7 +74,7 @@ router.get('/checkLogin', verifyToken, (req, res) => {
     res.send(str)
 })
 // 发送验证码
-router.post('/sendVerificationCode', async (req, res) => {
+router.post('/sendVerificationCode', async (req: Request, res: Response) => {
     const { email } = req.body
     const code = Math.floor(100000 + Math.random() * 900000).toString()
     try {
@@ -85,7 +86,7 @@ router.post('/sendVerificationCode', async (req, res) => {
     }
 })
 // 注册账号
-router.post('/register', async (req, res) => {
+router.post('/register', async (req: Request, res: Response) => {
     const { username, password, email, code } = req.body
     if (!verificationCodes.has(email)) {
         return res.json({ message: '验证码已过期', code: 400 })
@@ -98,14 +99,14 @@ router.post('/register', async (req, res) => {
     if (verificationCode.code !== code) {
         return res.json({ message: '验证码错误', code: 400 })
     }
-    pool.query(getUserByUsername, [username], (err, result) => {
+    pool.query(getUserByUsername, [username], (err: any, result: any) => {
         if (err) {
             return res.json({ message: '服务器错误', code: 500 })
         }
         if (result.length > 0) {
             return res.json({ message: '用户名已存在', code: 400 })
         } else {
-            pool.query(register, [username, password, email, 'http://8.137.77.95:3100/resource/blog/vue3-background.jpg'], (error, result2) => {
+            pool.query(register, [username, password, email, 'http://8.137.77.95:3100/resource/blog/vue3-background.jpg'], (error: any, result2: any) => {
                 if (error) {
                     return res.json({ message: '服务器错误' })
                 }
@@ -115,11 +116,11 @@ router.post('/register', async (req, res) => {
     })
 })
 // 延迟token有效期
-router.post('/refresh', verifyRefreshToken, async (req, res) => {
+router.post('/refresh', verifyRefreshToken, async (req: any, res: Response) => {
     const token = req.token
-    let payload = jwt.decode(token)
+    let payload = jwt.decode(token) as any
     // 如果前面校验通过，再查询数据库
-    pool.query(getUserByUID, [payload.uid], (err, result) => {
+    pool.query(getUserByUID, [payload?.uid], (err:any, result:any) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ message: '刷新失败' }) // ❗加 return
@@ -144,4 +145,4 @@ router.post('/refresh', verifyRefreshToken, async (req, res) => {
         res.header('Authorization', `Bearer ${accessToken}`).send(responseData) // ✅ 只发一次响应
     });
 })
-module.exports = router
+export default router

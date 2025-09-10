@@ -1,7 +1,7 @@
-const express = require('express')
-const router = express.Router()
-const { pool, dealWithTag } = require('../utils/index')
+import express, { Request, Response } from "express";
+import { pool, dealWithTag } from "../utils/index";
 
+const router = express.Router();
 // MySql 查询语句
 const getArticlesCount = 'select count(*) from article'
 const getArticlesByPage = `
@@ -44,7 +44,7 @@ INNER JOIN user_without_password u ON a.user_id = u.uid;
 const getArticleTag = `
 SELECT * FROM tag
 `
-const getArticlesCountByTagId = (tagIdList) => {
+const getArticlesCountByTagId = (tagIdList: any) => {
   if (!Array.isArray(tagIdList) || tagIdList.length === 0) {
     return
   }
@@ -70,7 +70,7 @@ INNER JOIN tag t ON t.id = a_t.tag_id
 WHERE t.id IN (${placeholders});
 `
 }
-const getArticleByTagId = (tagIdList) => {
+const getArticleByTagId = (tagIdList: any) => {
   if (!Array.isArray(tagIdList) || tagIdList.length === 0) {
     return
   }
@@ -102,18 +102,18 @@ WHERE t.id IN (${placeholders});
 `
 }
 // 查询文章接口
-router.get('/', (req, res) => {
-  const page = req.query.page
+router.get('/', (req: Request, res: Response) => {
+  const page = req.query.page as any
   const pageStart = (page - 1) * 4
   const keyWord = req.query.keyWord
   let tagIdList = []
   if (req.query.tagIdList) {
-    tagIdList = req.query.tagIdList.map((item) => { return Number(item) })
+    tagIdList = (req.query.tagIdList as any).map((item: any) => { return Number(item) })
   }
 
   try {
     if (keyWord && tagIdList.length === 0) {
-      pool.query(getArticleByKeyWord, [keyWord, 4, pageStart], (err, result) => {
+      pool.query(getArticleByKeyWord, [keyWord, 4, pageStart], (err: any, result: any) => {
         if (err) {
           const str = {
             code: 400,
@@ -131,7 +131,7 @@ router.get('/', (req, res) => {
         res.send(str)
       })
     } else if (tagIdList.length !== 0 && !keyWord) {
-      pool.query(getArticleByTagId(tagIdList), [...tagIdList, 4, pageStart], (err, result) => {
+      pool.query(getArticleByTagId(tagIdList), [...tagIdList, 4, pageStart], (err: any, result: any) => {
         if (err) {
           const str = {
             code: 400,
@@ -149,7 +149,7 @@ router.get('/', (req, res) => {
         res.send(str)
       })
     } else {
-      pool.query(getArticlesByPage, [4, pageStart], (err, result) => {
+      pool.query(getArticlesByPage, [4, pageStart], (err: any, result: any) => {
         if (err) {
           const str = {
             code: 400,
@@ -167,7 +167,7 @@ router.get('/', (req, res) => {
         res.send(str)
       })
     }
-  } catch (err) {
+  } catch (err: any) {
     const str = {
       code: 400,
       message: '查询文章失败',
@@ -179,15 +179,15 @@ router.get('/', (req, res) => {
 
 })
 // 查询文章数量接口
-router.get('/number', (req, res) => {
+router.get('/number', (req: Request, res: Response) => {
   const keyWord = req.query.keyWord
   let tagIdList = []
   if (req.query.tagIdList) {
-    tagIdList = req.query.tagIdList.map((item) => { return Number(item) })
+    tagIdList = (req.query.tagIdList as any).map((item: any) => { return Number(item) })
   }
   try {
     if (keyWord && tagIdList.length === 0) {
-      pool.query(getArticlesCountByKeyWord, [keyWord], (err, result) => {
+      pool.query(getArticlesCountByKeyWord, [keyWord], (err: any, result: any) => {
         if (err) {
           const str = {
             code: 400,
@@ -205,7 +205,7 @@ router.get('/number', (req, res) => {
         res.send(str)
       })
     } else if (tagIdList.length !== 0 && !keyWord) {
-      pool.query(getArticlesCountByTagId(tagIdList), [...tagIdList], (err, result) => {
+      pool.query(getArticlesCountByTagId(tagIdList), [...tagIdList], (err: any, result: any) => {
         if (err) {
           const str = {
             code: 400,
@@ -223,7 +223,7 @@ router.get('/number', (req, res) => {
         res.send(str)
       })
     } else {
-      pool.query(getArticlesCount, (err, result) => {
+      pool.query(getArticlesCount, (err: any, result: any) => {
         if (err) {
           const str = {
             code: 400,
@@ -241,7 +241,7 @@ router.get('/number', (req, res) => {
         res.send(str)
       })
     }
-  } catch (err) {
+  } catch (err: any) {
     const str = {
       code: 400,
       message: '查询文章数量失败',
@@ -253,8 +253,8 @@ router.get('/number', (req, res) => {
 
 })
 // 查询文章标签接口
-router.get('/tag', (req, res) => {
-  pool.query(getArticleTag, (err, result) => {
+router.get('/tag', (req: Request, res: Response) => {
+  pool.query(getArticleTag, (err: any, result: any) => {
     if (err) {
       const str = {
         code: 400,
@@ -271,4 +271,4 @@ router.get('/tag', (req, res) => {
     res.send(str)
   })
 })
-module.exports = router
+export default router

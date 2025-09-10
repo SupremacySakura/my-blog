@@ -218,8 +218,7 @@ onUnmounted(() => {
           <section class="user">
             <div>
               <el-image :src="myInformation?.avatar || yxzq" alt="头像" class="custom-image" fit="cover"
-                :preview-src-list="[myInformation?.avatar || yxzq]" hide-on-click-modal @error="onError()"
-                v-loading="myInformation?.loading" @load="onImageLoad()" />
+                :preview-src-list="[myInformation?.avatar || yxzq]" hide-on-click-modal @error="onError()" />
               <span>{{ myInformation?.username || '余心知秋' }}</span>
               <p>{{ myInformation?.introduce || '耗尽' }}</p>
               <span>{{ myInformation?.identity || '前端工程师' }}</span>

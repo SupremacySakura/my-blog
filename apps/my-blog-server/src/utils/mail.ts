@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
         pass: process.env.MAIL_PASS
     }
 })
-function sendVerificationEmail(to, code) {
+function sendVerificationEmail(to:any, code:any) {
     const mailOptions = {
         from: '"余心知秋" <3118654731@qq.com>',
         to,
@@ -18,4 +18,4 @@ function sendVerificationEmail(to, code) {
     }
     return transporter.sendMail(mailOptions)
 }
-module.exports = sendVerificationEmail
+export default sendVerificationEmail

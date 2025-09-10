@@ -1,6 +1,7 @@
+import { Router, Request, Response, NextFunction } from "express";
 const jwt = require('jsonwebtoken')
 
-function verifyToken(req, res, next) {
+function verifyToken(req: any, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]; // 提取 Bearer token
     req.token = token
@@ -18,7 +19,7 @@ function verifyToken(req, res, next) {
         return res.status(403).json({ error: 'Invalid token.' })
     }
 }
-function verifyRefreshToken(req, res, next) {
+function verifyRefreshToken(req: any, res: Response, next: NextFunction) {
     const refreshHeader = req.headers['refresh_token']
     const token = refreshHeader; // 提取 Bearer token
     req.token = token
@@ -36,7 +37,7 @@ function verifyRefreshToken(req, res, next) {
         return res.status(403).json({ error: 'Invalid token.' })
     }
 }
-module.exports = {
+export {
     verifyToken,
     verifyRefreshToken
 };

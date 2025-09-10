@@ -1,6 +1,7 @@
-const express = require('express')
-const router = express.Router()
-const { pool } = require('../utils/index')
+import express, { Request, Response } from "express";
+import { pool } from "../utils";
+
+const router = express.Router();
 
 // MySql 查询语句
 const getTime = 'select * from asset where id=1'
@@ -8,8 +9,8 @@ const getPeopleNumber = 'select * from asset where id=1'
 const postPeopleVisit = 'update asset set people = ? where id = 1'
 
 // 查询时间接口
-router.get('/time', (req, res) => {
-  pool.query(getTime, (err, result) => {
+router.get('/time', (req:Request, res:Response) => {
+  pool.query(getTime, (err:any, result:any) => {
     if (err) {
       const str = {
         code: 400,
@@ -27,8 +28,8 @@ router.get('/time', (req, res) => {
   })
 })
 // 查询访问次数
-router.get('/people', (req, res) => {
-  pool.query(getPeopleNumber, (err, result) => {
+router.get('/people', (req:Request, res:Response) => {
+  pool.query(getPeopleNumber, (err:any, result:any) => {
     if (err) {
       const str = {
         code: 400,
@@ -46,8 +47,8 @@ router.get('/people', (req, res) => {
   })
 })
 // 访问请求
-router.post('/get', (req, res) => {
-  pool.query(getPeopleNumber, (err, result) => {
+router.post('/get', (req:Request, res:Response) => {
+  pool.query(getPeopleNumber, (err:any, result:any) => {
     if (err) {
       const str = {
         code: 400,
@@ -56,8 +57,8 @@ router.post('/get', (req, res) => {
       res.send(str)
       return console.log(err.message)
     }
-    people = result[0].people + 1
-    pool.query(postPeopleVisit, people, (err, result) => {
+    const people = result[0].people + 1
+    pool.query(postPeopleVisit, people, (err:any, result:any) => {
       if (err) {
         const str = {
           code: 400,
@@ -75,4 +76,4 @@ router.post('/get', (req, res) => {
 
   })
 })
-module.exports = router
+export default router

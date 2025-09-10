@@ -1,18 +1,21 @@
 require('dotenv').config()
-const createError = require('http-errors')
-const express = require('express')
-const path = require('path')
-const cookieParser = require('cookie-parser')
-const logger = require('morgan')
-const cors = require('cors')
-const loginRouter = require('./routes/login')
-const messagesRouter = require('./routes/messages')
-const articlesRouter = require('./routes/articles')
-const momentsRouter = require('./routes/moments')
-const indexRouter = require('./routes/asset')
-const myRouter = require('./routes/my')
-const friendsRouter = require('./routes/friends')
-const userRouter = require('./routes/user')
+import { Request, Response, NextFunction } from "express";
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import cors from "cors";
+
+// 路由
+import loginRouter from "./routes/login";
+import messagesRouter from "./routes/messages";
+import articlesRouter from "./routes/articles";
+import momentsRouter from "./routes/moments";
+import indexRouter from "./routes/asset";
+import myRouter from "./routes/my";
+import friendsRouter from "./routes/friends";
+import userRouter from "./routes/user";
+
 var app = express()
 
 
@@ -30,7 +33,7 @@ const allowedOrigins = [
 ]
 app.use(cors(
   {
-    origin: (origin, callback) => {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
@@ -53,20 +56,17 @@ apiRouter.use('/friends', friendsRouter)
 apiRouter.use('/user', userRouter)
 
 app.use('/api', apiRouter)
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404))
-});
-
 // error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  const status = err.status || 500;
+  const message = err.message || "Internal Server Error";
 
-  // render the error page
-  res.status(err.status || 500)
-})
+  res.status(status).json({
+    success: false,
+    message,
+    error: req.app.get("env") === "development" ? err : {},
+  });
+});
 const port = Number(process.env.PORT) || 5050
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`)

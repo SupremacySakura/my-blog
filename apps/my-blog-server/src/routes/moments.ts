@@ -1,6 +1,6 @@
-const express = require('express')
-const router = express.Router()
-const { pool } = require('../utils/index')
+import express, { Router, Request, Response } from "express";
+import { pool } from "../utils";
+const router: Router = express.Router();
 
 // MySql 查询语句
 const getMoments = `SELECT m.*, u.*
@@ -9,8 +9,8 @@ INNER JOIN user_without_password AS u ON m.user_id = u.uid; `
 const getTechnology = 'select * from technology'
 
 // 查询朋友圈接口
-router.get('/', (req, res) => {
-  pool.query(getMoments, (err, result) => {
+router.get('/', (req:Request, res:Response) => {
+  pool.query(getMoments, (err:any, result:any) => {
     if (err) {
       const str = {
         code: 400,
@@ -28,8 +28,8 @@ router.get('/', (req, res) => {
   })
 })
 // 查询技术栈接口
-router.get('/technology', (req, res) => {
-  pool.query(getTechnology, (err, result) => {
+router.get('/technology', (req:Request, res:Response) => {
+  pool.query(getTechnology, (err:any, result:any) => {
     if (err) {
       const str = {
         code: 400,
@@ -46,4 +46,4 @@ router.get('/technology', (req, res) => {
     res.send(str)
   })
 })
-module.exports = router
+export default router

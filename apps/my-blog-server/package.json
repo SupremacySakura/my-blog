@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./app.js"
+    "dev": "nodemon --watch src --exec ts-node src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js"
   },
   "dependencies": {
     "@yxzq-web-resource-tools/yxzq-utils-node": "~1.0.0",
@@ -16,10 +18,22 @@
     "http-errors": "~1.6.3",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.19.0",
     "morgan": "~1.9.1",
-    "multer": "^2.0.0",
+    "multer": "^2.0.2",
     "mysql2": "^3.11.3",
     "nodemailer": "^7.0.3",
     "npm": "^11.4.1"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.6.2"
   }
 }

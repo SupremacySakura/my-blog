@@ -1,6 +1,7 @@
-const express = require('express')
-const router = express.Router()
-const { pool } = require('../utils/index')
+import express, { Request, Response } from "express";
+import { pool } from "../utils";
+
+const router = express.Router();
 // MySql 查询语句
 const getFriends = `
   SELECT u.*, f.*
@@ -11,8 +12,8 @@ const getFriends = `
 const insertFriend = 'insert into friend set ?'
 const getNotice = 'select * from notice'
 // 查询友链
-router.get('/', (req, res) => {
-  pool.query(getFriends, (err, result) => {
+router.get('/', (req: Request, res: Response) => {
+  pool.query(getFriends, (err: any, result: any) => {
     if (err) {
       const str = {
         code: 400,
@@ -30,14 +31,14 @@ router.get('/', (req, res) => {
   })
 })
 // 申请友链
-router.post('/apply', async (req, res) => {
+router.post('/apply', async (req: Request, res: Response) => {
   const newFriend = {
     user_id: req.body.user_id,
     name: req.body.name,
     label: req.body.label,
     url: req.body.url
   }
-  pool.query(insertFriend, newFriend, (err, result) => {
+  pool.query(insertFriend, newFriend, (err: any, result: any) => {
     if (err) {
       const str = {
         code: 400,
@@ -55,8 +56,8 @@ router.post('/apply', async (req, res) => {
   })
 })
 // 查询公告
-router.get('/notice', (req, res) => {
-  pool.query(getNotice, (err, result) => {
+router.get('/notice', (req: Request, res: Response) => {
+  pool.query(getNotice, (err: any, result: any) => {
     if (err) {
       const str = {
         code: 400,
@@ -73,4 +74,4 @@ router.get('/notice', (req, res) => {
     res.send(str)
   })
 })
-module.exports = router
+export default router

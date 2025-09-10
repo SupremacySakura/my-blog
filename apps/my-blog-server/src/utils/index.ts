@@ -9,7 +9,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME//指定需要操作哪个数据库
 })
 // 检测mysql模块是否正常工作
-pool.query('SELECT 1', (err, result) => {
+pool.query('SELECT 1', (err:any, result:any) => {
   if (err) return console.log(err.message)
   //只要能打印出[RowDataPacket{'1':1}]的结果,就证明数据库连接正常
   console.log(JSON.stringify(result[0]) === '{"1":1}' ? '数据库连接成功' : '数据库连接失败')
@@ -19,10 +19,10 @@ pool.query('SELECT 1', (err, result) => {
  * @param {*} result 
  * @returns 处理后的文章列表
  */
-const dealWithTag = (result) => {
+const dealWithTag = (result:any) => {
   // 创建标签关联对象
-  const newTagArray = {}
-  result.forEach(item => {
+  const newTagArray = {} as any
+  result.forEach((item:any) => {
     if (!newTagArray[item.id]) {
       newTagArray[item.id] = []
     }
@@ -30,24 +30,24 @@ const dealWithTag = (result) => {
   });
 
   // 创建新文章数组
-  const newArticleArray = []
-  result.forEach(item => {
+  const newArticleArray = [] as any
+  result.forEach((item:any) => {
     // 如果文章没有被添加过（根据 ID 判断）
-    if (!newArticleArray.some(article => article.arid === item.arid)) {
+    if (!newArticleArray.some((article:any) => article.arid === item.arid)) {
       const newArticle = { ...item, label: newTagArray[item.arid] }
       newArticleArray.push(newArticle)
     }
   });
 
   // 如果新数组长度小于 4，去除空值项
-  return newArticleArray.filter(item => item)
+  return newArticleArray.filter((item:any) => item)
 }
 /**
  * 处理base64字符串
  * @param {*} base64String 
  * @returns 
  */
-const parseBase64 = (base64String) => {
+const parseBase64 = (base64String:any) => {
   const matches = base64String.match(/^data:(.+);base64,(.+)$/)
   if (!matches || matches.length !== 3) {
     throw new Error('Invalid base64 string')
@@ -56,7 +56,7 @@ const parseBase64 = (base64String) => {
   const data = matches[2]
   return { mimeType, data }
 }
-module.exports = {
+export {
   pool,
   dealWithTag,
   parseBase64
