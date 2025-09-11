@@ -74,6 +74,7 @@ const handleGetArticles = async () => {
   setTimeout(() => {
     isLoadingArticles.value = false
   }, 0)
+  console.log('articleList',articlesList.value)
 }
 
 // 页码切换
@@ -158,7 +159,7 @@ const handleChooseArticle = (item: iArticleItem) => {
       router.push({
         name: 'show',
         params: {
-          id: articleItem.value.arid
+          id: articleItem.value._id
         }
       } as RouteLocationRaw)
     }
@@ -179,7 +180,7 @@ const onError = (item: iArticleItem, type: ErrorImage) => {
   if (type === ErrorImage.Cover) {
     item.cover = test1
   } else if (type === ErrorImage.UserHeadPortrait) {
-    item.avatar = yxzq
+    item.user.avatar = yxzq
   }
 }
 /**
@@ -316,8 +317,8 @@ onMounted(async () => {
           <div class="tag">
             <span>标签</span>
             <ul>
-              <li v-for="(item) of tagList" :key="item.id"
-                :class="{ 'active': activeTagIdList.some((e) => e === item.id) }" @click="handleSearchByTag(item.id)">{{
+              <li v-for="(item) of tagList" :key="item._id"
+                :class="{ 'active': activeTagIdList.some((e) => e === item._id) }" @click="handleSearchByTag(item._id)">{{
                   item.tag }}</li>
             </ul>
           </div>
@@ -330,7 +331,7 @@ onMounted(async () => {
           <section class="card" v-show="isLoadingArticles === true" :style="{ opacity: '0' }">
 
           </section>
-          <section class="card" v-for="(item) of articlesList" :key="item.arid" @click="handleChooseArticle(item)">
+          <section class="card" v-for="(item) of articlesList" :key="item._id" @click="handleChooseArticle(item)">
             <div class="image">
               <el-image :src="item.cover || test1" alt="封面" class="cover" fit="cover" lazy
                 @error="onError(item, ErrorImage.Cover)" v-loading="item.loading[EArticlePhotoType.cover]"
@@ -342,10 +343,10 @@ onMounted(async () => {
               <h2>{{ item.head }}</h2>
               <span class="abstract">{{ item.digest }}</span>
               <div class="author">
-                <el-image :src="item.avatar || yxzq" alt="" @error="onError(item, ErrorImage.UserHeadPortrait)"
+                <el-image :src="item.user.avatar || yxzq" alt="" @error="onError(item, ErrorImage.UserHeadPortrait)"
                   class="userHeadPortrait" lazy v-loading="item.loading[EArticlePhotoType.userHeadPortrait]"
                   @load="onImageLoad(item, EArticlePhotoType.userHeadPortrait)" />
-                <span>{{ item.username }}</span>
+                <span>{{ item.user.username }}</span>
                 <time>{{ item.time }}</time>
                 <ul class="label">
                   <li v-for="(subItem, subIndex) of item.label" :key="subItem" :class="{ 'hidden': subIndex >= 2 }">

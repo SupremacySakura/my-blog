@@ -1,49 +1,72 @@
-import express, { Router, Request, Response } from "express";
-import { pool } from "../utils";
-const router: Router = express.Router();
+import express, { Router, Request, Response } from "express"
+import dayjs from "dayjs"
+import { db } from '../db/mongodb'
+import { Db } from "mongodb"
+const router: Router = express.Router()
+/**
+ * 获取朋友圈动态
+ * @param db 数据库连接
+ * @returns 动态
+ */
+const getMoments = async (db: Db) => {
+  const moments = await db.collection("moment")
+    .aggregate([
+      // 把 user_id 转成 ObjectId
+      {
+        $addFields: {
+          user_id: { $toObjectId: "$user_id" }
+        }
+      },
+      {
+        $lookup: {
+          from: "user",               // 关联的集合
+          localField: "user_id",      // message.user_id
+          foreignField: "_id",        // user._id
+          as: "user"                  // 结果存放到 user 字段
+        }
+      },
+      { $unwind: "$user" },           // user 是数组，解开成对象
+      { $sort: { time: -1 } }         // 按时间倒序
+    ])
+    .toArray()
 
-// MySql 查询语句
-const getMoments = `SELECT m.*, u.*
-FROM moment AS m
-INNER JOIN user_without_password AS u ON m.user_id = u.uid; `
-const getTechnology = 'select * from technology'
-
+  return moments.map(msg => ({
+    ...msg,
+    time: dayjs(msg.time).format("YYYY-MM-DD HH:mm:ss")
+  }))
+}
 // 查询朋友圈接口
-router.get('/', (req:Request, res:Response) => {
-  pool.query(getMoments, (err:any, result:any) => {
-    if (err) {
-      const str = {
-        code: 400,
-        message: '查询朋友圈失败',
-      }
-      res.send(str)
-      return console.log(err.message)
-    }
-    const str = {
+router.get('/', async (req: Request, res: Response) => {
+  try {
+    const data = await getMoments(db)
+    res.send({
       code: 200,
-      message: '查询朋友圈成功',
-      data: result.slice().reverse(),
-    }
-    res.send(str)
-  })
+      message: '查询成功',
+      data: data
+    })
+  } catch (err) {
+    res.send({
+      code: 500,
+      message: '查询失败',
+      error: err
+    })
+  }
 })
 // 查询技术栈接口
-router.get('/technology', (req:Request, res:Response) => {
-  pool.query(getTechnology, (err:any, result:any) => {
-    if (err) {
-      const str = {
-        code: 400,
-        message: '查询技术栈失败',
-      }
-      res.send(str)
-      return console.log(err.message)
-    }
-    const str = {
+router.get('/technology', async(req: Request, res: Response) => {
+  try {
+    const data = await db.collection('technology').find().toArray()
+    res.send({
       code: 200,
-      message: '查询技术栈成功',
-      data: result,
-    }
-    res.send(str)
-  })
+      message: '查询成功',
+      data: data
+    })
+  } catch (err) {
+    res.send({
+      code: 500,
+      message: '查询失败',
+      error: err
+    })
+  }
 })
 export default router

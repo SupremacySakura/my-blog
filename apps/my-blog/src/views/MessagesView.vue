@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 导入vue相关API
-import { ref, onMounted, useTemplateRef, watchEffect, nextTick, onUnmounted } from 'vue'
+import { ref, onMounted, useTemplateRef, watchEffect, nextTick, onUnmounted, watch, computed } from 'vue'
 // 导入默认图片
 import background from '@/assets/messageBackground.jpg'
 import user from '@/assets/user.png'
@@ -23,7 +23,6 @@ const { _user } = storeToRefs(useUserStore())
 const { _checkLogin } = useUserStore()
 // 导入类型
 import type { iMessageItem } from '@/types'
-import { EMessagePhotoType } from '@/types'
 
 // 弹幕--------------------
 let danmuPage = ref(1)
@@ -36,13 +35,7 @@ const handleGetdanmu = async () => {
   try {
     const res = await getDanmu(danmuPage.value)
     if (res.data.code === 200) {
-      // danmuList.value = []
       danmuList.value = res.data.data
-      danmuList.value.forEach((item) => {
-        if (!item.loading) {
-          item.loading = [true, true]
-        }
-      })
       danmuPage.value++
     } else {
       danmuPage.value = 0
@@ -94,12 +87,12 @@ watchEffect(() => {
           }
           item.addEventListener('mouseenter', () => {
             if (item.getAnimations().length > 0) {
-              item.getAnimations()[0].pause(); // 暂停动画
+              item.getAnimations()[0]?.pause(); // 暂停动画
             }
           })
           item.addEventListener('mouseleave', () => {
             if (item.getAnimations().length > 0) {
-              item.getAnimations()[0].play(); // 继续动画
+              item.getAnimations()[0]?.play(); // 继续动画
             }
           })
         })
@@ -130,17 +123,7 @@ const handleGetMessages = async () => {
   await handleGetMessagesNum()
   const res = await getMessages(page.value)
   if (+res.data.code === 200) {
-    messagesList.value = [...messagesList.value, ...res.data.data,].reduce((acc, current) => {
-      if (!acc.some((item: any) => item.id === current.id)) {
-        acc.push(current)
-      }
-      return acc
-    }, [])
-    messagesList.value.forEach((item) => {
-      if (!item.loading) {
-        item.loading = [true, true]
-      }
-    })
+    messagesList.value = res.data.data
   }
 }
 /**
@@ -152,69 +135,26 @@ const handleGetMessagesNum = async () => {
     messageNum.value = res.data.data || 0
   }
 }
-// 页码切换
-enum PageChange {
-  left = -1,
-  right = 1
+/**
+ * 页面减一
+ */
+const handleSubPage = () => {
+  if (page.value <= 1) return
+  page.value--
 }
 /**
- * 加载更多留言
+ * 页面加一
  */
-const handleGetMoreMessages = async (type: PageChange) => {
-  if (type === PageChange.left && page.value === 1) {
-    return
-  }
-  if (type === PageChange.right && page.value * 5 >= messageNum.value) {
-    return
-  }
-  isLoading.value = true
-  if (page.value % 4 === 0 && type === PageChange.right) {
-    activePage.value++
-  }
-  if (page.value % 4 === 1 && type === PageChange.left) {
-    activePage.value--
-  }
-  page.value += type
-  try {
-    await handleGetMessages()
-  } catch (error) {
-    ElMessage.error('加载资源失败')
-    console.log(error)
-    if (type = 1) {
-      page.value--
-    } else if (type = -1) {
-      page.value++
-    }
-  } finally {
-    isLoading.value = false
-  }
+const handleAddPage = () => {
+  if (page.value >= Math.ceil(messageNum.value / 5)) return
+  page.value++
 }
-/**
- * 跳转页码
- * @param index 页面
- */
-const handleGoToPage = async (index: number) => {
-  isLoading.value = true
-  const oldPage = page.value
-  page.value = index
-  try {
-    await handleGetMessages()
-  } catch (error) {
-    ElMessage.error('加载资源失败')
-    console.log(error)
-    page.value = oldPage
-  } finally {
-    isLoading.value = false
-  }
-}
-const activeList = ref<number[]>([])
-const activePage = ref(1)
-const initActiveList = () => {
-  activeList.value = []
-  for (let i = 1; i <= Math.ceil(messageNum.value / 5); i++) {
-    activeList.value.push(i)
-  }
-}
+watch(page, () => {
+  handleGetMessages()
+})
+const rangePgae = computed(() => {
+  return [page.value - 2, page.value - 1, page.value, page.value + 1, page.value + 2].filter((item) => item > 0 && item <= Math.ceil(messageNum.value / 5))
+})
 // 留言--------------------
 
 // 发布留言--------------------
@@ -232,7 +172,7 @@ const handlePublish = async () => {
   let params = {
     content: content.value,
     time: time,
-    user_id: _user.value?.uid
+    user_id: _user.value?._id
   }
   content.value = ''
   const resP = await postMessages(params)
@@ -241,13 +181,10 @@ const handlePublish = async () => {
       message: '发布成功',
       type: 'success',
     })
+    page.value = 1
+    handleGetMessages()
   } else {
     ElMessage.error('发布失败')
-  }
-  const res = await getMessages(1)
-  if (+res.data.code === 200) {
-    messagesList.value.unshift(res.data.data[0])
-    messagesList.value[0].loading = [true, true]
   }
 }
 // 发布留言--------------------
@@ -255,24 +192,7 @@ const handlePublish = async () => {
 // 图片懒加载--------------------
 // 处理错误图片
 const onError = (item: iMessageItem) => {
-  item.avatar = user
-}
-/**
- * 图片加载完成
- * @param item 文章类
- * @param type 图片类型
- */
-const onImageLoad = (item: iMessageItem, type: EMessagePhotoType) => {
-  switch (type) {
-    case EMessagePhotoType.Danmu:
-      item.loading[EMessagePhotoType.Danmu] = false
-      break
-    case EMessagePhotoType.Message:
-      item.loading[EMessagePhotoType.Message] = false
-      break
-    default:
-      break
-  }
+  item.user.avatar = user
 }
 // 图片懒加载--------------------
 onMounted(async () => {
@@ -283,7 +203,7 @@ onMounted(async () => {
   } catch (error) {
     ElMessage.error(`加载资源失败${error}`)
   }
-  initActiveList()
+  console.log('messagesList', messagesList.value)
 })
 onUnmounted(() => {
 })
@@ -303,10 +223,9 @@ onUnmounted(() => {
 
       </div>
       <div class="showItem" v-for="item of danmuList" ref="showList" :key="item.id">
-        <el-image :src="item.avatar || user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
-          v-loading="item.loading[EMessagePhotoType.Danmu]"
-          @load="onImageLoad(item, EMessagePhotoType.Danmu)"></el-image>
-        <span class="name">{{ item.username }}:</span>
+        <el-image :src="item.user.avatar || user" alt="头像" class="custom-image" fit="cover" lazy
+          @error="onError(item)"></el-image>
+        <span class="name">{{ item.user.username }}:</span>
         <span class="content">{{ item.content }}</span>
       </div>
     </section>
@@ -325,14 +244,13 @@ onUnmounted(() => {
       <div class="showTop">
         <h4>评论数量:{{ messageNum }}</h4>
       </div>
-      <div class="messagesItem" v-for="item of messagesList.slice((page - 1) * 5, page * 5)" :key="item.id">
+      <div class="messagesItem" v-for="item of messagesList" :key="item.id">
         <section class="leftSection">
-          <el-image :src="item.avatar || user" alt="头像" class="custom-image" fit="cover" lazy @error="onError(item)"
-            v-loading="item.loading[EMessagePhotoType.Message]"
-            @load="onImageLoad(item, EMessagePhotoType.Message)"></el-image>
+          <el-image :src="item.user.avatar || user" alt="头像" class="custom-image" fit="cover" lazy
+            @error="onError(item)"></el-image>
         </section>
         <section class="rightSection">
-          <h4>{{ item.username }}</h4>
+          <h4>{{ item.user.username }}</h4>
           <p>{{ item.content }}</p>
           <div>
             <time>{{ item.time }}</time>
@@ -343,14 +261,14 @@ onUnmounted(() => {
     </section>
     <section class="moreSection">
       <ul>
-        <li @click="handleGetMoreMessages(PageChange.left)" :class="{ 'disabled': page === 1 }">
+        <li @click="handleSubPage()" :class="{ 'disabled': page === 1 }">
           <el-icon>
             <ArrowLeft />
           </el-icon>
         </li>
-        <li v-for="item of activeList.slice((activePage - 1) * 4, activePage * 4)" :key="item"
-          :class="{ 'active': page === item }" @click="handleGoToPage(item)">{{ item }}</li>
-        <li @click="handleGetMoreMessages(PageChange.right)" :class="{ 'disabled': page * 5 >= messageNum }">
+        <li v-for="item in rangePgae" :key="item" :class="{ 'active': page === item }" @click="page = item">{{ item }}
+        </li>
+        <li @click="handleAddPage()" :class="{ 'disabled': page >= Math.ceil(messageNum / 5) }">
           <el-icon>
             <ArrowRight />
           </el-icon>

@@ -200,7 +200,7 @@ onUnmounted(() => {
       <!-- 左侧标签 -->
       <section class="label">
         <ul>
-          <li v-for="item of labelList" :key="item.id"
+          <li v-for="item of labelList" :key="item._id"
             :style="{ color: item.color, backgroundColor: item.backgroundColor }">
             {{ item.text }}</li>
         </ul>

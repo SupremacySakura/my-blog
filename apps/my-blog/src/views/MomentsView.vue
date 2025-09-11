@@ -28,7 +28,7 @@ const momentsList = ref<iMomentItem[]>([])
  * @param item 接收一个朋友圈类
  */
 const onUserImageError = (item: iMomentItem) => {
-  item.avatar = yxzq
+  item.user.avatar = yxzq
 }
 
 /**
@@ -45,6 +45,7 @@ onMounted(async () => {
   } catch (error) {
     ElMessage.error(`加载资源失败${error}`)
   }
+  console.log('momentsList', momentsList.value)
 })
 
 </script>
@@ -66,9 +67,9 @@ onMounted(async () => {
         <div class="moment">
           <section>
             <div>
-              <el-image :src="item.avatar || yxzq" alt="头像" class="custom-image" fit="cover" lazy
+              <el-image :src="item.user.avatar || yxzq" alt="头像" class="custom-image" fit="cover" lazy
                 @error="onUserImageError(item)" v-loading="item.loading" @load="onMomentImageLoad(item)"></el-image>
-              <span>{{ item.username }}</span>
+              <span>{{ item.user.username }}</span>
             </div>
             <div>
               {{ item.content }}

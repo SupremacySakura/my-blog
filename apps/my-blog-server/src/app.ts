@@ -1,20 +1,20 @@
 require('dotenv').config()
-import { Request, Response, NextFunction } from "express";
-import express from "express";
-import path from "path";
-import cookieParser from "cookie-parser";
-import logger from "morgan";
-import cors from "cors";
+import { Request, Response, NextFunction } from "express"
+import express from "express"
+import path from "path"
+import cookieParser from "cookie-parser"
+import logger from "morgan"
+import cors from "cors"
 
 // 路由
-import loginRouter from "./routes/login";
-import messagesRouter from "./routes/messages";
-import articlesRouter from "./routes/articles";
-import momentsRouter from "./routes/moments";
-import indexRouter from "./routes/asset";
-import myRouter from "./routes/my";
-import friendsRouter from "./routes/friends";
-import userRouter from "./routes/user";
+import loginRouter from "./routes/login"
+import messagesRouter from "./routes/messages"
+import articlesRouter from "./routes/articles"
+import momentsRouter from "./routes/moments"
+import indexRouter from "./routes/asset"
+import myRouter from "./routes/my"
+import friendsRouter from "./routes/friends"
+import userRouter from "./routes/user"
 
 var app = express()
 
@@ -58,15 +58,15 @@ apiRouter.use('/user', userRouter)
 app.use('/api', apiRouter)
 // error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  const status = err.status || 500;
-  const message = err.message || "Internal Server Error";
+  const status = err.status || 500
+  const message = err.message || "Internal Server Error"
 
   res.status(status).json({
     success: false,
     message,
     error: req.app.get("env") === "development" ? err : {},
-  });
-});
+  })
+})
 const port = Number(process.env.PORT) || 5050
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`)

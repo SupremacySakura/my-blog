@@ -16,7 +16,7 @@ import FeiShuDoc from '../components/FeiShuDoc.vue'
 const article = ref<iArticleItem>()
 onMounted(() => {
   //初始化
-  article.value = _articlesList.filter(item => item.arid === +route.params.id)[0]
+  article.value = _articlesList.filter(item => item._id === +route.params.id)[0]
 })
 </script>
 

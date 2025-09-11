@@ -29,7 +29,7 @@ const checkLogin = () => {
 }
 // 刷新token
 const refreshToken = () => {
-    return request.post('/api/login/refresh',null, {
+    return request.post('/api/login/refresh',{}, {
         __isRefreshToken: true
     } as AxiosRequestConfig & { __isRefreshToken: boolean })
 }

@@ -1,6 +1,6 @@
 // 用户类型接口 
 interface iUser {
-  uid: number
+  _id: number
   username: string
   password: string
   avatar: string
@@ -12,11 +12,11 @@ interface iTabBarItem {
   id: number
   text: string
   path: string
-  isNeedLogin?:boolean
+  isNeedLogin?: boolean
 }
 // 文章类型接口
-interface iArticleItem extends iUser{
-  arid: number
+interface iArticleItem {
+  _id: number
   head: string
   digest: string
   article: string
@@ -24,6 +24,7 @@ interface iArticleItem extends iUser{
   cover: string
   label: string[]
   loading: boolean[] // 第一项表示头像加载,第二项表示封面加载
+  user: iUser
 }
 // 声明加载文章图片枚举
 enum EArticlePhotoType {
@@ -32,17 +33,18 @@ enum EArticlePhotoType {
 }
 
 // 友链类型接口
-interface iFriendItem extends iUser {
+interface iFriendItem {
   id: number
   name: string
   label: string
   url: string
   loading: boolean
+  user: iUser
 }
 
 // 标签类型接口
 interface iLabelItem {
-  id: number
+  _id: number
   text: string
   color: string
   backgroundColor: string
@@ -50,7 +52,7 @@ interface iLabelItem {
 
 // 个人信息类型接口
 interface iInformation extends iUser {
-  id: number
+  _id: number
   content: string
   introduce: string
   identity: string
@@ -58,24 +60,21 @@ interface iInformation extends iUser {
 }
 
 // 评论类型接口
-interface iMessageItem extends iUser {
+interface iMessageItem {
   id: number
   content: string
   time: string
   address: string
   loading: boolean[] // 第一项表示弹幕,第二项表示留言
+  user: iUser
 }
-enum EMessagePhotoType {
-  Danmu = 0,
-  Message = 1
-}
-
 // 朋友圈类型接口
-interface iMomentItem extends iUser {
+interface iMomentItem {
   id: number
   time: string
   content: string
   loading: boolean
+  user: iUser
 }
 
 // 技术栈类型接口
@@ -101,7 +100,7 @@ interface iRowItem {
 }
 // 文章标签类型接口
 interface iTag {
-  id: number
+  _id: number
   tag: string
 }
 // 标题类型接口
@@ -113,7 +112,7 @@ interface iTocItem {
 }
 // 公告类型接口
 interface iNotice {
-  id: number
+  _id: string
   notice: string
 }
 
@@ -135,5 +134,4 @@ export type {
 export {
   EArticlePhotoType,
   EWaterFallPhotoType,
-  EMessagePhotoType,
 }

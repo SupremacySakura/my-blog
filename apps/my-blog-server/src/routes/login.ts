@@ -1,16 +1,12 @@
-import express, { Router, Request, Response } from "express";
-import { pool } from "../utils"; 
-import jwt from "jsonwebtoken";
-import { verifyToken, verifyRefreshToken } from "../middlewares";
-import sendVerificationEmail from "../utils/mail";
-
-const router: Router = express.Router();
+import express, { Router, Request, Response } from "express"
+import jwt from "jsonwebtoken"
+import { verifyToken, verifyRefreshToken } from "../middlewares"
+import sendVerificationEmail from "../utils/mail"
+import { db } from '../db/mongodb'
+import { ObjectId } from "mongodb"
+const router: Router = express.Router()
 // 验证码缓存
 let verificationCodes = new Map()
-// MySQL 查询
-const getUserByUsername = 'select * from user where username = ?'
-const getUserByUID = 'select * from user where uid = ?'
-const register = 'insert into user (username,password,email,avatar) values (?,?,?,?)'
 // 秘钥与配置
 const accessSecret = 'my-blog'
 const refreshSecret = 'my-blog-refresh'
@@ -18,21 +14,14 @@ const accessOptions = {
     expiresIn: 10 * 60
 }
 const refreshOptions = {
-    expiresIn: 7 * 24 *60 *60
+    expiresIn: 7 * 24 * 60 * 60
 }
 // 登录接口
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
     const { username, password } = req.body
-    pool.query(getUserByUsername, [username], (err: any, result: any) => {
-        if (err) {
-            const str = {
-                code: 400,
-                message: '登录失败',
-            }
-            res.send(str)
-            return console.log(err.message)
-        }
-        if (result.length === 0) {
+    try {
+        const result = await db.collection('user').findOne({ username })
+        if (!result) {
             const str = {
                 code: 400,
                 message: '用户不存在',
@@ -40,16 +29,16 @@ router.post('/', (req: Request, res: Response) => {
             res.send(str)
             return
         }
-        if (result[0].password === password) {
+        if (result.password === password) {
             const payload = {
-                uid: result[0].uid,
+                uid: result._id,
                 username: username,
             }
             const str = {
                 code: 200,
                 message: '登录成功',
                 data: {
-                    ...result[0],
+                    ...result,
                     password: '',
                 }
             }
@@ -63,8 +52,13 @@ router.post('/', (req: Request, res: Response) => {
             }
             res.send(str)
         }
-    })
-
+    } catch (err) {
+        res.send({
+            code: 500,
+            message: '服务器错误',
+            error: err
+        })
+    }
 })
 router.get('/checkLogin', verifyToken, (req: Request, res: Response) => {
     const str = {
@@ -99,50 +93,60 @@ router.post('/register', async (req: Request, res: Response) => {
     if (verificationCode.code !== code) {
         return res.json({ message: '验证码错误', code: 400 })
     }
-    pool.query(getUserByUsername, [username], (err: any, result: any) => {
-        if (err) {
-            return res.json({ message: '服务器错误', code: 500 })
+    try {
+        const result = await db.collection('user').findOne({ username })
+        if (result) {
+            const str = {
+                code: 400,
+                message: '用户已存在',
+            }
+            res.send(str)
+            return
         }
-        if (result.length > 0) {
-            return res.json({ message: '用户名已存在', code: 400 })
-        } else {
-            pool.query(register, [username, password, email, 'http://8.137.77.95:3100/resource/blog/vue3-background.jpg'], (error: any, result2: any) => {
-                if (error) {
-                    return res.json({ message: '服务器错误' })
-                }
-                return res.json({ message: '注册成功', code: 200 })
-            })
-        }
-    })
+        const data = await db.collection('user').insertOne({ username, password, email })
+        res.send({
+            code: 200,
+            message: '注册成功',
+            data,
+        })
+    } catch (err) {
+        res.send({
+            code: 500,
+            message: '服务器错误',
+            error: err
+        })
+    }
 })
 // 延迟token有效期
 router.post('/refresh', verifyRefreshToken, async (req: any, res: Response) => {
     const token = req.token
     let payload = jwt.decode(token) as any
-    // 如果前面校验通过，再查询数据库
-    pool.query(getUserByUID, [payload?.uid], (err:any, result:any) => {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).json({ message: '刷新失败' }) // ❗加 return
-        }
-
+    try {
+        // 如果前面校验通过，再查询数据库
+        const result = await db.collection('user').findOne({ _id: new ObjectId(payload?.uid as string) })
         const newPayload = {
             uid: payload.uid,
             username: payload.username,
-        };
+        }
 
-        const accessToken = jwt.sign(newPayload, accessSecret, accessOptions);
+        const accessToken = jwt.sign(newPayload, accessSecret, accessOptions)
 
         const responseData = {
             code: 200,
             message: '刷新成功',
             data: {
-                ...result[0],
+                ...result,
                 password: '', // 清空密码
             },
-        };
+        }
 
         res.header('Authorization', `Bearer ${accessToken}`).send(responseData) // ✅ 只发一次响应
-    });
+    } catch (err) {
+        res.send({
+            code: 500,
+            message: '服务器错误',
+            error: err
+        })
+    }
 })
 export default router

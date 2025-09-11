@@ -21,7 +21,7 @@ const friendsList = ref<iFriendItem[]>([])
  * @param item 接收一个朋友类
  */
 const onError = (item: iFriendItem) => {
-  item.avatar = user
+  item.user.avatar = user
 }
 /**
  * 获取朋友列表
@@ -47,7 +47,7 @@ const handleGetNotice = async () => {
 // 公告
 const aboutList = ref<iNotice[]>([
   {
-    id: 0,
+    _id: '0',
     notice: '下面申请友链'
   }
 ])
@@ -85,7 +85,7 @@ const handleApply = async () => {
       return
     }
     const res = await postFriend(
-      _user.value?.uid as number,
+      _user.value?._id as number,
       name.value,
       label.value,
       url.value,
@@ -122,7 +122,7 @@ onMounted(async () => {
         <h2 class="defaultCursor">友链站点</h2>
         <ul class="cardList">
           <li v-for="item of friendsList" :key="item.id" class="cardItem" @click="handleGoPage(item)">
-            <el-image :src="item.avatar || user" alt="头像" fit="cover" lazy class="user" @error="onError(item)"
+            <el-image :src="item.user.avatar || user" alt="头像" fit="cover" lazy class="user" @error="onError(item)"
               v-loading="item.loading" @load="onImageLoad(item)" />
             <div class="info">
               <h4>{{ item.name }}</h4>
@@ -134,7 +134,7 @@ onMounted(async () => {
       <div class="section">
         <h2 class="defaultCursor">公告</h2>
         <ul class="aboutList">
-          <li v-for="item of aboutList" :key="item.id" class="aboutItem">
+          <li v-for="item of aboutList" :key="item._id" class="aboutItem">
             <span class=" lineWith">{{ item.notice }}</span>
           </li>
         </ul>

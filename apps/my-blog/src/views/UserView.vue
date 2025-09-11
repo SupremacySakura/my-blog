@@ -24,9 +24,9 @@ const setAvatar = async (e: Event) => {
         avatar.value = null
     }
     if (avatar.value) {
-        if (_user.value && _user.value.uid) {
+        if (_user.value && _user.value._id) {
             const formData = new FormData()
-            formData.set('uid', _user.value.uid.toString())
+            formData.set('uid', _user.value._id.toString())
             formData.set('avatar', avatar.value)
             try {
                 const res = await postAvatar(formData)
@@ -93,7 +93,7 @@ const handleChangeUsername = async () => {
         handleChangeStatus(eChangeStatus.USERNAME)
         return
     }
-    const uid = _user.value?.uid
+    const uid = _user.value?._id
     if (!uid) {
         ElMessage.error('请先登录')
         router.push('/login')
@@ -122,7 +122,7 @@ const handleChangeEmail = async () => {
         handleChangeStatus(eChangeStatus.EMAIL)
         return
     }
-    const uid = _user.value?.uid
+    const uid = _user.value?._id
     if (!uid) {
         ElMessage.error('请先登录')
         router.push('/login')
@@ -151,7 +151,7 @@ const handleChangeAddress = async () => {
         handleChangeStatus(eChangeStatus.ADDRESS)
         return
     }
-    const uid = _user.value?.uid
+    const uid = _user.value?._id
     if (!uid) {
         ElMessage.error('请先登录')
         router.push('/login')
@@ -206,7 +206,7 @@ const handleChangeAddress = async () => {
                     <div class="info-section">
                         <div class="info-group">
                             <label class="info-label">用户ID</label>
-                            <div class="info-value">{{ _user?.uid }}</div>
+                            <div class="info-value">{{ _user?._id }}</div>
                         </div>
 
                         <div class="info-group">
