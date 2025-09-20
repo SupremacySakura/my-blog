@@ -1,8 +1,12 @@
-"use client"
+'use client'
 import React from 'react'
-import Link from 'next/link';
-import { ModeToggle } from '../ThemeMode';
+import Link from 'next/link'
+import { ModeToggle } from '../ThemeMode'
+import favicon from '@/app/favicon.ico'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 export default function NavBar() {
+    const pathname = usePathname()
     const list = [
         { name: '主页', path: '/' },
         { name: '归档', path: '/article' },
@@ -10,13 +14,19 @@ export default function NavBar() {
         { name: '关于我', path: '/about' },
     ]
     return (
-        <div className="flex w-full h-12 justify-between items-center bg-blue-300/50 dark:bg-gray-800/50 text-black dark:text-white pl-4 pr-4">
+        <div className='fixed z-[99] flex w-full h-12 justify-between items-center bg-white-300/50 dark:bg-gray-800/50 text-black dark:text-white pl-4 pr-4 backdrop-blur-md backdrop-saturate-50'>
             {/* 左侧 */}
-            <div>余心知秋的博客</div>
+            <div className='flex gap-2 items-center'>
+                <Image src={favicon} alt='favicon' width={36} height={36} objectFit='cover'></Image>
+                余心知秋的博客
+            </div>
             {/* 中间 */}
             <div>
-                <ul className="flex gap-4">
-                    {list.map((item) => (<li className='hover:text-blue-500 hover:bg-blue-200 p-2 rounded-lg'><Link href={item.path}>{item.name}</Link></li>))}
+                <ul className='flex gap-4'>
+                    {list.map((item) => {
+                        const isActive = pathname === item.path
+                        return (<li key={item.name} className={`w-20 text-center hover:text-blue-500 hover:bg-blue-200 p-2 rounded-lg transition-colors duration-300 ${isActive ? 'text-blue-600 dark:text-blue-400 font-bold border-b-2 border-blue-500' : ''}`}><Link href={item.path}>{item.name}</Link></li>)
+                    })}
                 </ul>
             </div>
             {/* 右侧 */}

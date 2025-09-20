@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning style={{ scrollbarWidth: "none" }}>
         <head />
         <body>
           <ThemeProvider
@@ -25,8 +25,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Image src={background} alt="" className="absolute top-0 left-0 w-full h-screen object-cover z-[-1]"></Image>
-            <NavBar />
+            <Image src={background} alt="" className="fixed top-0 left-0 w-full h-screen object-cover z-[-1]"></Image>
+            <NavBar/>
             {children}
           </ThemeProvider>
         </body>
