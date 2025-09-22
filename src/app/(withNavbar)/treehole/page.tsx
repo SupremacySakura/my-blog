@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import treehole from '../../../public/treehole.png'
+import treehole from '../../../../public/treehole.png'
 import { IMessageItem } from '@/types/message'
 import { random } from '@/utils'
 

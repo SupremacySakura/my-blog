@@ -24,7 +24,6 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <NavBar />
             {children}
             <VisitLog></VisitLog>
           </ThemeProvider>

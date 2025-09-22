@@ -30,8 +30,13 @@ export default function NavBar() {
                 </ul>
             </div>
             {/* 右侧 */}
-            <div>
+            <div className='flex gap-2 items-center h-full'>
                 <ModeToggle></ModeToggle>
+                <Link href='/login' className="px-4 py-2 rounded-lg font-medium 
+               bg-gradient-to-r from-blue-500 to-blue-600 
+               text-white shadow-md 
+               hover:from-blue-600 hover:to-blue-700 
+               active:scale-95 transition-all duration-300"><span>登录</span></Link>
             </div>
         </div>
     )
