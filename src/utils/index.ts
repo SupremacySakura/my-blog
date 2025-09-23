@@ -4,10 +4,10 @@
  * @param b 
  * @returns 
  */
-const random = (a:number,b:number)=>{
- return Math.random()*(b-a) + a
+const random = (a: number, b: number) => {
+  return Math.random() * (b - a) + a
 }
 
-export{
+export {
   random,
 }

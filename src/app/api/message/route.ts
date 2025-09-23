@@ -1,7 +1,7 @@
 import clientPromise from "@/lib/mongodb"
-import { Db } from "mongodb"
+import { Db, ObjectId } from "mongodb"
 import { NextResponse } from "next/server"
-
+import { verifyToken } from "@/lib/middleware/auth"
 const getMessages = async (db: Db, page = 1, pageSize = 10) => {
     const skip = (page - 1) * pageSize
 
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
     const page = Number(url.searchParams.get('page')) || 1
     const pageSize = Number(url.searchParams.get('pageSize')) || 5
     const client = await clientPromise
-    const db = client.db("MyBlog")
+    const db = client.db('MyBlog')
     const message = await getMessages(db, page, pageSize)
     const data = {
         code: 0,
@@ -53,3 +53,30 @@ export async function GET(request: Request) {
     }
     return NextResponse.json(data)
 }
+
+const addMessage = async (request: Request, payload: { uid: string, username: string }) => {
+    const body = await request.json()
+    const client = await clientPromise
+    const db = client.db('MyBlog')
+    const { content } = body
+    const newMessage = {
+        content,
+        user_id: new ObjectId(payload.uid),
+        time: new Date().toISOString(),
+    }
+    try {
+        const data = await db.collection('message').insertOne(newMessage)
+        return NextResponse.json({
+            code: 200,
+            message: '发布留言成功',
+            data: data
+        })
+    } catch (err: any) {
+        return NextResponse.json({
+            code: 400,
+            message: '发布留言失败',
+            error: err.message
+        })
+    }
+}
+export const POST = verifyToken(addMessage)

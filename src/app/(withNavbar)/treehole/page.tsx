@@ -4,14 +4,33 @@ import Image from 'next/image'
 import treehole from '../../../../public/treehole.png'
 import { IMessageItem } from '@/types/message'
 import { random } from '@/utils'
+import http from '@/lib/http'
+import { toast } from "sonner"
 
 export default function Page() {
   const [danmuList, setDanmuList] = useState<IMessageItem[]>([])
+  const [content, setContent] = useState('')
   const [page, setPage] = useState(1)
   const showList = useRef<HTMLDivElement[]>([])
   const board = useRef<HTMLDivElement>(null)
   const countRef = useRef(0) // ✅ 用 ref 保存计数
-
+  const handleSubmit =async (e: React.FormEvent<HTMLFormElement>) => { 
+    e.preventDefault()
+    if (!content) return
+    const res = await http.fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message`, {
+      method: 'POST',
+      body: JSON.stringify({
+        content
+      })
+    })
+    const data = await res.json()
+    if (data.code === 200) {
+      setPage(1)
+      getDanmu(1)
+      setContent('')
+      toast.success('留言成功')
+    }
+  }
   const getDanmu = async (page: number) => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/message?page=${page}&pageSize=10`
@@ -84,12 +103,12 @@ export default function Page() {
       <section className="relative bg-gray-300/50 w-full h-screen pt-12 flex flex-col items-center justify-center">
         <div className="w-full max-w-md mx-auto h-40 flex flex-col items-center justify-center bg-blue-400/40 dark:bg-gray-400/40 rounded-2xl p-4 shadow-md">
           <form className="w-full flex items-center space-x-2"
-            onSubmit={(e) => {
-              e.preventDefault() // 阻止默认刷新
-              console.log('提交逻辑在这里处理')
-            }}>
+            onSubmit={handleSubmit}>
             <input
               type="text"
+              name="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
               placeholder="写下你的留言..."
               className="flex-1 px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/70 backdrop-blur-md text-black"
             />

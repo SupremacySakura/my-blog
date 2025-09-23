@@ -1,12 +1,19 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ModeToggle } from '../ThemeMode'
 import favicon from '@/app/favicon.ico'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { useUserStore } from '@/store/user'
 export default function NavBar() {
     const pathname = usePathname()
+    const userStore = useUserStore()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
     const list = [
         { name: '主页', path: '/' },
         { name: '归档', path: '/article' },
@@ -32,11 +39,35 @@ export default function NavBar() {
             {/* 右侧 */}
             <div className='flex gap-2 items-center h-full'>
                 <ModeToggle></ModeToggle>
-                <Link href='/login' className="px-4 py-2 rounded-lg font-medium 
-               bg-gradient-to-r from-blue-500 to-blue-600 
-               text-white shadow-md 
-               hover:from-blue-600 hover:to-blue-700 
-               active:scale-95 transition-all duration-300"><span>登录</span></Link>
+                {mounted && !userStore.isLogin() ? (
+                    <Link
+                        href="/login"
+                        className="
+                            px-4 py-2 rounded-lg font-medium
+                            bg-gradient-to-r from-blue-500 to-blue-600
+                            text-white shadow-md
+                            hover:from-blue-600 hover:to-blue-700
+                            active:scale-95 transition-all duration-300
+                            dark:from-blue-700 dark:to-blue-800 dark:hover:from-blue-800 dark:hover:to-blue-900
+                            "
+                    >
+                        <span>登录</span>
+                    </Link>
+                ) : (
+                    <button
+                        onClick={() => userStore.logout()}
+                        className="
+                            px-4 py-2 rounded-lg font-medium
+                            bg-gradient-to-r from-red-500 to-red-600
+                            text-white shadow-md
+                            hover:from-red-600 hover:to-red-700
+                            active:scale-95 transition-all duration-300
+                            dark:from-red-700 dark:to-red-800 dark:hover:from-red-800 dark:hover:to-red-900
+                            "
+                    >
+                        登出
+                    </button>
+                )}
             </div>
         </div>
     )
