@@ -13,6 +13,7 @@ import { ITechnology } from "@/types/technology"
 import { IUser } from "@/types/user"
 import background from "../../../public/background.jpg"
 import Image from "next/image"
+import { getArticle } from "@/service"
 export default async function Home() {
     const saying: ISaying[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saying`, { method: "GET" })).json()).data
     const owner: IUser = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/user/owner`, { method: "GET" })).json()).data
@@ -20,7 +21,7 @@ export default async function Home() {
     const label: ILabel[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/label`, { method: "GET" })).json()).data
     const technology: ITechnology[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/technology`, { method: "GET" })).json()).data
     const statistics: IStatistics = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/statistics`, { method: "GET" })).json()).data
-    const article: IArticleItem[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article`, { method: "GET" })).json()).data
+    const article: IArticleItem[] = await getArticle()
     return (
         <div className="w-full h-screen">
             <Image src={background} alt="" className="fixed top-0 left-0 w-full h-screen object-cover z-[-1]"></Image>

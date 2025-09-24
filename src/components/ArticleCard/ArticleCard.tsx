@@ -8,7 +8,7 @@ export default function ArticleCard(params: { article: IArticleItem }) {
         return date.toLocaleDateString()
     }
     return (
-        <Link href={`/article/${article._id}`}>
+        <Link href={`/article/${article._id}`} className='w-full'>
         <div className='w-full h-50 gap-2 bg-white dark:bg-gray-600 p-3 rounded-lg flex'>
             <img src={article.cover} alt="" className='w-65 h-full flex-shrink-0 object-cover rounded-lg'/>
             <section className='flex flex-col gap-1 justify-between'>
