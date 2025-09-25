@@ -233,3 +233,25 @@
 .pause-hover:hover {
   animation-play-state: paused;
 }
+.lineWith {
+  background: linear-gradient(to right, #044, #544) no-repeat;
+  background-size: 0px 2px;
+  background-position: right bottom;
+  transition: background-size 0.5s;
+}
+
+.lineWith:hover {
+  background-size: 100% 2px;
+  background-position: left bottom;
+}
+.dark .lineWith {
+  background: linear-gradient(to right, rgba(246, 246, 246, 0.666), white) no-repeat;
+  background-size: 0px 2px;
+  background-position: right bottom;
+  transition: background-size 0.5s;
+}
+
+.dark .lineWith:hover {
+  background-size: 100% 2px;
+  background-position: left bottom;
+}

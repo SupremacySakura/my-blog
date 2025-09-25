@@ -18,7 +18,7 @@ export default function NavBar() {
         { name: '主页', path: '/' },
         { name: '归档', path: '/article' },
         { name: '树洞', path: '/treehole' },
-        { name: '关于我', path: '/about' },
+        { name: '友链', path: '/friend' },
     ]
     return (
         <div className='fixed z-[99] flex w-full h-12 justify-between items-center bg-white-300/50 dark:bg-gray-800/50 text-black dark:text-white pl-4 pr-4 backdrop-blur-md backdrop-saturate-50'>
