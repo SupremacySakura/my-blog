@@ -94,7 +94,7 @@ export default function Page() {
   }, [danmuList, page]) // ✅ 依赖改为 danmuList
 
   return (
-    <div ref={board} className="relative w-full h-screen overflow-hidden">
+    <div ref={board} className="w-full h-screen overflow-hidden">
       <Image
         src={treehole}
         alt="treehole"

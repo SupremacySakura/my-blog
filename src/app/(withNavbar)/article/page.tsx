@@ -7,7 +7,7 @@ import ArticleCard from '@/components/ArticleCard/ArticleCard'
 import { getArticle } from '@/service'
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import './index.css'
+import style from './index.module.css'
 export default function page() {
   const [article, setArticle] = useState<IArticleItem[]>([])
   const [page, setPage] = useState<number>(1)
@@ -27,15 +27,15 @@ export default function page() {
     })()
   }, [page])
   return (
-    <div className="relative w-ful h-full">
+    <div className="w-ful h-full">
       <Image
         src={articleBackground}
         alt="artcile"
         className="z-[-1] fixed w-full h-screen object-cover"
       />
-      <section className='w-full flex flex-col gap-4 p-22 items-center'>
+      <section className='w-full flex flex-col gap-4 p-4 md:p-10 xl:p-22 items-center'>
         {article.length > 0 && article.map((item, index) => (<ArticleCard key={item._id + index} article={item}></ArticleCard>))}
-        {loading && <div className="loader"></div>}
+        {loading && <div className={style.loader}></div>}
         {!loading && <Button onClick={visitMore} variant={'outline'} size={'sm'} className='w-30'>查看更多</Button>}
       </section>
     </div>

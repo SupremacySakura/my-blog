@@ -1,6 +1,6 @@
 
-import NavBar from "@/components/NavBar/NavBar"
-
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -8,8 +8,13 @@ export default function RootLayout({
 }>) {
     return (
         <>
-            <NavBar />
-            {children}
+            <SidebarProvider>
+                <AppSidebar />
+                <main className="w-full relative">
+                    <SidebarTrigger className="fixed top-0 z-[99]"/>
+                    {children}
+                </main>
+            </SidebarProvider>
         </>
     )
 }

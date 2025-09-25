@@ -10,7 +10,7 @@ export default async function page() {
   const notice: INotice[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend/notice`, { method: "GET" })).json()).data
   const friendList: IFriend[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, { method: "GET" })).json()).data
   return (
-    <div className="relative w-ful h-full">
+    <div className="w-ful h-full">
       <Image
         src={friendBackground}
         alt="artcile"
