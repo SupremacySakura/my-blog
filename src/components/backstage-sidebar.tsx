@@ -28,27 +28,27 @@ import { ModeToggle } from "./ThemeMode"
 const items = [
     {
         title: "主页",
-        url: "/",
+        url: "/backstage",
         icon: Home,
     },
     {
         title: "归档",
-        url: "/article",
+        url: "/backstage/article",
         icon: Inbox,
     },
     {
         title: "树洞",
-        url: "/treehole",
+        url: "/backstage/treehole",
         icon: TreePine,
     },
     {
         title: "友链",
-        url: "/friend",
+        url: "/backstage/friend",
         icon: Handshake,
     },
 ]
 
-export function AppSidebar() {
+export function BackstageSidebar() {
     const pathname = usePathname()
     const userStore = useUserStore()
     const router = useRouter()
@@ -97,9 +97,9 @@ export function AppSidebar() {
                                 <DropdownMenuItem>
                                     <span onClick={() => userStore.logout()}>Sign out</span>
                                 </DropdownMenuItem>
-                                {userStore.owner_token && <DropdownMenuItem>
-                                    <span onClick={() => router.push('/backstage')}>切换到后台</span>
-                                </DropdownMenuItem>}
+                                <DropdownMenuItem>
+                                    <span onClick={() => router.push('/')}>切换到前台</span>
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>}
                         {mounted && !userStore.isLogin() && (<SidebarMenuButton asChild>

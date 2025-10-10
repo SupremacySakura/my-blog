@@ -3,4 +3,5 @@ export interface ITechnology {
     text:string
     src:string
     icon:string
+    note:string
 }

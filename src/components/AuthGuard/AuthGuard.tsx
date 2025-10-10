@@ -1,0 +1,27 @@
+'use client'
+import http from "@/lib/http"
+import { useUserStore } from "@/store/user"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+
+export default function AuthGuard({ children }: { children: React.ReactNode }) {
+    const router = useRouter()
+    const { owner_token } = useUserStore()
+    const [checking, setChecking] = useState(true)
+
+    useEffect(() => {
+        (async () => {
+            const res = await http.fetch('/api/login/checkRole', { method: 'POST' })
+            const data = await res.json()
+            if (data.code !== 200) {
+                router.replace("/")
+            }
+            setChecking(false)
+        })()
+    }, [owner_token, router])
+    return (
+        <>
+            {checking && <div className='w-full h-full flex justify-center items-center'>Loading...</div>}
+            {!checking && children}
+        </>)
+}
