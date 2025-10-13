@@ -8,10 +8,12 @@ export interface IArticleItem {
     article: string
     time: string
     cover: string
-    tags: {
-        _id: string
-        tag: string
-    }[]
+    tags: ITag[]
     user: IUser
-    visit:number
+    visit: number
+}
+
+export interface ITag {
+    _id: string
+    tag: string
 }

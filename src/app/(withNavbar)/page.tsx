@@ -1,9 +1,9 @@
-import ArticleCard from "@/components/ArticleCard/ArticleCard"
-import IconMorphButton from "@/components/IconMorphButton/IconMorphButton"
-import LabelCard from "@/components/LabelCard/LabelCard"
-import StatisticsCard from "@/components/StatisticsCard/StatisticsCard"
-import TechStack from "@/components/TechStack/TechStack"
-import TypeWriter from "@/components/TypeWriter/TypeWriter"
+import ArticleCard from "@/components/business/ArticleCard/ArticleCard"
+import IconMorphButton from "@/components/my-ui/IconMorphButton/IconMorphButton"
+import LabelCard from "@/components/business/LabelCard/LabelCard"
+import StatisticsCard from "@/components/business/StatisticsCard/StatisticsCard"
+import TechStack from "@/components/business/TechStack/TechStack"
+import TypeWriter from "@/components/my-ui/TypeWriter/TypeWriter"
 import { IAddress } from "@/types/address"
 import { IArticleItem } from "@/types/article"
 import { ILabel } from "@/types/label"
@@ -46,7 +46,7 @@ export default async function Home() {
                 </section>
 
                 <section className="bg-gray-300/30 backdrop-blur-md rounded-lg p-4 flex flex-col gap-4">
-                    {article.length > 0 &&
+                    {article?.length > 0 &&
                         article.map((item) => (
                             <ArticleCard key={item._id} article={item} />
                         ))}

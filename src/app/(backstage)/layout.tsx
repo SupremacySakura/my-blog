@@ -1,7 +1,7 @@
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { BackstageSidebar } from "@/components/backstage-sidebar"
-import AuthGuard from "@/components/AuthGuard/AuthGuard"
+import { BackstageSidebar } from "@/components/business/BackStageSideBar"
+import AuthGuard from "@/components/business/AuthGuard/AuthGuard"
 export default function RootLayout({
     children,
 }: Readonly<{

@@ -26,7 +26,7 @@ export default function ArticleCard(params: { article: IArticleItem }) {
                     style={{ backgroundImage: `url(${article.cover})` }}
                 >
                     <img
-                        src={article.cover}
+                        src={article?.cover}
                         alt=""
                         className="hidden @md:block w-64 h-full object-cover rounded-lg"
                     />
@@ -43,29 +43,29 @@ export default function ArticleCard(params: { article: IArticleItem }) {
           "
                 >
                     <h1 className="text-lg font-bold overflow-hidden text-ellipsis break-words line-clamp-1 text-white @md:text-black dark:@md:text-white">
-                        {article.head}
+                        {article?.head}
                     </h1>
                     <p className="text-sm overflow-hidden text-ellipsis break-words line-clamp-3 text-white @md:text-gray-800 dark:@md:text-gray-200">
-                        {article.digest}
+                        {article?.digest}
                     </p>
                     <div className="flex gap-2 flex-wrap">
                         <img
-                            src={article.user.avatar}
+                            src={article?.user?.avatar}
                             alt=""
                             className="w-6 h-6 rounded-full"
                         />
                         <span className="text-white @md:text-black dark:@md:text-white">
-                            {article.user.username}
+                            {article?.user?.username}
                         </span>
                         <span className="flex items-center px-2 rounded-sm text-xs text-gray-200 bg-gray-500 @md:text-gray-600 @md:bg-gray-300">
                             {`发布于${formateTime(article.time)}`}
                         </span>
                         <span className="flex items-center px-2 rounded-sm text-xs text-blue-200 bg-blue-600 @md:text-blue-600 @md:bg-blue-300">
-                            阅读:{article.visit || 0}
+                            阅读:{article?.visit || 0}
                         </span>
                     </div>
                     <ul className="flex gap-2 flex-wrap">
-                        {article.tags?.map((item) => (
+                        {article?.tags?.map((item) => (
                             <li
                                 key={item._id}
                                 className="text-xs px-2 py-1 rounded-sm bg-blue-500 text-white"

@@ -1,6 +1,6 @@
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
+import { AppSidebar } from "@/components/business/AppSideBar"
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -11,7 +11,7 @@ export default function RootLayout({
             <SidebarProvider>
                 <AppSidebar />
                 <main className="w-full relative">
-                    <SidebarTrigger className="fixed top-0 z-[99]"/>
+                    <SidebarTrigger className="fixed top-0 z-[99]" />
                     {children}
                 </main>
             </SidebarProvider>

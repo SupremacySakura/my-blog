@@ -22,7 +22,7 @@ import {
 import { usePathname, useRouter } from "next/navigation"
 import { useUserStore } from "@/store/user"
 import { useEffect, useState } from "react"
-import { ModeToggle } from "./ThemeMode"
+import { ModeToggle } from "../../my-ui/ThemeMode"
 
 // Menu items.
 const items = [

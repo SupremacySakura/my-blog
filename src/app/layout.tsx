@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import VisitLog from "@/components/VisitLog/VisitLog"
+import { ThemeProvider } from "@/components/my-ui/ThemeProvider"
+import VisitLog from "@/components/business/VisitLog/VisitLog"
 import { Toaster } from "@/components/ui/sonner"
 export const metadata: Metadata = {
   title: "余心知秋的博客",
