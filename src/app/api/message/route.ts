@@ -2,6 +2,41 @@ import clientPromise from "@/lib/mongodb"
 import { Db, ObjectId } from "mongodb"
 import { NextResponse } from "next/server"
 import { verifyToken } from "@/lib/middleware/auth"
+
+const addMessage = async (request: Request, payload: { uid: string, username: string }) => {
+    const body = await request.json()
+    const client = await clientPromise
+    const db = client.db('MyBlog')
+    const { content } = body
+    const newMessage = {
+        content,
+        user_id: new ObjectId(payload.uid),
+        time: new Date().toISOString(),
+    }
+    try {
+        const data = await db.collection('message').insertOne(newMessage)
+        return NextResponse.json({
+            code: 200,
+            message: '发布留言成功',
+            data: data
+        })
+    } catch (err: any) {
+        return NextResponse.json({
+            code: 400,
+            message: '发布留言失败',
+            error: err.message
+        })
+    }
+}
+export const POST = verifyToken(addMessage)
+export async function DELETE(request: Request) {
+    const { id } = await request.json()
+    if (!id) return NextResponse.json({ code: 1, message: "缺少 id" })
+    const client = await clientPromise
+    const db = client.db("MyBlog")
+    const result = await db.collection("message").deleteOne({ _id: new ObjectId(id) })
+    return NextResponse.json({ code: 0, data: result, message: "删除成功" })
+}
 const getMessages = async (db: Db, page = 1, pageSize = 10) => {
     const skip = (page - 1) * pageSize
 
@@ -53,30 +88,3 @@ export async function GET(request: Request) {
     }
     return NextResponse.json(data)
 }
-
-const addMessage = async (request: Request, payload: { uid: string, username: string }) => {
-    const body = await request.json()
-    const client = await clientPromise
-    const db = client.db('MyBlog')
-    const { content } = body
-    const newMessage = {
-        content,
-        user_id: new ObjectId(payload.uid),
-        time: new Date().toISOString(),
-    }
-    try {
-        const data = await db.collection('message').insertOne(newMessage)
-        return NextResponse.json({
-            code: 200,
-            message: '发布留言成功',
-            data: data
-        })
-    } catch (err: any) {
-        return NextResponse.json({
-            code: 400,
-            message: '发布留言失败',
-            error: err.message
-        })
-    }
-}
-export const POST = verifyToken(addMessage)

@@ -2,7 +2,7 @@ import { IUser } from "./user"
 
 // 评论类型接口
 export interface IMessageItem {
-    _id: number
+    _id: string
     content: string
     time: string
     user: IUser

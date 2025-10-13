@@ -1,9 +1,12 @@
 'use client'
-import TechnologyTable from '@/components/TechnologyTable/TechnologyTable'
+import ColorTable from '@/components/business/ColorTable'
+import LabelTable from '@/components/business/LabelTable'
+import TechnologyTable from '@/components/business/TechnologyTable'
 import React, { useState } from 'react'
 
 enum Mode {
   Technology = 'technology',
+  Color = 'color',
   Tag = 'tag',
 }
 
@@ -13,6 +16,7 @@ export default function Page() {
   // 导航项配置
   const navItems = [
     { key: Mode.Technology, label: '技术栈' },
+    { key:Mode.Color,label:'颜色'},
     { key: Mode.Tag, label: '标签' },
   ]
 
@@ -47,8 +51,15 @@ export default function Page() {
             <TechnologyTable />
           </div>
         )}
+        {mode === Mode.Color && (
+          <div className="text-blue-500">
+            <ColorTable />
+          </div>
+        )}
         {mode === Mode.Tag && (
-          <div className="text-blue-500">这里是【标签】内容</div>
+          <div className="text-blue-500">
+            <LabelTable />
+          </div>
         )}
       </div>
     </>

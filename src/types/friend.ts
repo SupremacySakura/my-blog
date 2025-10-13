@@ -6,4 +6,5 @@ export interface IFriend {
     label: string
     url: string
     user: IUser
+    status: number // 1 || 0
 }
