@@ -43,7 +43,7 @@ export default function TechnologyTable() {
             body: JSON.stringify({ id }),
         })
         const data = await res.json()
-        if (data.code === 200 || data.code === 0) {
+        if (data.code === 200) {
             toast.success("删除成功")
             fetchTechStacks()
         } else {
@@ -84,8 +84,8 @@ export default function TechnologyTable() {
 
         const res = await fetch(url, { method, body })
         const data = await res.json()
-
-        if (data.code === 0) {
+        console.log(data)
+        if (data.code === 200) {
             toast.success(isEdit ? "修改成功" : "添加成功")
             setOpen(false)
             fetchTechStacks()

@@ -1,12 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
 import friendBackground from '../../../../public/friend.png'
-import NoticeCard from '@/components/business/NoticeCard/NoticeCard'
+import NoticeCard from '@/components/business/NoticeCard'
 import { INotice } from '@/types/notice'
 import { IFriend } from '@/types/friend'
-import FriendCard from '@/components/business/FriendCard/FriendCard'
-import ApplyFriendDialog from '@/components/business/ApplyFriendDialog/ApplyFriendDialog'
-export default async function page() {
+import FriendCard from '@/components/business/FriendCard'
+import ApplyFriendDialog from '@/components/business/ApplyFriendDialog'
+export default async function Page() {
   const notice: INotice[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend/notice`, { method: "GET" })).json()).data
   const friendList: IFriend[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, { method: "GET" })).json()).data
   return (

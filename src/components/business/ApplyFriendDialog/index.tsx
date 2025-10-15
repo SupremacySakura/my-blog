@@ -23,7 +23,7 @@ export default function ApplyFriendDialog() {
             body: JSON.stringify({ name, label, url }),
         })
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success('申请成功')
         } else {
             toast.error(`申请失败${data.message}`)

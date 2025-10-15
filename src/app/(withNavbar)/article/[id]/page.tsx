@@ -2,7 +2,7 @@ import React from 'react'
 interface IParams {
     id: string
 }
-export default async function page({ params }: { params: IParams }) {
+export default async function Page({ params }: { params: IParams }) {
     const res = await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article/url?id=${params.id}`, { cache: "no-store" })).json()
     console.log(res)
     return (

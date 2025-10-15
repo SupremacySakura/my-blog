@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import articleBackground from '../../../../public/article.png'
 import { IArticleItem } from '@/types/article'
-import ArticleCard from '@/components/business/ArticleCard/ArticleCard'
+import ArticleCard from '@/components/business/ArticleCard'
 import { getArticle } from '@/service'
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import style from './index.module.css'
-export default function page() {
+export default function Page() {
   const [article, setArticle] = useState<IArticleItem[]>([])
   const [page, setPage] = useState<number>(1)
   const [loading, setLoading] = useState<boolean>(false)
@@ -22,7 +22,7 @@ export default function page() {
       if (newArticle?.length === 0) {
         toast.error('没有更多文章了')
       }
-      setArticle([...article, ...newArticle || []])
+      setArticle(prev => [...prev, ...(newArticle || [])])
       setLoading(false)
     })()
   }, [page])

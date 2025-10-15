@@ -1,22 +1,40 @@
 import clientPromise from "@/lib/mongodb"
 import { NextResponse } from "next/server"
 import { ObjectId } from "mongodb"
+/**
+ * 添加技术
+ * @param request 
+ * @returns 
+ */
 export async function POST(request: Request) {
-    const { text, src, icon, note } = await request.json()
-    const client = await clientPromise
-    const db = client.db("MyBlog")
-    const data = await db.collection('technology').insertOne({
-        text,
-        src,
-        icon,
-        note
-    })
-    return NextResponse.json({
-        code: 0,
-        data,
-        message: '添加成功'
-    })
+    try {
+        const { text, src, icon, note } = await request.json()
+        const client = await clientPromise
+        const db = client.db("MyBlog")
+        const data = await db.collection('technology').insertOne({
+            text,
+            src,
+            icon,
+            note
+        })
+        return NextResponse.json({
+            code: 200,
+            data,
+            message: '添加成功'
+        })
+    } catch (error) {
+        return NextResponse.json({
+            code: 500,
+            message: "添加失败",
+            error
+        })
+    }
 }
+/**
+ * 删除技术
+ * @param request 
+ * @returns 
+ */
 export async function DELETE(request: Request) {
     try {
         const { id } = await request.json()
@@ -27,7 +45,7 @@ export async function DELETE(request: Request) {
         const result = await db.collection('technology').deleteOne({ _id: new ObjectId(id) })
 
         return NextResponse.json({
-            code: 0,
+            code: 200,
             data: result,
             message: '删除成功'
         })
@@ -40,25 +58,51 @@ export async function DELETE(request: Request) {
         })
     }
 }
+/**
+ * 修改技术
+ * @param request 
+ * @returns 
+ */
 export async function PUT(request: Request) {
-    const { id, text, src, icon, note } = await request.json()
-    const client = await clientPromise
-    const db = client.db("MyBlog")
+    try {
+        const { id, text, src, icon, note } = await request.json()
+        const client = await clientPromise
+        const db = client.db("MyBlog")
 
-    const result = await db.collection('technology').updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { text, src, icon, note } }
-    )
+        const result = await db.collection('technology').updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { text, src, icon, note } }
+        )
 
-    return NextResponse.json({ code: 200, data: result, message: '修改成功' })
+        return NextResponse.json({ code: 200, data: result, message: '修改成功' })
+    } catch (error) {
+        return NextResponse.json({
+            code: 500,
+            message: "修改失败",
+            error
+        })
+    }
 }
+/**
+ * 获取所有技术
+ * @param request 
+ * @returns 所有技术
+ */
 export async function GET(request: Request) {
-    const client = await clientPromise
-    const db = client.db("MyBlog")
-    const label = await db.collection('technology').find().toArray()
-    return NextResponse.json({
-        code: 0,
-        data: label,
-        message: '获取成功'
-    })
+    try {
+        const client = await clientPromise
+        const db = client.db("MyBlog")
+        const label = await db.collection('technology').find().toArray()
+        return NextResponse.json({
+            code: 200,
+            data: label,
+            message: '获取成功'
+        })
+    } catch (error) {
+        return NextResponse.json({
+            code: 500,
+            message: "获取失败",
+            error
+        })
+    }
 }

@@ -16,7 +16,7 @@ export default function MessageTable() {
             `${process.env.NEXT_PUBLIC_SITE_URL}/api/message/count`
         )
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             setTotal(data.data)
         }
     }
@@ -27,7 +27,7 @@ export default function MessageTable() {
             `${process.env.NEXT_PUBLIC_SITE_URL}/api/message?page=${currentPage}&pageSize=${pageSize}`
         )
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             setMessages(data.data)
         }
     }
@@ -43,7 +43,7 @@ export default function MessageTable() {
             body: JSON.stringify({ id }),
         })
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success("删除成功")
             // 如果删除后当前页没数据了，自动跳到上一页
             const newTotal = total - 1

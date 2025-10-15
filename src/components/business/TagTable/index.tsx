@@ -41,7 +41,7 @@ export default function TagTable() {
             body: JSON.stringify({ id }),
         })
         const data = await res.json()
-        if (data.code === 0 || data.code === 200) {
+        if (data.code === 200 || data.code === 200) {
             toast.success('删除成功')
             fetchTags()
         } else {
@@ -74,7 +74,7 @@ export default function TagTable() {
 
         const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body })
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success(isEdit ? '修改成功' : '添加成功')
             setOpen(false)
             fetchTags()

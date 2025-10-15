@@ -41,7 +41,7 @@ export default function ColorTable() {
             body: JSON.stringify({ id }),
         })
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success("删除成功")
             fetchColors()
         } else {
@@ -79,7 +79,7 @@ export default function ColorTable() {
         const res = await fetch(url, { method, body })
         const data = await res.json()
 
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success(isEdit ? "修改成功" : "添加成功")
             setOpen(false)
             fetchColors()

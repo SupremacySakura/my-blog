@@ -5,6 +5,8 @@ import { NextResponse } from "next/server"
 /**
  * POST - 新增文章
  * body: { head, digest, article, cover, user_id, tags: string[] }  // tags 为标签 _id 数组
+ * @param request 
+ * @returns 文章 _id
  */
 export async function POST(request: Request) {
     try {
@@ -32,15 +34,17 @@ export async function POST(request: Request) {
             visit: 0
         })
 
-        return NextResponse.json({ code: 0, data: { _id: result.insertedId }, message: '添加成功' })
+        return NextResponse.json({ code: 200, data: { _id: result.insertedId }, message: '添加成功' })
     } catch (error) {
-        return NextResponse.json({ code: 500, message: '添加失败', error: (error as Error).message })
+        return NextResponse.json({ code: 500, message: '添加失败', error })
     }
 }
 
 /**
  * PUT - 编辑文章
  * body: { id, head, digest, article, cover, user_id, tags: string[] }
+ * @param request 
+ * @returns 文章 _id
  */
 export async function PUT(request: Request) {
     try {
@@ -71,12 +75,12 @@ export async function PUT(request: Request) {
         )
 
         if (result.modifiedCount === 1) {
-            return NextResponse.json({ code: 0, message: '修改成功' })
+            return NextResponse.json({ code: 200, data: { _id: id }, message: '修改成功' })
         } else {
             return NextResponse.json({ code: 404, message: '未找到文章或未修改' })
         }
     } catch (error) {
-    
+
         return NextResponse.json({ code: 500, message: '修改失败', error: (error as Error).message })
     }
 }
@@ -84,6 +88,8 @@ export async function PUT(request: Request) {
 /**
  * DELETE - 删除文章
  * body: { id }
+ * @param request 
+ * @returns 文章 _id
  */
 export async function DELETE(request: Request) {
     try {
@@ -95,7 +101,7 @@ export async function DELETE(request: Request) {
         const result = await db.collection('article').deleteOne({ _id: new ObjectId(id) })
 
         if (result.deletedCount === 1) {
-            return NextResponse.json({ code: 0, message: '删除成功' })
+            return NextResponse.json({ code: 200, data: { _id: id }, message: '删除成功' })
         } else {
             return NextResponse.json({ code: 404, message: '未找到文章' })
         }
@@ -107,6 +113,8 @@ export async function DELETE(request: Request) {
 /**
  * GET - 获取文章（分页）
  * 支持 tags 展示完整标签对象
+ * @param request 
+ * @returns 文章列表
  */
 const getArticles = async (db: Db, page = 1, pageSize = 4) => {
     const skip = (page - 1) * pageSize
@@ -155,7 +163,11 @@ const getArticles = async (db: Db, page = 1, pageSize = 4) => {
     }))
     return result
 }
-
+/**
+ * GET - 获取文章列表
+ * @param request 
+ * @returns 文章列表
+ */
 export async function GET(request: Request) {
     try {
         const url = new URL(request.url)
@@ -164,7 +176,7 @@ export async function GET(request: Request) {
         const client = await clientPromise
         const db = client.db('MyBlog')
         const data = await getArticles(db, page, pageSize)
-        return NextResponse.json({ code: 0, data, message: '获取成功' })
+        return NextResponse.json({ code: 200, data, message: '获取成功' })
     } catch (error) {
         return NextResponse.json({ code: 500, message: '获取失败', error: (error as Error).message })
     }

@@ -41,7 +41,7 @@ export default function ArticleTable() {
             `${process.env.NEXT_PUBLIC_SITE_URL}/api/article/count`
         )
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             setTotal(data.data || 0)
         }
     }
@@ -78,7 +78,7 @@ export default function ArticleTable() {
             body: JSON.stringify({ id }),
         })
         const data = await res.json()
-        if (data.code === 0 || data.code === 200) {
+        if (data.code === 200 || data.code === 200) {
             toast.success('删除成功')
             fetchArticles()
         } else {
@@ -126,7 +126,7 @@ export default function ArticleTable() {
         const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body })
         const data = await res.json()
         console.log(data)
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success(isEdit ? '修改成功' : '添加成功')
             setOpen(false)
             fetchArticles()

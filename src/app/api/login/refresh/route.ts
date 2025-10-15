@@ -6,6 +6,13 @@ import { accessOptions, accessSecret } from "../route"
 import { verifyRefreshToken } from "@/lib/middleware/auth"
 // 验证码缓存
 export const verificationCodes = new Map()
+
+/**
+ * 刷新访问令牌
+ * @param request 
+ * @param payload 
+ * @returns 
+ */
 const refrshToken = async (request: Request, payload: { uid: string, username: string }) => {
     const client = await clientPromise
     const db = client.db('MyBlog')
@@ -30,13 +37,18 @@ const refrshToken = async (request: Request, payload: { uid: string, username: s
         const response = NextResponse.json(responseData)
         response.headers.set('Authorization', `Bearer ${accessToken}`)
         return response
-    } catch (err) {
+    } catch (error) {
         return NextResponse.json({
             code: 500,
             message: '服务器错误',
-            error: err
+            error
         })
     }
 
 }
+/**
+ * 刷新访问令牌
+ * @param request 
+ * @returns 
+ */
 export const POST = verifyRefreshToken(refrshToken)

@@ -11,6 +11,11 @@ export const accessOptions = {
 export const refreshOptions = {
     expiresIn: 7 * 24 * 60 * 60
 }
+/**
+ * 用户登录
+ * @param request 
+ * @returns 
+ */
 export async function POST(request: Request) {
     try {
         // 解析请求体
@@ -60,10 +65,9 @@ export async function POST(request: Request) {
             response.headers.set('owner_token', ownerToken)
         }
         return response
-    } catch (err) {
-        console.error(err)
+    } catch (error) {
         return NextResponse.json(
-            { code: 400, message: '服务器错误', error: String(err) },
+            { code: 400, message: '服务器错误', error },
         )
     }
 }

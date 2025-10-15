@@ -2,7 +2,7 @@ import { IUser } from "./user"
 
 // 文章类型接口
 export interface IArticleItem {
-    _id: number
+    _id: string
     head: string
     digest: string
     article: string

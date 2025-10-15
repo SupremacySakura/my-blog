@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server'
 import { verificationCodes } from './verify/route'
 import clientPromise from '@/lib/mongodb'
+/**
+ * 注册用户
+ * @param request 
+ * @returns 
+ */
 export async function POST(request: Request) {
     const body = await request.json()
     const { username, password, email, code } = body
@@ -40,11 +45,11 @@ export async function POST(request: Request) {
             message: '注册成功',
             data,
         })
-    } catch (err) {
+    } catch (error) {
         return NextResponse.json({
             code: 500,
             message: '服务器错误',
-            error: err
+            error
         })
     }
 }

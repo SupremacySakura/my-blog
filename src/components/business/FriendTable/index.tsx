@@ -12,7 +12,7 @@ export default function FriendTable() {
     const fetchFriends = async () => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend?needAll=${true}`, { method: "GET" })
         const data = await res.json()
-        if (data.code === 0) setFriends(data.data)
+        if (data.code === 200) setFriends(data.data)
     }
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function FriendTable() {
             body: JSON.stringify({ id }),
         })
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success("删除成功")
             fetchFriends()
         } else {
@@ -42,7 +42,7 @@ export default function FriendTable() {
             body: JSON.stringify({ id: friend._id, status: newStatus })
         })
         const data = await res.json()
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success(newStatus === 1 ? "已解冻" : "已冻结")
             fetchFriends()
         } else {

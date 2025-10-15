@@ -2,7 +2,12 @@ import clientPromise from "@/lib/mongodb"
 import { Db, ObjectId } from "mongodb"
 import { NextResponse } from "next/server"
 import { verifyToken } from "@/lib/middleware/auth"
-
+/**
+ * 发布留言
+ * @param request 
+ * @param payload 
+ * @returns 
+ */
 const addMessage = async (request: Request, payload: { uid: string, username: string }) => {
     const body = await request.json()
     const client = await clientPromise
@@ -20,23 +25,36 @@ const addMessage = async (request: Request, payload: { uid: string, username: st
             message: '发布留言成功',
             data: data
         })
-    } catch (err: any) {
+    } catch (error) {
         return NextResponse.json({
             code: 400,
             message: '发布留言失败',
-            error: err.message
+            error
         })
     }
 }
+/**
+ * 发布留言
+ */
 export const POST = verifyToken(addMessage)
+/**
+ * 删除留言
+ * @param request 
+ * @returns 
+ */
 export async function DELETE(request: Request) {
     const { id } = await request.json()
     if (!id) return NextResponse.json({ code: 1, message: "缺少 id" })
     const client = await clientPromise
     const db = client.db("MyBlog")
     const result = await db.collection("message").deleteOne({ _id: new ObjectId(id) })
-    return NextResponse.json({ code: 0, data: result, message: "删除成功" })
+    return NextResponse.json({ code: 200, data: result, message: "删除成功" })
 }
+/**
+ * 获取留言
+ * @param request 
+ * @returns 
+ */
 const getMessages = async (db: Db, page = 1, pageSize = 10) => {
     const skip = (page - 1) * pageSize
 
@@ -74,17 +92,30 @@ const getMessages = async (db: Db, page = 1, pageSize = 10) => {
         ])
         .toArray()
 }
+/**
+ * 获取留言
+ * @param request 
+ * @returns 
+ */
 export async function GET(request: Request) {
-    const url = new URL(request.url)
-    const page = Number(url.searchParams.get('page')) || 1
-    const pageSize = Number(url.searchParams.get('pageSize')) || 5
-    const client = await clientPromise
-    const db = client.db('MyBlog')
-    const message = await getMessages(db, page, pageSize)
-    const data = {
-        code: 0,
-        data: message,
-        messgage: '获取成功'
+    try {
+        const url = new URL(request.url)
+        const page = Number(url.searchParams.get('page')) || 1
+        const pageSize = Number(url.searchParams.get('pageSize')) || 5
+        const client = await clientPromise
+        const db = client.db('MyBlog')
+        const message = await getMessages(db, page, pageSize)
+        const data = {
+            code: 200,
+            data: message,
+            message: '获取成功'
+        }
+        return NextResponse.json(data)
+    } catch (error) {
+        return NextResponse.json({
+            code: 500,
+            message: '服务器错误',
+            error
+        })
     }
-    return NextResponse.json(data)
 }

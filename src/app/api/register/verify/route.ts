@@ -2,6 +2,11 @@ import sendVerificationEmail from "@/lib/mail"
 import { NextResponse } from "next/server"
 // 验证码缓存
 export const verificationCodes = new Map()
+/**
+ * 发送验证码
+ * @param request 
+ * @returns 
+ */
 export async function POST(request: Request) {
     const body = await request.json()
     const { email } = body

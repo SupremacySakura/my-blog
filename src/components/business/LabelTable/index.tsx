@@ -56,7 +56,7 @@ export default function LabelTable() {
             body: JSON.stringify({ id }),
         })
         const data = await res.json()
-        if (data.code === 200 || data.code === 0) {
+        if (data.code === 200 || data.code === 200) {
             toast.success("删除成功")
             fetchLabels()
         } else {
@@ -111,7 +111,7 @@ export default function LabelTable() {
         })
         const data = await res.json()
 
-        if (data.code === 0) {
+        if (data.code === 200) {
             toast.success(isEdit ? "修改成功" : "添加成功")
             setOpen(false)
             fetchLabels()
