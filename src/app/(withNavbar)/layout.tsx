@@ -9,7 +9,7 @@ export default function RootLayout({
     return (
         <>
             <SidebarProvider>
-                <AppSidebar />
+                <AppSidebar type={'frontstage'} />
                 <main className="w-full relative">
                     <SidebarTrigger className="fixed top-0 z-[99]" />
                     {children}

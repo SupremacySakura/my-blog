@@ -3,7 +3,7 @@ import http from "@/lib/http"
 import { useUserStore } from "@/store/user"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-
+import style from './index.module.css'
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const router = useRouter()
     const { owner_token } = useUserStore()
@@ -21,7 +21,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }, [owner_token, router])
     return (
         <>
-            {checking && <div className='w-full h-full flex justify-center items-center'>Loading...</div>}
+            {checking &&
+                (<div className='flex justify-center items-center h-screen'>
+                    <div className={style.loader}></div>
+                </div>)}
             {!checking && children}
         </>)
 }

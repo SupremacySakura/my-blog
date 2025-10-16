@@ -28,27 +28,39 @@ import { ModeToggle } from "../../my-ui/ThemeMode"
 const items = [
     {
         title: "主页",
-        url: "/",
+        url: {
+            frontstage: '/',
+            backstage: '/backstage',
+        },
         icon: Home,
     },
     {
         title: "归档",
-        url: "/article",
+        url: {
+            frontstage: '/article',
+            backstage: '/backstage/article',
+        },
         icon: Inbox,
     },
     {
         title: "树洞",
-        url: "/treehole",
+        url: {
+            frontstage: '/treehole',
+            backstage: '/backstage/treehole',
+        },
         icon: TreePine,
     },
     {
         title: "友链",
-        url: "/friend",
+        url: {
+            frontstage: '/friend',
+            backstage: '/backstage/friend',
+        },
         icon: Handshake,
     },
 ]
-
-export function AppSidebar() {
+export type AppSidebarType = 'frontstage' | 'backstage'
+export function AppSidebar({ type }: { type: AppSidebarType }) {
     const pathname = usePathname()
     const userStore = useUserStore()
     const router = useRouter()
@@ -65,8 +77,8 @@ export function AppSidebar() {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild isActive={item.url === pathname}>
-                                        <a href={item.url}>
+                                    <SidebarMenuButton asChild isActive={type === 'frontstage' && item.url.frontstage === pathname || type === 'backstage' && item.url.backstage === pathname}>
+                                        <a href={type === 'frontstage' ? item.url.frontstage : item.url.backstage}>
                                             <item.icon />
                                             <span>{item.title}</span>
                                         </a>
@@ -97,9 +109,10 @@ export function AppSidebar() {
                                 <DropdownMenuItem>
                                     <span onClick={() => userStore.logout()}>Sign out</span>
                                 </DropdownMenuItem>
-                                {userStore.owner_token && <DropdownMenuItem>
+                                {type === 'frontstage' && userStore.owner_token && <DropdownMenuItem>
                                     <span onClick={() => router.push('/backstage')}>切换到后台</span>
                                 </DropdownMenuItem>}
+                                {type === 'backstage' && <DropdownMenuItem> <span onClick={() => router.push('/')}>切换到前台</span></DropdownMenuItem>}
                             </DropdownMenuContent>
                         </DropdownMenu>}
                         {mounted && !userStore.isLogin() && (<SidebarMenuButton asChild>

@@ -1,7 +1,7 @@
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { BackstageSidebar } from "@/components/business/BackStageSideBar"
 import AuthGuard from "@/components/business/AuthGuard"
+import { AppSidebar } from "@/components/business/AppSideBar"
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -10,7 +10,7 @@ export default function RootLayout({
     return (
         <>
             <SidebarProvider>
-                <BackstageSidebar />
+                <AppSidebar type={'backstage'} />
                 <main className="w-full relative">
                     <SidebarTrigger className="fixed top-0 z-[99]" />
                     <AuthGuard>{children}</AuthGuard>
