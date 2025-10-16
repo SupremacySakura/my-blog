@@ -6,6 +6,9 @@ import { INotice } from '@/types/notice'
 import { IFriend } from '@/types/friend'
 import FriendCard from '@/components/business/FriendCard'
 import ApplyFriendDialog from '@/components/business/ApplyFriendDialog'
+
+export const dynamic = "force-dynamic"
+
 export default async function Page() {
   const notice: INotice[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend/notice`, { method: "GET" })).json()).data
   const friendList: IFriend[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, { method: "GET" })).json()).data

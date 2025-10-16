@@ -13,16 +13,14 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { IArticleItem, ITag } from '@/types/article'
-import { IUser } from '@/types/user'
 
 export default function ArticleTable() {
     const [articles, setArticles] = useState<IArticleItem[]>([])
     const [tagsList, setTagsList] = useState<ITag[]>([]) // 所有标签
     const [open, setOpen] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
-    const [editingId, setEditingId] = useState<number | null>(null)
+    const [editingId, setEditingId] = useState<string | null>(null)
 
     const [head, setHead] = useState('')
     const [digest, setDigest] = useState('')
@@ -71,7 +69,7 @@ export default function ArticleTable() {
             setSelectedTags([...selectedTags || [], item])
         }
     }
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },

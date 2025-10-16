@@ -8,7 +8,7 @@ export default function Page() {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const handleSendVerificationCode = async () => {
-        if (!email){
+        if (!email) {
             return toast.error("请输入邮箱")
         }
         try {
@@ -19,6 +19,7 @@ export default function Page() {
             })
             toast.success("发送成功")
         } catch (error) {
+            console.error(error)
             toast.error("发送失败")
         }
     }
@@ -42,9 +43,12 @@ export default function Page() {
                 router.push('/login')
             } else {
                 // alert(data.message)
-                toast.error('注册失败:',data.message)
+                toast.error('注册失败:', data.message)
             }
-        } catch (error) { }
+        } catch (error) {
+            console.error(error)
+            toast.error("注册失败")
+        }
     }
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-800 dark:to-gray-900 p-4">

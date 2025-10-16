@@ -14,6 +14,9 @@ import { IUser } from "@/types/user"
 import background from "../../../public/background.jpg"
 import Image from "next/image"
 import { getArticle } from "@/service"
+
+export const dynamic = "force-dynamic"
+
 export default async function Home() {
     const saying: ISaying[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saying`, { method: "GET" })).json()).data
     const owner: IUser = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/user/owner`, { method: "GET" })).json()).data

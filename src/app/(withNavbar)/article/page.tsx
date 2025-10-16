@@ -8,6 +8,7 @@ import { getArticle } from '@/service'
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import style from './index.module.css'
+
 export default function Page() {
   const [article, setArticle] = useState<IArticleItem[]>([])
   const [page, setPage] = useState<number>(1)
