@@ -14,8 +14,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { IArticleItem, ITag } from '@/types/article'
+import { useUserStore } from '@/store/user'
 
 export default function ArticleTable() {
+    const { user } = useUserStore()
     const [articles, setArticles] = useState<IArticleItem[]>([])
     const [tagsList, setTagsList] = useState<ITag[]>([]) // 所有标签
     const [open, setOpen] = useState(false)
@@ -27,7 +29,7 @@ export default function ArticleTable() {
     const [article, setArticle] = useState('')
     const [cover, setCover] = useState('')
     const [selectedTags, setSelectedTags] = useState<ITag[]>([])
-    const [userId, setUserId] = useState<string>('')
+    const [userId, setUserId] = useState<string>(user?._id || '')
 
     // 分页
     const [page, setPage] = useState(1)
@@ -104,7 +106,6 @@ export default function ArticleTable() {
         setArticle('')
         setCover('')
         setSelectedTags([])
-        setUserId('')
         setOpen(true)
     }
 
