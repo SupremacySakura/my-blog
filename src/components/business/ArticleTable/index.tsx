@@ -139,9 +139,9 @@ export default function ArticleTable() {
         <div className="w-full mt-5">
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button variant="default" onClick={handleAdd}>新增文章</Button>
+                    <Button variant="default" onClick={handleAdd} className="w-full sm:w-auto">新增文章</Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-2xl">
+                <DialogContent className="sm:max-w-2xl max-w-[95vw] mx-4 max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>{isEdit ? '编辑文章' : '新增文章'}</DialogTitle>
                         <DialogDescription>
@@ -172,7 +172,7 @@ export default function ArticleTable() {
 
                         <div className="space-y-2">
                             <Label>标签</Label>
-                            <div>
+                            <div className="flex flex-wrap gap-2">
                                 {tagsList.map(item => {
                                     const isSelected = selectedTags.some(t => t._id === item._id)
                                     return (
@@ -182,7 +182,7 @@ export default function ArticleTable() {
                                             className={`px-3 py-1 rounded-full text-sm cursor-pointer border transition
                 ${isSelected
                                                     ? "bg-blue-500 text-white border-blue-500"
-                                                    : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
+                                                    : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
                                                 }`}
                                         >
                                             {item.tag}
@@ -204,40 +204,87 @@ export default function ArticleTable() {
                 </DialogContent>
             </Dialog>
 
-            {/* 表格 */}
-            <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm mt-4">
-                <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
-                    <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">标题</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">摘要</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">封面</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">标签</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">用户</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">操作</th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                    {articles.map((item) => (
-                        <tr key={item?._id} className="hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-150">
-                            <td className="px-4 py-3 font-medium">{item?.head}</td>
-                            <td className="px-4 py-3">{item?.digest}</td>
-                            <td className="px-4 py-3"><img src={item?.cover} alt={item?.head} className="w-12 h-12 object-cover" /></td>
-                            <td className="px-4 py-3">{item?.tags.map(t => t.tag).join(', ')}</td>
-                            <td className="px-4 py-3">{item?.user?.username}</td>
-                            <td className="px-4 py-3 flex gap-2">
-                                <Button variant="secondary" size="sm" onClick={() => handleEdit(item)}>编辑</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDelete(item?._id)}>删除</Button>
-                            </td>
+            {/* 移动端卡片布局 */}
+            <div className="block md:hidden mt-4 space-y-3">
+                {articles.map((item) => (
+                    <div key={item?._id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-900 shadow-sm">
+                        <div className="flex gap-3 mb-3">
+                            {item?.cover && (
+                                <img src={item?.cover} alt={item?.head} className="w-16 h-16 object-cover rounded flex-shrink-0" />
+                            )}
+                            <div className="flex-1 min-w-0">
+                                <h3 className="text-gray-800 dark:text-gray-100 font-medium mb-1 break-words">{item?.head}</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{item?.user?.username}</p>
+                            </div>
+                        </div>
+                        {item?.digest && (
+                            <div className="mb-3">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">摘要</p>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm break-words">{item?.digest}</p>
+                            </div>
+                        )}
+                        {item?.tags && item.tags.length > 0 && (
+                            <div className="mb-3">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">标签</p>
+                                <div className="flex flex-wrap gap-1">
+                                    {item.tags.map(t => (
+                                        <span key={t._id} className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded text-xs">
+                                            {t.tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        <div className="flex gap-2">
+                            <Button variant="secondary" size="sm" onClick={() => handleEdit(item)} className="flex-1">编辑</Button>
+                            <Button variant="destructive" size="sm" onClick={() => handleDelete(item?._id)} className="flex-1">删除</Button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* 桌面端表格布局 */}
+            <div className="hidden md:block overflow-x-auto mt-4">
+                <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
+                    <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                        <tr>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">标题</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">摘要</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap w-fit min-w-fit">封面</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">标签</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">用户</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">操作</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                        {articles.map((item) => (
+                            <tr key={item?._id} className="hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-150">
+                                <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-100 break-words">{item?.head}</td>
+                                <td className="px-4 py-3 text-gray-600 dark:text-gray-400 break-words">{item?.digest}</td>
+                                <td className="px-4 py-3 whitespace-nowrap w-fit min-w-fit">
+                                    {item?.cover && (
+                                        <img src={item?.cover} alt={item?.head} className="w-20 h-20 object-cover rounded flex-shrink-0" />
+                                    )}
+                                </td>
+                                <td className="px-4 py-3 text-gray-600 dark:text-gray-400 break-words">
+                                    {item?.tags?.map(t => t.tag).join(', ')}
+                                </td>
+                                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{item?.user?.username}</td>
+                                <td className="px-4 py-3 flex gap-2">
+                                    <Button variant="secondary" size="sm" onClick={() => handleEdit(item)}>编辑</Button>
+                                    <Button variant="destructive" size="sm" onClick={() => handleDelete(item?._id)}>删除</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
             {/* 分页 */}
-            <div className="flex justify-end gap-2 mt-4">
-                <Button disabled={page <= 1} onClick={() => setPage((p) => Math.max(p - 1, 1))}>上一页</Button>
-                <span className="px-2 py-1">第 {page} / {totalPages} 页</span>
-                <Button disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(p + 1, totalPages))}>下一页</Button>
+            <div className="flex flex-col sm:flex-row justify-end items-center gap-2 mt-4">
+                <Button disabled={page <= 1} onClick={() => setPage((p) => Math.max(p - 1, 1))} className="w-full sm:w-auto">上一页</Button>
+                <span className="px-2 py-1 text-sm text-gray-600 dark:text-gray-400">第 {page} / {totalPages} 页</span>
+                <Button disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(p + 1, totalPages))} className="w-full sm:w-auto">下一页</Button>
             </div>
         </div>
     )

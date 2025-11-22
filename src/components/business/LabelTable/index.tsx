@@ -127,10 +127,10 @@ export default function LabelTable() {
         <div className="w-full mt-5">
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button variant="default" onClick={handleAdd}>新增标签</Button>
+                    <Button variant="default" onClick={handleAdd} className="w-full sm:w-auto">新增标签</Button>
                 </DialogTrigger>
 
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-md max-w-[95vw] mx-4 max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>{isEdit ? "编辑标签" : "新增标签"}</DialogTitle>
                         <DialogDescription>
@@ -203,43 +203,85 @@ export default function LabelTable() {
                 </DialogContent>
             </Dialog>
 
-            <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm mt-4">
-                <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
-                    <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">标签名</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">文字颜色</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">背景颜色</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">预览</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">操作</th>
-                    </tr>
-                </thead>
+            {/* 移动端卡片布局 */}
+            <div className="block md:hidden mt-4 space-y-3">
+                {labels.map((item) => (
+                    <div key={item._id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-900 shadow-sm">
+                        <div className="mb-3">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">标签名</p>
+                            <p className="text-gray-800 dark:text-gray-100 font-medium">{item.text}</p>
+                        </div>
+                        <div className="mb-3">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">预览</p>
+                            <span
+                                className="px-3 py-1 rounded-full text-sm border inline-block"
+                                style={{
+                                    color: item.color,
+                                    backgroundColor: item.backgroundColor,
+                                    borderColor: item.color,
+                                }}
+                            >
+                                {item.text}
+                            </span>
+                        </div>
+                        <div className="mb-3 grid grid-cols-2 gap-2 text-sm">
+                            <div>
+                                <p className="text-gray-500 dark:text-gray-400 mb-1">文字颜色</p>
+                                <p className="text-gray-600 dark:text-gray-300 break-all">{item.color}</p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500 dark:text-gray-400 mb-1">背景颜色</p>
+                                <p className="text-gray-600 dark:text-gray-300 break-all">{item.backgroundColor}</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button variant="secondary" size="sm" onClick={() => handleEdit(item)} className="flex-1">编辑</Button>
+                            <Button variant="destructive" size="sm" onClick={() => handleDelete(item._id)} className="flex-1">删除</Button>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
-                <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                    {labels.map((item) => (
-                        <tr key={item._id} className="hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-150">
-                            <td className="px-4 py-3 text-gray-800 dark:text-gray-100 font-medium">{item.text}</td>
-                            <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{item.color}</td>
-                            <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{item.backgroundColor}</td>
-                            <td className="px-4 py-3">
-                                <span
-                                    className="px-3 py-1 rounded-full text-sm border"
-                                    style={{
-                                        color: item.color,
-                                        backgroundColor: item.backgroundColor,
-                                        borderColor: item.color,
-                                    }}
-                                >
-                                    {item.text}
-                                </span>
-                            </td>
-                            <td className="px-4 py-3 flex gap-2">
-                                <Button variant="secondary" size="sm" onClick={() => handleEdit(item)}>编辑</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDelete(item._id)}>删除</Button>
-                            </td>
+            {/* 桌面端表格布局 */}
+            <div className="hidden md:block overflow-x-auto mt-4">
+                <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
+                    <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                        <tr>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">标签名</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">文字颜色</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">背景颜色</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap w-fit min-w-fit">预览</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">操作</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                        {labels.map((item) => (
+                            <tr key={item._id} className="hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-150">
+                                <td className="px-4 py-3 text-gray-800 dark:text-gray-100 font-medium">{item.text}</td>
+                                <td className="px-4 py-3 text-gray-600 dark:text-gray-300 break-all">{item.color}</td>
+                                <td className="px-4 py-3 text-gray-600 dark:text-gray-300 break-all">{item.backgroundColor}</td>
+                                <td className="px-4 py-3 whitespace-nowrap w-fit min-w-fit">
+                                    <span
+                                        className="px-3 py-1 rounded-full text-sm border whitespace-nowrap inline-block"
+                                        style={{
+                                            color: item.color,
+                                            backgroundColor: item.backgroundColor,
+                                            borderColor: item.color,
+                                        }}
+                                    >
+                                        {item.text}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3 flex gap-2">
+                                    <Button variant="secondary" size="sm" onClick={() => handleEdit(item)}>编辑</Button>
+                                    <Button variant="destructive" size="sm" onClick={() => handleDelete(item._id)}>删除</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

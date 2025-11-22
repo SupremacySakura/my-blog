@@ -14,7 +14,7 @@ export default function Page() {
   const showList = useRef<HTMLDivElement[]>([])
   const board = useRef<HTMLDivElement>(null)
   const countRef = useRef(0) // ✅ 用 ref 保存计数
-  const handleSubmit =async (e: React.FormEvent<HTMLFormElement>) => { 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!content) return
     const res = await http.fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message`, {
@@ -124,7 +124,7 @@ export default function Page() {
 
         {danmuList.map((item, index) => (
           <div
-            className="h-12 inline-flex absolute bg-blue-400 dark:bg-gray-400 rounded-full items-center top-0 left-0"
+            className="h-12 inline-flex absolute bg-blue-300/30 dark:bg-gray-800/40 backdrop-blur-md text-white dark:text-gray-100 shadow-md rounded-full items-center top-0 left-0 border border-white/20 dark:border-gray-600/30"
             key={item._id}
             ref={(el) => {
               if (el) showList.current[index] = el

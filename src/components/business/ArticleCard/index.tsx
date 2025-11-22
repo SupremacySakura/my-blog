@@ -13,22 +13,22 @@ export default function ArticleCard(params: { article: IArticleItem }) {
         <Link href={`/article/${article._id}`} className="w-full">
             <div
                 className="
-          @container w-full gap-2 bg-white dark:bg-gray-600 p-3 rounded-lg flex 
+          @container w-full gap-2 bg-white dark:bg-gray-600 p-3 rounded-lg flex items-center
            @md:flex-row relative overflow-hidden
         "
             >
                 {/* 小容器：背景图，大容器：左图 */}
                 <div
                     className="
-            absolute inset-0 bg-cover bg-center 
-            @md:static @md:w-64 @md:h-full @md:flex-shrink-0 @md:rounded-lg
+            absolute inset-0 bg-cover bg-center
+            @md:static @md:w-64 @md:h-40 @md:flex-shrink-0 @md:rounded-lg
           "
                     style={{ backgroundImage: `url(${article.cover})` }}
                 >
                     <img
                         src={article?.cover}
                         alt=""
-                        className="hidden @md:block w-64 h-full object-cover rounded-lg"
+                        className="hidden @md:block w-64 h-40 object-cover rounded-lg"
                     />
                 </div>
 

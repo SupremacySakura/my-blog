@@ -102,9 +102,9 @@ export default function TechnologyTable() {
         <div className="w-full mt-5">
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button variant="default" onClick={handleAdd}>新增技术栈</Button>
+                    <Button variant="default" onClick={handleAdd} className="w-full sm:w-auto">新增技术栈</Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-md max-w-[95vw] mx-4 max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>{isEdit ? "编辑技术栈" : "新增技术栈"}</DialogTitle>
                         <DialogDescription>
@@ -160,37 +160,68 @@ export default function TechnologyTable() {
                 </DialogContent>
             </Dialog>
 
-            <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm mt-4">
-                <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
-                    <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">名称</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">官网</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">图标</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">备注</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">操作</th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                    {techStacks.map((item) => (
-                        <tr key={item._id} className="hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-150">
-                            <td className="px-4 py-3 text-gray-800 dark:text-gray-100 font-medium">{item.text}</td>
-                            <td className="px-4 py-3">
-                                <a href={item.src} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">
-                                    {item.src}
-                                </a>
-                            </td>
-                            <td className="px-4 py-3">
-                                <img src={item.icon} alt={item.text} className="w-6 h-6" />
-                            </td>
-                            <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{item.note}</td>
-                            <td className="px-4 py-3 flex gap-2">
-                                <Button variant="secondary" size="sm" onClick={() => handleEdit(item)}>编辑</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDelete(item._id)}>删除</Button>
-                            </td>
+            {/* 移动端卡片布局 */}
+            <div className="block md:hidden mt-4 space-y-3">
+                {techStacks.map((item) => (
+                    <div key={item._id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-900 shadow-sm">
+                        <div className="flex items-center gap-3 mb-3">
+                            <img src={item.icon} alt={item.text} className="w-8 h-8 flex-shrink-0" />
+                            <p className="text-gray-800 dark:text-gray-100 font-medium">{item.text}</p>
+                        </div>
+                        <div className="mb-3">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">官网</p>
+                            <a href={item.src} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-sm break-all">
+                                {item.src}
+                            </a>
+                        </div>
+                        {item.note && (
+                            <div className="mb-3">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">备注</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">{item.note}</p>
+                            </div>
+                        )}
+                        <div className="flex gap-2">
+                            <Button variant="secondary" size="sm" onClick={() => handleEdit(item)} className="flex-1">编辑</Button>
+                            <Button variant="destructive" size="sm" onClick={() => handleDelete(item._id)} className="flex-1">删除</Button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* 桌面端表格布局 */}
+            <div className="hidden md:block overflow-x-auto mt-4">
+                <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
+                    <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                        <tr>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">名称</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">官网</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">图标</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">备注</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">操作</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                        {techStacks.map((item) => (
+                            <tr key={item._id} className="hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-150">
+                                <td className="px-4 py-3 text-gray-800 dark:text-gray-100 font-medium">{item.text}</td>
+                                <td className="px-4 py-3">
+                                    <a href={item.src} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline break-all">
+                                        {item.src}
+                                    </a>
+                                </td>
+                                <td className="px-4 py-3">
+                                    <img src={item.icon} alt={item.text} className="w-6 h-6" />
+                                </td>
+                                <td className="px-4 py-3 text-gray-600 dark:text-gray-400 break-words">{item.note}</td>
+                                <td className="px-4 py-3 flex gap-2">
+                                    <Button variant="secondary" size="sm" onClick={() => handleEdit(item)}>编辑</Button>
+                                    <Button variant="destructive" size="sm" onClick={() => handleDelete(item._id)}>删除</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

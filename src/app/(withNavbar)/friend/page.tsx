@@ -19,7 +19,7 @@ export default async function Page() {
         alt="artcile"
         className="z-[-1] fixed w-full h-screen object-cover object-[right_top]"
       />
-      <section className='w-full flex flex-col gap-4 p-22 items-center'>
+      <section className='w-full flex flex-col p-[5%] gap-4 items-center'>
         {/* 公告 */}
         <div className="w-full mx-auto mb-6">
           <NoticeCard notice={notice} />
@@ -28,15 +28,18 @@ export default async function Page() {
         {/* 友链 */}
         <div
           className="w-full p-6 bg-white/60 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-md
+          flex flex-col
           "
         >
           <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
             🤝 友链站点
           </h1>
-          <div className=' flex gap-6 flex-wrap justify-center'>
+          <div className='w-[90%] flex flex-wrap gap-4 mx-auto'>
             {friendList.length > 0 &&
               friendList.map((item) => (
-                <FriendCard key={item._id} friend={item} />
+                <div key={item._id}>
+                  <FriendCard friend={item} />
+                </div>
               ))}
           </div>
         </div>
