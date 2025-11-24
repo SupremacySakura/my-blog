@@ -30,11 +30,11 @@ export default async function Home() {
             <Image src={background} alt="" className="fixed w-full h-screen object-cover z-[-1]"></Image>
             {/* 第一层 */}
             <div className="relative w-full h-full flex items-center justify-center flex-col gap-5">
-                <img src={owner.avatar} alt="" className="w-30 h-30 rounded-full"></img>
-                <span className="text-2xl">{owner.username}</span>
-                <TypeWriter wordList={[...saying.map((item) => item.text)]}></TypeWriter>
+                <img src={owner?.avatar} alt="" className="w-30 h-30 rounded-full"></img>
+                <span className="text-2xl">{owner?.username}</span>
+                <TypeWriter wordList={[...saying?.map((item) => item?.text)]}></TypeWriter>
                 <div className="flex gap-5">
-                    {address.map((item) => (<IconMorphButton key={item._id} icon={item.icon} text={item.text} url={item.url}></IconMorphButton>))}
+                    {address?.map((item) => (<IconMorphButton key={item?._id} icon={item?.icon} text={item?.text} url={item?.url}></IconMorphButton>))}
                 </div>
             </div>
             {/* 第二层 */}
@@ -49,9 +49,10 @@ export default async function Home() {
                 </section>
 
                 <section className="bg-gray-300/30 backdrop-blur-md rounded-lg p-4 flex flex-col gap-4">
+                    <h2 className='text-xl font-bold mb-4'>最新文章</h2>
                     {article?.length > 0 &&
-                        article.map((item) => (
-                            <ArticleCard key={item._id} article={item} />
+                        article?.map((item) => (
+                            <ArticleCard key={item?._id} article={item} />
                         ))}
                 </section>
             </div>

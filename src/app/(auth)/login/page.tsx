@@ -61,7 +61,7 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-800 dark:to-gray-900 p-4">
+    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-800 dark:to-gray-900 p-4">
       <div className="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl w-full max-w-md transition-colors duration-300">
         <form className="space-y-6" onSubmit={handleSubmit}>
           <h2 className="text-3xl font-extrabold text-center text-gray-900 dark:text-gray-100 mb-2">欢迎登录</h2>
