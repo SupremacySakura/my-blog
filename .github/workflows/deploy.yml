@@ -30,7 +30,7 @@ jobs:
             echo "重置旧代码"
             git reset --hard
             git clean -f
-            git pull origin main
+            git pull origin master
 
             echo "安装依赖"
             npm install --production
