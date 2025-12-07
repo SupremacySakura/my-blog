@@ -40,6 +40,6 @@ jobs:
             npm run build
 
             echo "重启服务"
-            pm2 restart my-blog || pm2 start npm --name "my-blog" -- start -- --port 4000
+            pm2 restart my-blog || pm2 start npm --name "my-blog" -- start
 
             echo "✅ 部署完成"
