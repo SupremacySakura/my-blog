@@ -33,7 +33,7 @@ jobs:
             git pull origin master
 
             echo "安装依赖"
-            npm install --production
+            npm install
 
             echo "构建项目"
             npm run build
