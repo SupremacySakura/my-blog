@@ -1,0 +1,44 @@
+name: Auto Deploy my-blog
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to OpenCloudOS Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+
+            echo "进入项目目录"
+            cd /www/wwwroot/my-blog || exit 1
+
+            echo "写入环境变量"
+            cat << EOF > .env.production
+            ${{ secrets.ENV_FILE }}
+            EOF
+
+            echo "重置旧代码"
+            git reset --hard
+            git clean -f
+            git pull origin main
+
+            echo "安装依赖"
+            npm install --production
+
+            echo "构建项目"
+            npm run build
+
+            echo "重启服务"
+            pm2 restart my-blog || pm2 start npm --name "my-blog" -- start --env production
+
+            echo "✅ 部署完成"
