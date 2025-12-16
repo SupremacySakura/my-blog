@@ -10,72 +10,41 @@ export default function ArticleCard(params: { article: IArticleItem }) {
     }
 
     return (
-        <Link href={`/article/${article._id}`} className="w-full">
-            <div
-                className="
-          @container w-full gap-2 bg-white dark:bg-gray-600 p-3 rounded-lg flex items-center
-           @md:flex-row relative overflow-hidden
-        "
-            >
-                {/* 小容器：背景图，大容器：左图 */}
-                <div
-                    className="
-            absolute inset-0 bg-cover bg-center
-            @md:static @md:w-64 @md:h-40 @md:flex-shrink-0 @md:rounded-lg
-          "
-                    style={{ backgroundImage: `url(${article.cover})` }}
-                >
-                    <img
-                        src={article?.cover}
-                        alt=""
-                        className="hidden @md:block w-64 h-40 object-cover rounded-lg"
-                    />
+        <div className="@container w-full bg-white dark:bg-gray-800 p-4 rounded-xl ring-1 ring-gray-200/70 dark:ring-white/10 hover:shadow-md transition-all duration-200 flex justify-between gap-4">
+            <div className="flex-1 min-w-0 flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-xs @md:text-sm">
+                    <img src={article?.user?.avatar} alt="" className="w-5 h-5 @md:w-6 @md:h-6 rounded-full" />
+                    <span className="text-gray-900 dark:text-white">{article?.user?.username}</span>
+                    <span className="text-gray-300 dark:text-gray-400">•</span>
+                    <span className="text-gray-600 dark:text-gray-300">{formateTime(article.time)}</span>
                 </div>
-
-                {/* 遮罩层：仅在容器 <600px 时显示 */}
-                <div className="absolute inset-0 bg-black/40 @md:hidden"></div>
-
-                {/* 内容区 */}
-                <section
-                    className="
-            relative z-10 flex flex-col gap-1 justify-between 
-            @md:gap-2 @md:pl-3 @md:z-auto
-          "
-                >
-                    <h1 className="text-lg font-bold overflow-hidden text-ellipsis break-words line-clamp-1 text-white @md:text-black dark:@md:text-white">
+                <Link href={`/article/${article._id}`} className="group">
+                    <h2 className="text-base @md:text-lg font-semibold tracking-tight text-gray-900 dark:text-white line-clamp-1 group-hover:underline">
                         {article?.head}
-                    </h1>
-                    <p className="text-sm overflow-hidden text-ellipsis break-words line-clamp-3 text-white @md:text-gray-800 dark:@md:text-gray-200">
-                        {article?.digest}
-                    </p>
-                    <div className="flex gap-2 flex-wrap">
-                        <img
-                            src={article?.user?.avatar}
-                            alt=""
-                            className="w-6 h-6 rounded-full"
-                        />
-                        <span className="text-white @md:text-black dark:@md:text-white">
-                            {article?.user?.username}
-                        </span>
-                        <span className="flex items-center px-2 rounded-sm text-xs text-gray-200 bg-gray-500 @md:text-gray-600 @md:bg-gray-300">
-                            {`发布于${formateTime(article.time)}`}
-                        </span>
-                        <span className="flex items-center px-2 rounded-sm text-xs text-blue-200 bg-blue-600 @md:text-blue-600 @md:bg-blue-300">
-                            阅读:{article?.visit || 0}
-                        </span>
-                    </div>
-                    <ul className="flex gap-2 flex-wrap">
-                        {article?.tags?.map((item) => (
-                            <li
-                                key={item._id}
-                                className="text-xs px-2 py-1 rounded-sm bg-blue-500 text-white"
-                            >
-                                {item.tag}
-                            </li>
-                        ))}
-                    </ul>
-                </section>
+                    </h2>
+                </Link>
+                <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2 @md:line-clamp-3">
+                    {article?.digest}
+                </p>
+                <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300">
+                    <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                        <span>{article?.tags?.[0]?.tag || '文章'}</span>
+                    </span>
+                    <span>•</span>
+                    <span>阅读 {article?.visit || 0}</span>
+                </div>
+                <ul className="flex gap-2 flex-wrap">
+                    {article?.tags?.map((item) => (
+                        <li key={item._id} className="text-xs px-2 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-200 dark:border-blue-800">
+                            {item.tag}
+                        </li>
+                    ))}
+                </ul>
             </div>
-        </Link>
+            <Link href={`/article/${article._id}`} className="hidden @md:block flex-shrink-0 self-center">
+                <img src={article?.cover} alt="" className="w-40 h-24 rounded-lg object-cover" />
+            </Link>
+        </div>
     )
 }
