@@ -1,6 +1,5 @@
 'use client'
 import { ChevronUp, Home, Inbox, User2, TreePine, Handshake } from "lucide-react"
-
 import {
     Sidebar,
     SidebarContent,
@@ -23,6 +22,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useUserStore } from "@/store/user"
 import { useEffect, useState } from "react"
 import { ModeToggle } from "../../my-ui/ThemeMode"
+import Link from "next/link"
 
 // Menu items.
 const items = [
@@ -77,11 +77,11 @@ export function AppSidebar({ type }: { type: AppSidebarType }) {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild isActive={type === 'frontstage' && item.url.frontstage === pathname || type === 'backstage' && item.url.backstage === pathname}>
-                                        <a href={type === 'frontstage' ? item.url.frontstage : item.url.backstage}>
+                                    <SidebarMenuButton asChild isActive={type === 'frontstage' && pathname.endsWith(item.url.frontstage) || type === 'backstage' && pathname.endsWith(item.url.backstage)}>
+                                        <Link href={type === 'frontstage' ? item.url.frontstage : item.url.backstage}>
                                             <item.icon />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
