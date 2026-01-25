@@ -1,5 +1,6 @@
 // lib/http.ts
 import { useUserStore } from "@/store/user"
+import { useRouter } from "next/navigation";
 import { toast } from "sonner"
 type RequestInterceptor = (
     input: RequestInfo | URL,
@@ -93,7 +94,7 @@ http.useResponse(async (response) => {
             return fetch(response.url, response as any)
         } else {
             // 刷新失败，跳转登录
-            window.location.href = '/login'
+            window.location.href = `${process.env.NEXT_PUBLIC_SITE_URL}/login`
         }
     }
     return response
