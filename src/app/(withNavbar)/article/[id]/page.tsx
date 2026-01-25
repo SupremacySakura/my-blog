@@ -18,9 +18,9 @@ export default function Page({ params }: { params: Promise<IParams> }) {
      * 初始化文章
      */
     const initArticle = async () => {
-        const res = await (await fetch(`api/article/url?id=${id}`, { cache: "no-store" })).json()
+        const res = await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article/url?id=${id}`, { cache: "no-store" })).json()
         setArticle(res.data.article)
-        fetch(`api/article/visit`, {
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article/visit`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ _id: id })
