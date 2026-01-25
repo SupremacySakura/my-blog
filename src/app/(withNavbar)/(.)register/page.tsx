@@ -12,7 +12,7 @@ export default function Page() {
             return toast.error("请输入邮箱")
         }
         try {
-            await fetch("/api/register/verify", {
+            await fetch("api/register/verify", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email }),
@@ -31,7 +31,7 @@ export default function Page() {
         const code = formData.get("code")
         const email = formData.get("email")
         try {
-            const res = await fetch("/api/register", {
+            const res = await fetch("api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password, code, email }),

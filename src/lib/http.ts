@@ -86,7 +86,7 @@ http.useResponse(async (response) => {
         }
         toast.error('登录已过期，将尝试刷新')
         // 请求刷新接口（保存新 token 的工作交给拦截器上面那几行）
-        const refreshRes = await fetch('/api/login/refresh', { method: 'POST' })
+        const refreshRes = await fetch('api/login/refresh', { method: 'POST' })
 
         if (refreshRes.ok) {
             // 🔹 重试原请求（会自动带上最新 token）

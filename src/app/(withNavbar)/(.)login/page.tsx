@@ -28,7 +28,7 @@ export default function Page() {
     const password = formData.get("password")
 
     try {
-      const res = await http.fetch("/api/login", {
+      const res = await http.fetch("api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password, loginType }),
