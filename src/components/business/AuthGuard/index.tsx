@@ -13,7 +13,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         (async () => {
             const data = await checkOwnerRole()
             if (data.code !== 200) {
-                router.replace("/")
+                router.replace(`${process.env.NEXT_PUBLIC_SITE_URL}`)
             }
             setChecking(false)
         })()
