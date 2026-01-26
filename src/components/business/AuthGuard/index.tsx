@@ -1,5 +1,5 @@
 'use client'
-import http from "@/lib/http"
+import { checkOwnerRole } from "@/service"
 import { useUserStore } from "@/store/user"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -11,8 +11,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         (async () => {
-            const res = await http.fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/login/checkRole`, { method: 'POST' })
-            const data = await res.json()
+            const data = await checkOwnerRole()
             if (data.code !== 200) {
                 router.replace("/")
             }

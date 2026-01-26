@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ITag } from '@/types/article'
+import { getArticleTags, deleteTag, saveTag } from '@/service'
 
 export default function TagTable() {
     const [tags, setTags] = useState<ITag[]>([])
@@ -24,9 +25,8 @@ export default function TagTable() {
 
     // 拉取标签
     const fetchTags = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article/tag`)
-        const json = await res.json()
-        setTags(json.data || [])
+        const list = await getArticleTags()
+        setTags(list || [])
     }
 
     useEffect(() => {
@@ -35,12 +35,7 @@ export default function TagTable() {
 
     // 删除
     const handleDelete = async (id: string) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article/tag`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id }),
-        })
-        const data = await res.json()
+        const data = await deleteTag(id)
         if (data.code === 200 || data.code === 200) {
             toast.success('删除成功')
             fetchTags()
@@ -68,12 +63,7 @@ export default function TagTable() {
     // 提交
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/article/tag`
-        const method = isEdit ? 'PUT' : 'POST'
-        const body = JSON.stringify(isEdit ? { id: editingId, tag: tagName } : { tag: tagName })
-
-        const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body })
-        const data = await res.json()
+        const data = await saveTag(isEdit ? { id: editingId, tag: tagName } : { tag: tagName })
         if (data.code === 200) {
             toast.success(isEdit ? '修改成功' : '添加成功')
             setOpen(false)

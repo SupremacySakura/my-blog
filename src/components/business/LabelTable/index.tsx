@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { getLabelsAdmin, getColors, deleteLabel, saveLabel } from "@/service"
 
 export default function LabelTable() {
     const [labels, setLabels] = useState<ILabel[]>([])
@@ -32,16 +33,14 @@ export default function LabelTable() {
 
     // -> 拉取标签（后端返回应包含 color, backgroundColor 字段）
     const fetchLabels = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/label`, { method: "GET" })
-        const json = await res.json()
-        setLabels(json.data || [])
+        const list = await getLabelsAdmin()
+        setLabels(list || [])
     }
 
     // -> 拉取颜色表（只允许从这里选择）
     const fetchColors = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/color`, { method: "GET" })
-        const json = await res.json()
-        setColors(json.data || [])
+        const list = await getColors()
+        setColors(list || [])
     }
 
     useEffect(() => {
@@ -51,11 +50,7 @@ export default function LabelTable() {
 
     // 删除
     const handleDelete = async (id: string) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/label`, {
-            method: "DELETE",
-            body: JSON.stringify({ id }),
-        })
-        const data = await res.json()
+        const data = await deleteLabel(id)
         if (data.code === 200 || data.code === 200) {
             toast.success("删除成功")
             fetchLabels()
@@ -98,18 +93,7 @@ export default function LabelTable() {
             return
         }
 
-        const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/my/label`
-        const method = isEdit ? "PUT" : "POST"
-        const body = isEdit
-            ? JSON.stringify({ id: editingId, text, color, backgroundColor })
-            : JSON.stringify({ text, color, backgroundColor })
-
-        const res = await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body,
-        })
-        const data = await res.json()
+        const data = await saveLabel({ id: editingId, text, color, backgroundColor })
 
         if (data.code === 200) {
             toast.success(isEdit ? "修改成功" : "添加成功")

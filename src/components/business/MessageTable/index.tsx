@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { IMessageItem } from "@/types/message"
+import { countMessages, getMessages, deleteMessage } from "@/service"
 
 export default function MessageTable() {
     const [messages, setMessages] = useState<IMessageItem[]>([])
@@ -12,24 +13,14 @@ export default function MessageTable() {
 
     // 获取留言总数
     const fetchMessageCount = async () => {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_SITE_URL}/api/message/count`
-        )
-        const data = await res.json()
-        if (data.code === 200) {
-            setTotal(data.data)
-        }
+        const totalCount = await countMessages()
+        setTotal(totalCount || 0)
     }
     // ✅ 拉取留言数据（分页）
     const fetchMessages = async (currentPage = 1) => {
         fetchMessageCount()
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_SITE_URL}/api/message?page=${currentPage}&pageSize=${pageSize}`
-        )
-        const data = await res.json()
-        if (data.code === 200) {
-            setMessages(data.data)
-        }
+        const list = await getMessages(currentPage, pageSize)
+        setMessages(list)
     }
 
     useEffect(() => {
@@ -38,11 +29,7 @@ export default function MessageTable() {
 
     // ✅ 删除留言
     const handleDelete = async (id: string) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message`, {
-            method: "DELETE",
-            body: JSON.stringify({ id }),
-        })
-        const data = await res.json()
+        const data = await deleteMessage(id)
         if (data.code === 200) {
             toast.success("删除成功")
             // 如果删除后当前页没数据了，自动跳到上一页

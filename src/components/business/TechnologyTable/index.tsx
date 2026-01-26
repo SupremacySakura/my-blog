@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { getTechnologiesAdmin, deleteTechnology, saveTechnology } from "@/service"
 
 export default function TechnologyTable() {
     const [techStacks, setTechStacks] = useState<ITechnology[]>([])
@@ -27,9 +28,8 @@ export default function TechnologyTable() {
 
     // ✅ 拉取数据
     const fetchTechStacks = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/technology`, { method: "GET" })
-        const json = await res.json()
-        setTechStacks(json.data)
+        const list = await getTechnologiesAdmin()
+        setTechStacks(list)
     }
 
     useEffect(() => {
@@ -38,11 +38,7 @@ export default function TechnologyTable() {
 
     // ✅ 删除技术栈
     const handleDelete = async (id: string) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/technology`, {
-            method: "DELETE",
-            body: JSON.stringify({ id }),
-        })
-        const data = await res.json()
+        const data = await deleteTechnology(id)
         if (data.code === 200) {
             toast.success("删除成功")
             fetchTechStacks()
@@ -76,15 +72,7 @@ export default function TechnologyTable() {
     // ✅ 提交（新增或编辑）
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/my/technology`
-        const method = isEdit ? "PUT" : "POST"
-        const body = isEdit
-            ? JSON.stringify({ id: editingId, text: name, src, icon, note })
-            : JSON.stringify({ text: name, src, icon, note })
-
-        const res = await fetch(url, { method, body })
-        const data = await res.json()
-        console.log(data)
+        const data = await saveTechnology({ id: editingId, text: name, src, icon, note })
         if (data.code === 200) {
             toast.success(isEdit ? "修改成功" : "添加成功")
             setOpen(false)

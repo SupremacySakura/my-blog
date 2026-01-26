@@ -4,8 +4,8 @@ import Image from 'next/image'
 import treehole from '../../../../public/treehole.png'
 import { IMessageItem } from '@/types/message'
 import { random } from '@/utils'
-import http from '@/lib/http'
 import { toast } from "sonner"
+import { sendMessage, getMessages } from '@/service'
 
 export default function Page() {
   const [danmuList, setDanmuList] = useState<IMessageItem[]>([])
@@ -17,13 +17,7 @@ export default function Page() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!content) return
-    const res = await http.fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message`, {
-      method: 'POST',
-      body: JSON.stringify({
-        content
-      })
-    })
-    const data = await res.json()
+    const data = await sendMessage(content)
     if (data.code === 200) {
       setPage(1)
       getDanmu(1)
@@ -32,12 +26,9 @@ export default function Page() {
     }
   }
   const getDanmu = async (page: number) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/message?page=${page}&pageSize=10`
-    )
-    const data = await res.json()
-    setDanmuList(data.data)
-    if (page !== 1 && data.data.length <= 0) {
+    const list = await getMessages(page, 10)
+    setDanmuList(list)
+    if (page !== 1 && list.length <= 0) {
       setPage(1)
     }
   }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import http from "@/lib/http"
+import { applyFriend } from "@/service"
 import { toast } from "sonner"
 
 export default function ApplyFriendDialog() {
@@ -15,14 +15,7 @@ export default function ApplyFriendDialog() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        const res = await http.fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, label, url }),
-        })
-        const data = await res.json()
+        const data = await applyFriend({ name, label, url })
         if (data.code === 200) {
             toast.success('申请成功')
         } else {

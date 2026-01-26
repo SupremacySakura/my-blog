@@ -1,6 +1,5 @@
 // lib/http.ts
 import { useUserStore } from "@/store/user"
-import { useRouter } from "next/navigation";
 import { toast } from "sonner"
 type RequestInterceptor = (
     input: RequestInfo | URL,
@@ -81,13 +80,13 @@ http.useResponse(async (response) => {
     // 🔹 401/403 自动刷新
     if (response.status === 401 || response.status === 403) {
        
-        if (response.url.includes('/api/login/refresh')) {
+        if (response.url.includes(`${process.env.NEXT_PUBLIC_SITE_URL}/api/login/refresh`)) {
             toast.error('登录已过期,请手动登录')
             return response // 避免死循环
         }
         toast.error('登录已过期，将尝试刷新')
         // 请求刷新接口（保存新 token 的工作交给拦截器上面那几行）
-        const refreshRes = await fetch('api/login/refresh', { method: 'POST' })
+        const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/login/refresh`, { method: 'POST' })
 
         if (refreshRes.ok) {
             // 🔹 重试原请求（会自动带上最新 token）

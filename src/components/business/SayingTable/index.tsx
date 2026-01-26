@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { getSayings, deleteSaying, saveSaying } from "@/service"
 
 export default function SayingTable() {
     const [sayings, setSayings] = useState<ISaying[]>([])
@@ -23,9 +24,8 @@ export default function SayingTable() {
 
     // ✅ 拉取名言数据
     const fetchSayings = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saying`, { method: "GET" })
-        const json = await res.json()
-        setSayings(json.data)
+        const list = await getSayings()
+        setSayings(list)
     }
 
     useEffect(() => {
@@ -34,11 +34,7 @@ export default function SayingTable() {
 
     // ✅ 删除名言
     const handleDelete = async (id: string) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saying`, {
-            method: "DELETE",
-            body: JSON.stringify({ id }),
-        })
-        const data = await res.json()
+        const data = await deleteSaying(id)
         if (data.code === 200) {
             toast.success("删除成功")
             fetchSayings()
@@ -66,14 +62,7 @@ export default function SayingTable() {
     // ✅ 提交（新增或编辑）
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/saying`
-        const method = isEdit ? "PUT" : "POST"
-        const body = isEdit
-            ? JSON.stringify({ id: editingId, text })
-            : JSON.stringify({ text })
-
-        const res = await fetch(url, { method, body })
-        const data = await res.json()
+        const data = await saveSaying({ id: editingId, text })
 
         if (data.code === 200) {
             toast.success(isEdit ? "修改成功" : "添加成功")

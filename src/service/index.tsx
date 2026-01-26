@@ -1,17 +1,11 @@
-import { IArticleItem } from "@/types/article"
-
-/**
- * 获取文章
- * @param page 页码
- * @param pageSize 每页数量
- * @returns 文章数组
- */
-export async function getArticle(page: number = 1, pageSize: number = 4): Promise<IArticleItem[]> {
-    try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article?page=${page}&pageSize=${pageSize}`, { method: "GET" })
-        const data = await res.json()
-        return data.data
-    } catch (error) {
-        return []
-    }
-}
+export * from "./request"
+export * from "./article"
+export * from "./friend"
+export * from "./message"
+export * from "./auth"
+export * from "./home"
+export * from "./visit"
+export * from "./color"
+export * from "./label"
+export * from "./technology"
+export * from "./saying"

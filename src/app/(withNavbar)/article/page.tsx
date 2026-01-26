@@ -4,7 +4,7 @@ import Image from 'next/image'
 import articleBackground from '../../../../public/article.png'
 import { IArticleItem } from '@/types/article'
 import ArticleCard from '@/components/business/ArticleCard'
-import { getArticle } from '@/service'
+import { getArticles } from '@/service'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Flame, Search as SearchIcon } from "lucide-react"
@@ -23,7 +23,7 @@ export default function Page() {
   useEffect(() => {
     setLoading(true);
     (async () => {
-      const newArticle = await getArticle(page, 4)
+      const newArticle = await getArticles(page, 4)
       if (newArticle?.length === 0) {
         toast.error('没有更多文章了')
       }

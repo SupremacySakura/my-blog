@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { IArticleItem, ITag } from '@/types/article'
 import { useUserStore } from '@/store/user'
+import { countArticles, getArticlesPaged, getArticleTags, deleteArticle, saveArticle } from '@/service'
 
 export default function ArticleTable() {
     const { user } = useUserStore()
@@ -37,25 +38,18 @@ export default function ArticleTable() {
     const [total, setTotal] = useState(0)
 
     const fetchArticleCount = async () => {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_SITE_URL}/api/article/count`
-        )
-        const data = await res.json()
-        if (data.code === 200) {
-            setTotal(data.data || 0)
-        }
+        const totalCount = await countArticles()
+        setTotal(totalCount || 0)
     }
     const fetchArticles = async () => {
         fetchArticleCount()
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article?page=${page}&pageSize=${pageSize}`)
-        const json = await res.json()
-        setArticles(json.data || [])
+        const list = await getArticlesPaged(page, pageSize)
+        setArticles(list || [])
     }
 
     const fetchTags = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article/tag`)
-        const json = await res.json()
-        setTagsList(json.data || [])
+        const list = await getArticleTags()
+        setTagsList(list || [])
     }
 
     useEffect(() => {
@@ -72,12 +66,7 @@ export default function ArticleTable() {
         }
     }
     const handleDelete = async (id: string) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id }),
-        })
-        const data = await res.json()
+        const data = await deleteArticle(id)
         if (data.code === 200 || data.code === 200) {
             toast.success('删除成功')
             fetchArticles()
@@ -111,9 +100,7 @@ export default function ArticleTable() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/article`
-        const method = isEdit ? 'PUT' : 'POST'
-        const body = JSON.stringify({
+        const data = await saveArticle({
             id: editingId,
             head,
             digest,
@@ -122,9 +109,6 @@ export default function ArticleTable() {
             tags: selectedTags.map((item) => item._id),
             user_id: userId,
         })
-        const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body })
-        const data = await res.json()
-        console.log(data)
         if (data.code === 200) {
             toast.success(isEdit ? '修改成功' : '添加成功')
             setOpen(false)

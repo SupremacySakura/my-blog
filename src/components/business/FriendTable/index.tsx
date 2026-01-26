@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react'
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { getAllFriends, deleteFriend, updateFriendStatus } from "@/service"
 
 export default function FriendTable() {
     const [friends, setFriends] = useState<IFriend[]>([])
 
     // ✅ 拉取好友数据
     const fetchFriends = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend?needAll=${true}`, { method: "GET" })
-        const data = await res.json()
-        if (data.code === 200) setFriends(data.data)
+        const data = await getAllFriends()
+        setFriends(data)
     }
 
     useEffect(() => {
@@ -21,11 +21,7 @@ export default function FriendTable() {
 
     // ✅ 删除好友
     const handleDelete = async (id: number) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, {
-            method: "DELETE",
-            body: JSON.stringify({ id }),
-        })
-        const data = await res.json()
+        const data = await deleteFriend(String(id))
         if (data.code === 200) {
             toast.success("删除成功")
             fetchFriends()
@@ -37,11 +33,7 @@ export default function FriendTable() {
     // ✅ 冻结/解冻好友
     const toggleStatus = async (friend: IFriend) => {
         const newStatus = friend.status === 1 ? 0 : 1
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, {
-            method: "PUT",
-            body: JSON.stringify({ id: friend._id, status: newStatus })
-        })
-        const data = await res.json()
+        const data = await updateFriendStatus(String(friend._id), newStatus)
         if (data.code === 200) {
             toast.success(newStatus === 1 ? "已解冻" : "已冻结")
             fetchFriends()

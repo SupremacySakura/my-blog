@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import http from "@/lib/http"
+import { login } from "@/service"
 import { useUserStore } from "@/store/user"
 import { toast } from "sonner"
 import {
@@ -28,11 +28,7 @@ export default function Page() {
     const password = formData.get("password")
 
     try {
-      const res = await http.fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, loginType }),
-      })
+      const res = await login({ username, password, loginType })
 
       const data = await res.json()
 

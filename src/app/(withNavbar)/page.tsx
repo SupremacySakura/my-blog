@@ -13,18 +13,18 @@ import { ITechnology } from "@/types/technology"
 import { IUser } from "@/types/user"
 import background from "../../../public/background.jpg"
 import Image from "next/image"
-import { getArticle } from "@/service"
+import { getArticles, getSayingList, getOwner, getAddressList, getLabels, getTechnologies, getStatistics } from "@/service"
 
 export const dynamic = "force-dynamic"
 
 export default async function Home() {
-    const saying: ISaying[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saying`, { method: "GET" })).json()).data
-    const owner: IUser = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/user/owner`, { method: "GET" })).json()).data
-    const address: IAddress[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/address`, { method: "GET" })).json()).data
-    const label: ILabel[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/label`, { method: "GET" })).json()).data
-    const technology: ITechnology[] = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/technology`, { method: "GET" })).json()).data
-    const statistics: IStatistics = (await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/statistics`, { method: "GET" })).json()).data
-    const article: IArticleItem[] = await getArticle()
+    const saying: ISaying[] = await getSayingList()
+    const owner: IUser = await getOwner()
+    const address: IAddress[] = await getAddressList()
+    const label: ILabel[] = await getLabels()
+    const technology: ITechnology[] = await getTechnologies()
+    const statistics: IStatistics = await getStatistics()
+    const article: IArticleItem[] = await getArticles()
     return (
         <div className="w-full h-screen">
             <Image src={background} alt="" className="fixed w-full h-screen object-cover z-[-1]"></Image>

@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { getColors, deleteColor, saveColor } from "@/service"
 
 export default function ColorTable() {
     const [colors, setColors] = useState<IColor[]>([])
@@ -25,9 +26,8 @@ export default function ColorTable() {
 
     // ✅ 拉取颜色数据
     const fetchColors = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/color`, { method: "GET" })
-        const json = await res.json()
-        setColors(json.data)
+        const list = await getColors()
+        setColors(list)
     }
 
     useEffect(() => {
@@ -36,11 +36,7 @@ export default function ColorTable() {
 
     // ✅ 删除颜色
     const handleDelete = async (id: string) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/color`, {
-            method: "DELETE",
-            body: JSON.stringify({ id }),
-        })
-        const data = await res.json()
+        const data = await deleteColor(id)
         if (data.code === 200) {
             toast.success("删除成功")
             fetchColors()
@@ -70,14 +66,7 @@ export default function ColorTable() {
     // ✅ 提交（新增或编辑）
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/my/color`
-        const method = isEdit ? "PUT" : "POST"
-        const body = isEdit
-            ? JSON.stringify({ id: editingId, color, comment })
-            : JSON.stringify({ color, comment })
-
-        const res = await fetch(url, { method, body })
-        const data = await res.json()
+        const data = await saveColor({ id: editingId, color, comment })
 
         if (data.code === 200) {
             toast.success(isEdit ? "修改成功" : "添加成功")

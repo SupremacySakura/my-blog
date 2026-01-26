@@ -12,11 +12,7 @@ export default function Page() {
             return toast.error("请输入邮箱")
         }
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/register/verify`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
-            })
+            await (await import('@/service')).registerVerify(email)
             toast.success("发送成功")
         } catch (error) {
             console.error(error)
@@ -31,11 +27,7 @@ export default function Page() {
         const code = formData.get("code")
         const email = formData.get("email")
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/register`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password, code, email }),
-            })
+            const res = await (await import('@/service')).register({ username, password, code, email })
             const data = await res.json()
             if (data.code === 200) {
                 // alert("注册成功")
