@@ -92,8 +92,8 @@ http.useResponse(async (response) => {
             // 🔹 重试原请求（会自动带上最新 token）
             return fetch(response.url, response as any)
         } else {
-            // 刷新失败，跳转登录
-            window.location.href = `${process.env.NEXT_PUBLIC_SITE_URL}/login`
+            // 刷新失败，跳转登录，测试
+            // window.location.href = `${process.env.NEXT_PUBLIC_SITE_URL}/login`
         }
     }
     return response
