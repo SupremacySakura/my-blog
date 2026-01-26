@@ -101,7 +101,7 @@ export default function Page() {
         className="z-[-1] fixed w-full h-screen object-cover object-[right_top]"
       />
       <section className="relative bg-gray-300/50 w-full h-screen pt-12 flex flex-col items-center justify-center">
-        <div className="w-full max-w-md mx-auto h-40 flex flex-col items-center justify-center bg-blue-400/40 dark:bg-gray-400/40 rounded-2xl p-4 shadow-md">
+        <div className="w-[92%] sm:w-full max-w-md mx-auto h-40 flex flex-col items-center justify-center bg-blue-400/40 dark:bg-gray-400/40 rounded-2xl p-3 sm:p-4 shadow-md">
           <form className="w-full flex items-center space-x-2"
             onSubmit={handleSubmit}>
             <input

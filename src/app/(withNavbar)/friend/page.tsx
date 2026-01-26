@@ -34,7 +34,7 @@ export default async function Page() {
           <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
             🤝 友链站点
           </h1>
-          <div className='w-[90%] flex flex-wrap gap-4 mx-auto'>
+          <div className='w-[90%] mx-auto flex flex-col items-center gap-4 md:flex-row md:flex-wrap md:justify-center'>
             {friendList.length > 0 &&
               friendList.map((item) => (
                 <div key={item._id}>

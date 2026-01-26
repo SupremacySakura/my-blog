@@ -42,7 +42,7 @@ export default function Page({ params }: { params: Promise<IParams> }) {
         }
     }, [])
     return (
-        <div className='h-screen box-border p-10 dark:bg-gray-300/30 backdrop-blur-sm'>
+        <div className='h-screen box-border p-4 md:p-10 dark:bg-gray-300/30 backdrop-blur-sm'>
             <Button onClick={() => handleBack()}>返回</Button>
             <iframe src={article} className='box-border mt-4 w-full h-full rounded-lg' />
         </div>
