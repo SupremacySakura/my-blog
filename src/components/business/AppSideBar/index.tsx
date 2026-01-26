@@ -109,7 +109,7 @@ export function AppSidebar({ type }: { type: AppSidebarType }) {
                                 <DropdownMenuItem>
                                     <span onClick={() => userStore.logout()}>Sign out</span>
                                 </DropdownMenuItem>
-                                {type === 'frontstage' && userStore.owner_token && <DropdownMenuItem>
+                                {type === 'frontstage' && userStore.ownerToken && <DropdownMenuItem>
                                     <span onClick={() => router.push('/backstage')}>切换到后台</span>
                                 </DropdownMenuItem>}
                                 {type === 'backstage' && <DropdownMenuItem> <span onClick={() => router.push('/')}>切换到前台</span></DropdownMenuItem>}

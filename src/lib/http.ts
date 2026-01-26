@@ -50,14 +50,14 @@ http.useRequest((input, init = {}) => {
     // 如果 headers 是 Record<string, string>，才能这样设置
     if (init.headers instanceof Headers) {
         init.headers.set('Authorization', `Bearer ${userStore.token}`)
-        init.headers.set('refresh_token', userStore.refresh_token)
-        init.headers.set('owner_token', userStore.owner_token)
+        init.headers.set('refreshToken', userStore.refreshToken)
+        init.headers.set('ownerToken', userStore.ownerToken)
     } else {
         // 当 headers 是对象或数组时
         const headers = init.headers as Record<string, string>
         headers['Authorization'] = `Bearer ${userStore.token}`
-        headers['refresh_token'] = userStore.refresh_token
-        headers['owner_token'] = userStore.owner_token
+        headers['refreshToken'] = userStore.refreshToken
+        headers['ownerToken'] = userStore.ownerToken
         init.headers = headers
     }
 
@@ -69,17 +69,17 @@ http.useResponse(async (response) => {
         const token = authHeader.split(' ')[1]
         useUserStore.setState({ token })
     }
-    const refresh_token = response.headers.get('refresh_token')
-    if (refresh_token) {
-        useUserStore.setState({ refresh_token })
+    const refreshToken = response.headers.get('refreshToken')
+    if (refreshToken) {
+        useUserStore.setState({ refreshToken })
     }
-    const owner_token = response.headers.get('owner_token')
-    if (owner_token) {
-        useUserStore.setState({ owner_token })
+    const ownerToken = response.headers.get('ownerToken')
+    if (ownerToken) {
+        useUserStore.setState({ ownerToken })
     }
     // 🔹 401/403 自动刷新
     if (response.status === 401 || response.status === 403) {
-       
+
         if (response.url.includes(`${process.env.NEXT_PUBLIC_SITE_URL}/api/login/refresh`)) {
             toast.error('登录已过期,请手动登录')
             return response // 避免死循环
@@ -92,8 +92,8 @@ http.useResponse(async (response) => {
             // 🔹 重试原请求（会自动带上最新 token）
             return fetch(response.url, response as any)
         } else {
-            // 刷新失败，跳转登录，测试
-            // window.location.href = `${process.env.NEXT_PUBLIC_SITE_URL}/login`
+            // 刷新失败，跳转登录
+            window.location.href = `${process.env.NEXT_PUBLIC_SITE_URL}/login`
         }
     }
     return response

@@ -58,11 +58,11 @@ export async function POST(request: Request) {
         })
 
         response.headers.set('Authorization', `Bearer ${accessToken}`)
-        response.headers.set('refresh_token', refreshToken)
+        response.headers.set('refreshToken', refreshToken)
         // 验证用户类型
         if (result.role === 'owner' && loginType === 'owner') {
             const ownerToken = jwt.sign(payload, ownerSecret, refreshOptions)
-            response.headers.set('owner_token', ownerToken)
+            response.headers.set('ownerToken', ownerToken)
         }
         return response
     } catch (error) {

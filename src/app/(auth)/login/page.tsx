@@ -36,8 +36,8 @@ export default function Page() {
         userStore.setUser(data.data)
         // alert("登录成功")
         toast.success("登录成功")
-        const owner_token = res.headers.get("owner_token")
-        if (owner_token) {
+        const ownerToken = res.headers.get("ownerToken")
+        if (ownerToken) {
           // 跳转到后台页面
           return router.push('/backstage')
         }

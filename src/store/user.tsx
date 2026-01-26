@@ -4,13 +4,13 @@ import { persist } from 'zustand/middleware'
 type UserStore = {
     user: IUser | null
     token: string
-    refresh_token: string
-    owner_token: string
+    refreshToken: string
+    ownerToken: string
     loginType: string
     setUser: (user: IUser) => void
     setToken: (token: string) => void
-    setRefreshToken: (refresh_token: string) => void
-    setOwnerToken: (owner_token: string) => void
+    setRefreshToken: (refreshToken: string) => void
+    setOwnerToken: (ownerToken: string) => void
     setLoginType: (loginType: string) => void
     logout: () => void
     isLogin: () => boolean
@@ -20,17 +20,17 @@ export const useUserStore = create<UserStore>()(persist((set, get) => {
     return {
         user: null,
         token: '',
-        refresh_token: '',
-        owner_token: '',
+        refreshToken: '',
+        ownerToken: '',
         loginType: '',
         isLogin: () => get().user?._id ? true : false,
         setUser: (user: IUser) => set(() => ({ user })),
         setToken: (token: string) => set(() => ({ token })),
-        setRefreshToken: (refresh_token: string) => set(() => ({ refresh_token })),
-        setOwnerToken: (owner_token: string) => set(() => ({ owner_token })),
+        setRefreshToken: (refreshToken: string) => set(() => ({ refreshToken })),
+        setOwnerToken: (ownerToken: string) => set(() => ({ ownerToken })),
         setLoginType: (loginType: string) => set(() => ({ loginType })),
         logout: () => {
-            set(() => ({ user: null, token: '', refresh_token: '', owner_token: '', loginType: '' }))
+            set(() => ({ user: null, token: '', refreshToken: '', ownerToken: '', loginType: '' }))
         }
     }
 }, { name: 'user-store' }))

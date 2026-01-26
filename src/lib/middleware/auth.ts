@@ -23,7 +23,7 @@ export function verifyToken(handler: Function) {
 // 校验 Refresh Token
 export function verifyRefreshToken(handler: Function) {
     return async (req: Request) => {
-        const token = req.headers.get('refresh_token')
+        const token = req.headers.get('refreshToken')
 
         if (!token) {
             return NextResponse.json({ error: 'Access denied. No token provided.', code: 401 }, { status: 401 })
@@ -38,10 +38,10 @@ export function verifyRefreshToken(handler: Function) {
     }
 
 }
-// 校验 owner_token Token
+// 校验 ownerToken Token
 export function verifyOwnerToken(handler: Function) {
     return async (req: Request) => {
-        const token = req.headers.get('owner_token')
+        const token = req.headers.get('ownerToken')
 
         if (!token) {
             return NextResponse.json({ error: 'Access denied. No token provided.', code: 401 }, { status: 401 })

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import style from './index.module.css'
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const router = useRouter()
-    const { owner_token } = useUserStore()
+    const { ownerToken } = useUserStore()
     const [checking, setChecking] = useState(true)
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             }
             setChecking(false)
         })()
-    }, [owner_token, router])
+    }, [ownerToken, router])
     return (
         <>
             {checking &&
