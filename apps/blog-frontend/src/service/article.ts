@@ -25,7 +25,7 @@ export async function visitArticle(id: string): Promise<void> {
   await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/article/visit`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ _id: id })
+    body: JSON.stringify({ id })
   })
 }
 
@@ -62,7 +62,7 @@ export async function saveArticle(payload: {
   digest: string
   article: string
   cover: string
-  tags: string[]
+  tag: string[]
   user_id: string
 }) {
   const method = payload.id ? "PUT" : "POST"

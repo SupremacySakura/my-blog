@@ -106,7 +106,7 @@ export default function ArticleTable() {
             digest,
             article,
             cover,
-            tags: selectedTags.map((item) => item._id),
+            tag: selectedTags.map((item) => item._id),
             user_id: userId,
         })
         if (data.code === 200) {

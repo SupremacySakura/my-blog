@@ -1,10 +1,20 @@
 import { AppPluginAsync } from '../../../../types'
+import { getArticleCountResponseSchema } from '../schemas'
 
 const count: AppPluginAsync = async (fastify, opts): Promise<void> => {
-    fastify.get('/', async function (request, reply) {
+
+    // 获取文章数量
+    fastify.get('/', {
+        schema: {
+            response: {
+                200: getArticleCountResponseSchema
+            }
+        }
+    }, async function (request, reply) {
         try {
             const db = fastify.mongo.db()
-            const count = await db.collection('article').countDocuments()
+            const articleCollection = db.collection('article')
+            const count = await articleCollection.countDocuments()
             return {
                 code: 200,
                 data: count,
@@ -13,6 +23,7 @@ const count: AppPluginAsync = async (fastify, opts): Promise<void> => {
         } catch (error) {
             return {
                 code: 500,
+                data: 0,
                 message: '服务器错误,获取失败',
                 error
             }

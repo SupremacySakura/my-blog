@@ -1,13 +1,15 @@
 import { ObjectId } from 'mongodb'
 import { AppPluginAsync } from '../../../types'
+import { Friend } from './types'
+import { deleteFriendBodySchema, deleteFriendResponseSchema, getFriendListQuerySchema, getFriendListResponseSchema, postFriendBodySchema, postFriendResponseSchema, updateFriendBodySchema, updateFriendResponseSchema } from './schemas/index.'
 
 const friend: AppPluginAsync = async (fastify, opts): Promise<void> => {
     const db = fastify.mongo.db()
 
     // Helper for GET friends
-    const getFriends = async () => {
+    const getFriends = async (): Promise<Friend[]> => {
         return await db.collection("friend")
-            .aggregate([
+            .aggregate<Friend>([
                 // 关联 user 表
                 {
                     $lookup: {
@@ -34,13 +36,19 @@ const friend: AppPluginAsync = async (fastify, opts): Promise<void> => {
             .toArray()
     }
 
-    // GET / - Get friend list
-    fastify.get('/', async function (request, reply) {
+    // 获取朋友列表
+    fastify.get('/', {
+        schema: {
+            querystring: getFriendListQuerySchema,
+            response: {
+                200: getFriendListResponseSchema
+            }
+        }
+    }, async function (request, reply) {
+        const { needAll } = request.query
+        const needAllBool = needAll === 'true'
+        let res = []
         try {
-            const { needAll } = request.query as { needAll?: string }
-            const needAllBool = needAll === 'true'
-
-            let res = []
             if (needAllBool) {
                 res = await getFriends()
             } else {
@@ -52,15 +60,34 @@ const friend: AppPluginAsync = async (fastify, opts): Promise<void> => {
                 message: '获取成功'
             }
         } catch (error) {
-            return { code: 500, message: '获取失败', error }
+            return {
+                code: 500,
+                data: [],
+                message: '获取失败',
+                error
+            }
         }
     })
 
-    // POST / - Apply for friend
-    fastify.post('/', async function (request, reply) {
+    // 申请友链
+    fastify.post('/', {
+        schema: {
+            body: postFriendBodySchema,
+            response: {
+                200: postFriendResponseSchema
+            }
+        }
+    }, async function (request, reply) {
         // Verify token
         if (!fastify.verifyAccess(request, reply)) {
-            return // verifyAccess sends the response if failed
+            return {
+                code: 401,
+                data: {
+                    success: false
+                },
+                message: '未登录或无权限',
+                error: '未登录或无权限'
+            }
         }
 
         // Get user info from token (set by verifyAccess)
@@ -68,7 +95,7 @@ const friend: AppPluginAsync = async (fastify, opts): Promise<void> => {
         const uid = user.userId || user.uid || user._id // Adjust based on token payload structure
 
         try {
-            const body = request.body as any
+            const body = request.body
             const { name, label, url } = body
 
             const newFriend = {
@@ -78,45 +105,95 @@ const friend: AppPluginAsync = async (fastify, opts): Promise<void> => {
                 url,
                 status: 0
             }
-            const result = await db.collection('friend').insertOne(newFriend)
+            await db.collection('friend').insertOne(newFriend)
             return {
                 code: 200,
-                data: result,
+                data: {
+                    success: true
+                },
                 message: '提交成功'
             }
         } catch (error) {
-            return { code: 500, message: '提交失败', error }
+            return {
+                code: 500,
+                data: {
+                    success: false
+                },
+                message: '提交失败',
+                error
+            }
         }
     })
 
-    // DELETE / - Delete friend
-    fastify.delete('/', async function (request, reply) {
-        try {
-            const body = request.body as any
-            const { id } = body
-            if (!id) return { code: 400, message: "缺少id" }
+    // 删除友链
+    fastify.delete('/', {
+        schema: {
+            body: deleteFriendBodySchema,
+            response: {
+                200: deleteFriendResponseSchema
+            }
+        }
+    }, async function (request, reply) {
+        const body = request.body
+        const { id } = body
+        if (!id) return {
+            code: 400,
+            data: void 0,
+            message: "缺少id"
+        }
 
+        try {
             await db.collection("friend").deleteOne({ _id: new ObjectId(id) })
-            return { code: 200, message: "删除成功" }
+            return {
+                code: 200,
+                data: void 0,
+                message: "删除成功"
+            }
         } catch (error) {
-            return { code: 500, message: "删除失败", error }
+            return {
+                code: 500,
+                data: void 0,
+                message: "删除失败",
+                error
+            }
         }
     })
 
-    // PUT / - Update friend status
-    fastify.put('/', async function (request, reply) {
+    // 更新友链展示状态
+    fastify.put('/', {
+        schema: {
+            body: updateFriendBodySchema,
+            response: {
+                200: updateFriendResponseSchema
+            }
+        }
+    }, async function (request, reply) {
+        const body = request.body
+        const { id, status } = body
+        if (!id || typeof status !== "number") {
+            return {
+                code: 400,
+                data: void 0,
+                message: "参数错误"
+            }
+        }
         try {
-            const body = request.body as any
-            const { id, status } = body
-            if (!id || typeof status !== "number") return { code: 400, message: "参数错误" }
-
             await db.collection("friend").updateOne(
                 { _id: new ObjectId(id) },
                 { $set: { status } }
             )
-            return { code: 200, message: "操作成功" }
+            return {
+                code: 200,
+                data: void 0,
+                message: "操作成功"
+            }
         } catch (error) {
-            return { code: 500, message: "操作失败", error }
+            return {
+                code: 500,
+                data: void 0,
+                message: "操作失败",
+                error
+            }
         }
     })
 }

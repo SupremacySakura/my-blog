@@ -1,15 +1,24 @@
 import { ObjectId } from 'mongodb'
 import { AppPluginAsync } from '../../../types'
+import { Message, MessageDB } from './types'
+import {
+    deleteMessageBodySchema,
+    deleteMessageResponseSchema,
+    getMessageListQuerySchema,
+    getMessageListResponseSchema,
+    postMessageBodySchema,
+    postMessageResponseSchema
+} from './schemas'
 
 const message: AppPluginAsync = async (fastify, opts): Promise<void> => {
     const db = fastify.mongo.db()
 
     // Helper for GET messages
-    const getMessages = async (page = 1, pageSize = 10) => {
+    const getMessages = async (page = 1, pageSize = 10): Promise<Message[]> => {
         const skip = (page - 1) * pageSize
 
-        return db.collection("message")
-            .aggregate([
+        return db.collection<MessageDB>("message")
+            .aggregate<Message>([
                 // 如果 user_id 是字符串，先转 ObjectId
                 {
                     $addFields: {
@@ -43,10 +52,17 @@ const message: AppPluginAsync = async (fastify, opts): Promise<void> => {
             .toArray()
     }
 
-    // GET / - Get messages
-    fastify.get('/', async function (request, reply) {
+    // 获取留言列表
+    fastify.get('/', {
+        schema: {
+            querystring: getMessageListQuerySchema,
+            response: {
+                200: getMessageListResponseSchema
+            }
+        }
+    }, async function (request, reply) {
         try {
-            const { page, pageSize } = request.query as { page?: string, pageSize?: string }
+            const { page, pageSize } = request.query
             const pageNum = Number(page) || 1
             const pageSizeNum = Number(pageSize) || 5
 
@@ -54,19 +70,27 @@ const message: AppPluginAsync = async (fastify, opts): Promise<void> => {
             return {
                 code: 200,
                 data: message,
-                message: '获取成功'
+                message: '获取留言列表成功'
             }
         } catch (error) {
             return {
                 code: 500,
+                data: [],
                 message: '服务器错误',
                 error
             }
         }
     })
 
-    // POST / - Add message
-    fastify.post('/', async function (request, reply) {
+    // 新增留言
+    fastify.post('/', {
+        schema: {
+            body: postMessageBodySchema,
+            response: {
+                200: postMessageResponseSchema
+            }
+        }
+    }, async function (request, reply) {
         // Verify token
         if (!fastify.verifyAccess(request, reply)) {
             return
@@ -77,40 +101,59 @@ const message: AppPluginAsync = async (fastify, opts): Promise<void> => {
         const uid = user.userId || user.uid || user._id
 
         try {
-            const body = request.body as any
-            const { content } = body
+            const { content } = request.body
             const newMessage = {
                 content,
                 user_id: new ObjectId(uid as string),
                 time: new Date().toISOString(),
             }
 
-            const data = await db.collection('message').insertOne(newMessage)
+            await db.collection<MessageDB>('message').insertOne(newMessage)
             return {
                 code: 200,
                 message: '发布留言成功',
-                data: data
+                data: void 0
             }
         } catch (error) {
             return {
                 code: 400,
                 message: '发布留言失败',
+                data: void 0,
                 error
             }
         }
     })
 
-    // DELETE / - Delete message
-    fastify.delete('/', async function (request, reply) {
+    // 删除留言
+    fastify.delete('/', {
+        schema: {
+            body: deleteMessageBodySchema,
+            response: {
+                200: deleteMessageResponseSchema
+            }
+        }
+    }, async function (request, reply) {
         try {
-            const body = request.body as any
-            const { id } = body
-            if (!id) return { code: 1, message: "缺少 id" }
+            const { id } = request.body
+            if (!id) return {
+                code: 400,
+                message: "缺少 id",
+                data: void 0
+            }
 
-            const result = await db.collection("message").deleteOne({ _id: new ObjectId(id) })
-            return { code: 200, data: result, message: "删除成功" }
+            await db.collection<MessageDB>("message").deleteOne({ _id: new ObjectId(id) })
+            return {
+                code: 200,
+                data: void 0,
+                message: "删除成功"
+            }
         } catch (error) {
-            return { code: 500, message: "删除失败", error }
+            return {
+                code: 500,
+                message: "删除失败", 
+                data: void 0, 
+                error
+            }
         }
     })
 }

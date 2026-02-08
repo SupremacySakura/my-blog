@@ -48,6 +48,25 @@ const app: FastifyPluginAsync<AppOptions> = async (
     schema: envJsonSchema,
     dotenv: true
   })
+
+   // Register Swagger
+  void fastify.register(swagger, {
+    openapi: {
+      info: {
+        title: 'My Blog API',
+        description: 'API documentation for My Blog',
+        version: '1.0.0'
+      },
+      servers: []
+    },
+    transform: jsonSchemaTransform
+  })
+
+  // Register Swagger UI
+  void fastify.register(swaggerUI, {
+    routePrefix: '/docs',
+  })
+
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins
@@ -65,28 +84,6 @@ const app: FastifyPluginAsync<AppOptions> = async (
   void fastify.register(AutoLoad, {
     dir: join(__dirname, 'routes'),
     options: opts
-  })
-
-  // Register Swagger
-  void fastify.register(swagger, {
-    openapi: {
-      info: {
-        title: 'My Blog API',
-        description: 'API documentation for My Blog',
-        version: '1.0.0'
-      },
-      servers: []
-    },
-    transform: jsonSchemaTransform
-  })
-
-  // Register Swagger UI
-  void fastify.register(swaggerUI, {
-    routePrefix: '/docs',
-    uiConfig: {
-      docExpansion: 'full',
-      deepLinking: false
-    }
   })
 }
 

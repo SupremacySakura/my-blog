@@ -1,13 +1,29 @@
 import { ObjectId } from 'mongodb'
 import { AppPluginAsync } from '../../../../types'
+import { Technology } from '../types'
+import {
+    deleteTechnologyBodySchema,
+    deleteTechnologyResponseSchema,
+    getTechnologyListResponseSchema,
+    postTechnologyBodySchema,
+    postTechnologyResponseSchema,
+    putTechnologyBodySchema,
+    putTechnologyResponseSchema
+} from '../schemas'
 
 const technology: AppPluginAsync = async (fastify, opts): Promise<void> => {
   const db = fastify.mongo.db()
 
-  // GET / - Get all technologies
-  fastify.get('/', async function (request, reply) {
+  // 获取技术栈
+  fastify.get('/', {
+    schema: {
+        response: {
+            200: getTechnologyListResponseSchema
+        }
+    }
+  }, async function (request, reply) {
     try {
-        const label = await db.collection('technology').find().toArray()
+        const label = await db.collection<Technology>('technology').find().toArray()
         return {
             code: 200,
             data: label,
@@ -17,74 +33,98 @@ const technology: AppPluginAsync = async (fastify, opts): Promise<void> => {
         return {
             code: 500,
             message: "获取失败",
+            data: [],
             error
         }
     }
   })
 
-  // POST / - Add technology
-  fastify.post('/', async function (request, reply) {
+  // 新增技术栈
+  fastify.post('/', {
+    schema: {
+        body: postTechnologyBodySchema,
+        response: {
+            200: postTechnologyResponseSchema
+        }
+    }
+  }, async function (request, reply) {
     try {
-        const body = request.body as any
-        const { text, src, icon, note } = body
-        const data = await db.collection('technology').insertOne({
+        const { text, src, icon, note, photo, height } = request.body
+        await db.collection<Technology>('technology').insertOne({
             text,
             src,
             icon,
-            note
-        })
+            note,
+            photo,
+            height
+        } as any)
         return {
             code: 200,
-            data,
+            data:void 0,
             message: '添加成功'
         }
     } catch (error) {
         return {
             code: 500,
             message: "添加失败",
+            data: void 0,
             error
         }
     }
   })
 
-  // PUT / - Update technology
-  fastify.put('/', async function (request, reply) {
+  // 修改技术栈
+  fastify.put('/', {
+    schema: {
+        body: putTechnologyBodySchema,
+        response: {
+            200: putTechnologyResponseSchema
+        }
+    }
+  }, async function (request, reply) {
     try {
-        const body = request.body as any
-        const { id, text, src, icon, note } = body
+        const { id, text, src, icon, note, photo, height } = request.body
 
-        const result = await db.collection('technology').updateOne(
+        await db.collection<Technology>('technology').updateOne(
             { _id: new ObjectId(id) },
-            { $set: { text, src, icon, note } }
+            { $set: { text, src, icon, note, photo, height } }
         )
 
-        return { code: 200, data: result, message: '修改成功' }
+        return { code: 200, data: void 0, message: '修改成功' }
     } catch (error) {
         return {
             code: 500,
             message: "修改失败",
+            data: void 0,
             error
         }
-    }
+    }   
   })
 
-  // DELETE / - Delete technology
-  fastify.delete('/', async function (request, reply) {
+  // 删除技术栈
+  fastify.delete('/', {
+    schema: {
+        body: deleteTechnologyBodySchema,
+        response: {
+            200: deleteTechnologyResponseSchema
+        }
+    }
+  }, async function (request, reply) {
     try {
-        const body = request.body as any
-        const { id } = body
+        const { id } = request.body
 
-        const result = await db.collection('technology').deleteOne({ _id: new ObjectId(id) })
+        await db.collection<Technology>('technology').deleteOne({ _id: new ObjectId(id) })
 
         return {
             code: 200,
-            data: result,
+            data: void 0,
             message: '删除成功'
         }
     } catch (error) {
         return {
             code: 500,
             message: '删除失败',
+            data: void 0,
             error: String(error)
         }
     }
