@@ -11,7 +11,7 @@ export const noticeDataSchema = z.object({
 export const getNoticeListResponseSchema = createResponseSchema(z.array(noticeDataSchema))
 
 export const friendDataSchema = z.object({
-    _id: z.string().describe('唯一标识'),
+    _id: z.instanceof(ObjectId).describe('唯一标识'),
     name: z.string().describe('博客名'),
     label: z.string().describe('标签'),
     url: z.string().describe('博客网址'),

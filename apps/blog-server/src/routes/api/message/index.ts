@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { AppPluginAsync } from '../../../types'
-import { Message, MessageDB } from './types'
+import { Message, MessageDB, MessageWithUser } from './types'
 import {
     deleteMessageBodySchema,
     deleteMessageResponseSchema,
@@ -14,11 +14,11 @@ const message: AppPluginAsync = async (fastify, opts): Promise<void> => {
     const db = fastify.mongo.db()
 
     // Helper for GET messages
-    const getMessages = async (page = 1, pageSize = 10): Promise<Message[]> => {
+    const getMessages = async (page = 1, pageSize = 10): Promise<MessageWithUser[]> => {
         const skip = (page - 1) * pageSize
 
         return db.collection<MessageDB>("message")
-            .aggregate<Message>([
+            .aggregate<MessageWithUser>([
                 // 如果 user_id 是字符串，先转 ObjectId
                 {
                     $addFields: {

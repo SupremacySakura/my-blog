@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb"
 import { z } from "zod/v4"
 import { createResponseSchema } from "../../../../schemas/response"
+import { userDataSchema } from "../../user/schemas"
 
 export const messageDataSchema = z.object({
     _id: z.instanceof(ObjectId).describe('唯一标识'),
@@ -10,14 +11,12 @@ export const messageDataSchema = z.object({
 })
 
 // Extended schema for GET response which includes user info
-export const messageWithUserSchema = messageDataSchema.extend({
-    user: z.object({
-        _id: z.instanceof(ObjectId),
-        username: z.string().optional(),
-        avatar: z.string().optional(),
-        email: z.string().optional(),
-        role: z.string().optional(),
-    }).optional().describe('用户信息')
+export const messageWithUserSchema = z.object({
+    _id: z.instanceof(ObjectId).describe('唯一标识'),
+    content: z.string().describe('留言内容'),
+    time: z.string().or(z.date()).describe('时间'),
+    user_id: z.instanceof(ObjectId).describe('用户ID'),
+    user: userDataSchema,
 })
 
 export const getMessageListQuerySchema = z.object({

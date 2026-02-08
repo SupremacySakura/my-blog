@@ -69,14 +69,14 @@ export const getArticleUrlQuerySchema = z.object({
 })
 
 export const postArticleVisitBodySchema = z.object({
-    id: z.instanceof(ObjectId).describe('唯一标识')
+    id: z.string().describe('唯一标识')
 })
 
 export const postArticleVisitResponseSchema = createResponseSchema(z.undefined())
 
 export const getArticleListQuerySchema = z.object({
-    page: z.number().optional().describe('页码'),
-    pageSize: z.number().optional().describe('每页大小')
+    page: z.string().optional().describe('页码'),
+    pageSize: z.string().optional().describe('每页大小')
 })
 
 export const getArticleListResponseSchema = createResponseSchema(z.array(fullArticleDataSchema))

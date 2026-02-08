@@ -7,7 +7,8 @@ export const userDataSchema = z.object({
     username: z.string().describe('用户名'),
     password: z.string().optional().describe('用户密码'),
     email: z.email().describe('用户邮箱'),
-    role: z.enum(['user', 'owner']).describe('用户权限'),
+    role: z.enum(['user', 'owner']).optional().describe('用户权限'),
+    address: z.string().optional().describe('用户地址'),
     avatar: z.string().describe('用户头像')
 })
 

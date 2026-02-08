@@ -54,6 +54,7 @@ const friend: AppPluginAsync = async (fastify, opts): Promise<void> => {
             } else {
                 res = (await getFriends()).filter(item => item.status === 1)
             }
+            console.log(res)
             return {
                 code: 200,
                 data: res,
