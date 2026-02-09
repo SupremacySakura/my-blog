@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { AppPluginAsync } from '../../../types'
-import { Message, MessageDB, MessageWithUser } from './types'
+import { MessageDB, MessageWithUser } from './types'
 import {
     deleteMessageBodySchema,
     deleteMessageResponseSchema,

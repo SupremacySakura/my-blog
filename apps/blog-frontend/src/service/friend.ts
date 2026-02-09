@@ -44,6 +44,9 @@ export async function getAllFriends(): Promise<IFriend[]> {
 export async function deleteFriend(id: string) {
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, {
     method: "DELETE",
+     headers: {
+        "Content-Type": "application/json",
+      },
     body: JSON.stringify({ id })
   })
   return res.json()
@@ -52,6 +55,9 @@ export async function deleteFriend(id: string) {
 export async function updateFriendStatus(id: string, status: number) {
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, {
     method: "PUT",
+     headers: {
+        "Content-Type": "application/json",
+      },
     body: JSON.stringify({ id, status })
   })
   return res.json()

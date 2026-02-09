@@ -93,7 +93,7 @@ http.useResponse(async (response) => {
             return fetch(response.url, response as any)
         } else {
             // 刷新失败，跳转登录
-            window.location.href = `${process.env.NEXT_PUBLIC_SITE_URL}/login`
+            window.location.href = `/login`
         }
     }
     return response

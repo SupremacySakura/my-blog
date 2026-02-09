@@ -9,6 +9,9 @@ export async function getLabelsAdmin() {
 export async function deleteLabel(id: string) {
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/label`, {
     method: "DELETE",
+     headers: {
+        "Content-Type": "application/json",
+      },
     body: JSON.stringify({ id })
   })
   return res.json()

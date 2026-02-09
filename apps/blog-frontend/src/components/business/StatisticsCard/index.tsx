@@ -52,107 +52,41 @@ export default function StatisticsCard({ statistics }: IParams) {
         requestAnimationFrame(tick)
     }, [])
 
-    return (
-        <section
-            className="
-                w-full rounded-2xl
-                bg-white/70 dark:bg-zinc-900/60
-                backdrop-blur-md
-                border border-gray-200/60 dark:border-zinc-700/60
-                p-4 sm:p-6
-                shadow-sm
-            "
-        >
-            <h2 className="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
-                📊 博客统计
+   return (
+        <section className="w-full rounded-[2rem] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-white/40 dark:border-white/5 p-6 shadow-xl">
+            <h2 className="mb-6 text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <span className="text-purple-500">📊</span> 博客统计
             </h2>
 
-            <ul
-                className="
-                    grid gap-4
-                    grid-cols-1
-                    sm:grid-cols-2
-                "
-            >
-                <StatItem
-                    label="文章总数"
-                    value={statistics.articleCount}
-                    color="blue"
-                />
-                <StatItem
-                    label="总访问数"
-                    value={statistics.visitCount}
-                    color="green"
-                />
-                <StatItem
-                    label="友链数量"
-                    value={statistics.friendCount}
-                    color="purple"
-                />
-
-                {/* 运行时间 */}
-                <li
-                    className="
-                        sm:col-span-2
-                        flex flex-col justify-center
-                        rounded-xl
-                        bg-gray-50/70 dark:bg-zinc-800/50
-                        border border-gray-200/60 dark:border-zinc-700/60
-                        p-4
-                    "
-                >
-                    <span className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                        本站运行时间
-                    </span>
-                    <span className="font-mono text-sm text-gray-700 dark:text-gray-200">
-                        {`${time.years}年${time.months}月${time.days}日 ${time.hours}:${time.minutes}:${time.seconds}`}
-                    </span>
-                </li>
-            </ul>
+            <div className="grid gap-4 grid-cols-2">
+                <StatItem label="文章总数" value={statistics.articleCount} color="blue" />
+                <StatItem label="总访问数" value={statistics.visitCount} color="green" />
+                
+                {/* 运行时间：增强为 Dark Mode 代码风格 */}
+                <div className="col-span-2 mt-2 p-4 rounded-2xl bg-zinc-900 dark:bg-black/40 border border-white/5 shadow-inner relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-30 transition-opacity">
+                        <span className="text-[40px] font-black text-white italic">TIME</span>
+                    </div>
+                    <span className="text-[10px] text-blue-400 font-mono block mb-2 uppercase tracking-widest">System Running</span>
+                    <div className="font-mono text-sm text-white/90 flex justify-between">
+                        <span>{time.years}Y {time.months}M {time.days}D</span>
+                        <span className="text-blue-400">{time.hours}:{time.minutes}:{time.seconds}</span>
+                    </div>
+                </div>
+            </div>
         </section>
     )
 }
 
-function StatItem({
-    label,
-    value,
-    color
-}: {
-    label: string
-    value: number
-    color: 'blue' | 'green' | 'purple'
-}) {
-    const colorMap = {
-        blue: `
-            text-blue-600 dark:text-blue-400
-            bg-blue-50/70 dark:bg-blue-900/20
-        `,
-        green: `
-            text-green-600 dark:text-green-400
-            bg-green-50/70 dark:bg-green-900/20
-        `,
-        purple: `
-            text-purple-600 dark:text-purple-400
-            bg-purple-50/70 dark:bg-purple-900/20
-        `
+function StatItem({ label, value, color }: { label: string, value: number, color: 'blue' | 'green' }) {
+    const themes = {
+        blue: "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400",
+        green: "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400"
     }
-
     return (
-        <li
-            className={`
-                rounded-xl p-4
-                flex flex-col justify-center
-                transition-all
-                hover:-translate-y-0.5 hover:shadow-md
-                ${colorMap[color]}
-            `}
-        >
-            <span className="text-2xl font-bold leading-tight">
-                {value}
-            </span>
-            <span className="text-sm mt-1 opacity-70">
-                {label}
-            </span>
-        </li>
+        <div className={`p-4 rounded-2xl border ${themes[color]} transition-all hover:scale-[1.02]`}>
+            <span className="text-2xl font-black block">{value}</span>
+            <span className="text-[10px] font-bold uppercase opacity-60 tracking-wider">{label}</span>
+        </div>
     )
 }

@@ -9,6 +9,9 @@ export async function getColors() {
 export async function deleteColor(id: string) {
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/color`, {
     method: "DELETE",
+     headers: {
+        "Content-Type": "application/json",
+      },
     body: JSON.stringify({ id })
   })
   return res.json()
@@ -18,6 +21,9 @@ export async function saveColor(payload: { id?: string | null; color: string; co
   const method = payload.id ? "PUT" : "POST"
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/my/color`, {
     method,
+     headers: {
+        "Content-Type": "application/json",
+      },
     body: JSON.stringify(payload)
   })
   return res.json()

@@ -10,6 +10,9 @@ export async function getSayings(): Promise<ISaying[]> {
 export async function deleteSaying(id: string) {
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saying`, {
     method: "DELETE",
+     headers: {
+        "Content-Type": "application/json",
+      },
     body: JSON.stringify({ id })
   })
   return res.json()
@@ -19,6 +22,9 @@ export async function saveSaying(payload: { id?: string | null; text: string }) 
   const method = payload.id ? "PUT" : "POST"
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saying`, {
     method,
+     headers: {
+        "Content-Type": "application/json",
+      },
     body: JSON.stringify(payload)
   })
   return res.json()

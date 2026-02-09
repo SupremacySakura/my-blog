@@ -7,73 +7,34 @@ interface IParams {
 }
 
 export default function TechStack({ techList }: IParams) {
-    const handleClick = (url: string) => {
-        window.open(url, '_blank')
-    }
-
-    // 用于无缝滚动
     const technologyList = [...techList, ...techList]
 
     return (
-        <section
-            className="
-                relative w-full
-                rounded-2xl
-                bg-white/70 dark:bg-zinc-900/60
-                backdrop-blur-md
-                border border-gray-200/60 dark:border-zinc-700/60
-                p-4 sm:p-6
-                overflow-hidden
-            "
-        >
-            <h2 className="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
-                🧰 技术栈
+        <section className="group relative w-full rounded-[2rem] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-white/40 dark:border-white/5 p-6 overflow-hidden shadow-xl">
+            <h2 className="mb-6 text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <span className="text-blue-500">🧰</span> 技术栈
             </h2>
 
-            {/* 渐隐遮罩 */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white/80 dark:from-zinc-900/80 to-transparent z-10" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white/80 dark:from-zinc-900/80 to-transparent z-10" />
+            <div className="relative flex items-center overflow-hidden h-24">
+                {/* 左右渐隐遮罩 */}
+                <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white/40 dark:from-zinc-900/40 to-transparent z-20" />
+                <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white/40 dark:from-zinc-900/40 to-transparent z-20" />
 
-            <ul
-                className="
-                    absolute left-0 flex items-center
-                    animate-marquee pause-hover
-                "
-            >
-                {technologyList.map((item, index) => (
-                    <li
-                        key={index}
-                        onClick={() => handleClick(item.src)}
-                        className="
-                            mx-2
-                            flex flex-col items-center justify-center
-                            rounded-xl
-                            bg-white/60 dark:bg-zinc-800/50
-                            border border-gray-200/50 dark:border-zinc-700/50
-                            p-3
-                            cursor-pointer
-                            transition-all
-                            hover:-translate-y-0.5 hover:shadow-md hover:scale-[1.03]
-                        "
-                    >
-                        <img
-                            src={item.icon}
-                            alt={item.text}
-                            className="
-                                w-10 h-10 sm:w-12 sm:h-12
-                                rounded-lg
-                                object-contain
-                            "
-                        />
-                        <span className="mt-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                            {item.text}
-                        </span>
-                    </li>
-                ))}
-            </ul>
-
-            {/* 占位高度，保证容器撑开 */}
-            <div className="h-24 sm:h-28" />
+                <ul className="flex items-center animate-[marquee_25s_linear_infinite] group-hover:[animation-play-state:paused]">
+                    {technologyList.map((item, index) => (
+                        <li
+                            key={index}
+                            onClick={() => window.open(item.src, '_blank')}
+                            className="mx-3 flex flex-col items-center justify-center min-w-[80px] rounded-2xl bg-white/60 dark:bg-zinc-800/60 border border-white/40 dark:border-white/5 p-3 cursor-pointer transition-all hover:scale-110 hover:shadow-lg hover:shadow-blue-500/10"
+                        >
+                            <img src={item.icon} alt={item.text} className="w-10 h-10 object-contain" />
+                            <span className="mt-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-tighter">
+                                {item.text}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </section>
     )
 }

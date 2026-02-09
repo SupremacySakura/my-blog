@@ -55,10 +55,12 @@ export default function TypeWriter(params: { wordList: string[] }) {
             }
         })()
     }, [nowNumber])
-    return (
-        <h1 className="text-2xl font-mono">
-            {text}
-            <span className="animate-pulse">|</span>
-        </h1>
+   return (
+        <div className="h-8 flex items-center justify-center">
+            <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {text}
+                <span className="ml-1 inline-block w-[3px] h-6 bg-blue-500 animate-[pulse_0.8s_infinite] align-middle" />
+            </h2>
+        </div>
     )
 }

@@ -4,6 +4,9 @@ import { IMessageItem } from "@/types/message"
 export async function sendMessage(content: string) {
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ content })
   })
   return res.json()
@@ -28,6 +31,9 @@ export async function countMessages(): Promise<number> {
 export async function deleteMessage(id: string) {
   const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ id })
   })
   return res.json()

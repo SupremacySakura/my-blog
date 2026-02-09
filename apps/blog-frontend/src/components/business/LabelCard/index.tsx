@@ -2,46 +2,26 @@ import { ILabel } from '@/types/label'
 import React from 'react'
 
 export default function LabelCard({ label }: { label: ILabel[] }) {
-    return (
-        <section
-            className="
-                w-full rounded-2xl
-                bg-white/70 dark:bg-zinc-900/60
-                backdrop-blur-md
-                border border-gray-200/60 dark:border-zinc-700/60
-                p-4 sm:p-6
-                shadow-sm
-            "
-        >
-            <h2 className="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
-                🏷️ 标签
+  return (
+        <section className="w-full rounded-[2rem] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-white/40 dark:border-white/5 p-6 shadow-xl">
+            <h2 className="mb-6 text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <span className="text-orange-500">🏷️</span> 标签云
             </h2>
 
-            <ul className="flex flex-wrap gap-2 sm:gap-3">
+            <div className="flex flex-wrap gap-2">
                 {label.map((item) => (
-                    <li
+                    <span
                         key={item._id}
-                        className="
-                            px-3 py-1.5
-                            rounded-full
-                            text-sm
-                            leading-none
-                            border
-                            transition-all
-                            cursor-default
-                            hover:-translate-y-0.5 hover:shadow-sm
-                        "
+                        className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer hover:scale-110 hover:rotate-2 border border-white/20 shadow-sm"
                         style={{
-                            color: item.color ?? undefined,
-                            backgroundColor: item.backgroundColor
-                                ? `${item.backgroundColor}`
-                                : undefined,
+                            color: item.color || '#3b82f6',
+                            backgroundColor: `${item.backgroundColor}` || 'rgba(59,130,246,0.1)',
                         }}
                     >
-                        {item.text}
-                    </li>
+                        #{item.text}
+                    </span>
                 ))}
-            </ul>
+            </div>
         </section>
     )
 }
