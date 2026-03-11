@@ -1,4 +1,5 @@
 'use client'
+import { getBaseUrl } from "@/lib/base-url";
 import { checkOwnerRole } from "@/service"
 import { useUserStore } from "@/store/user"
 import { useRouter } from "next/navigation"
@@ -13,7 +14,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         (async () => {
             const data = await checkOwnerRole()
             if (data.code !== 200) {
-                router.replace(`${process.env.NEXT_PUBLIC_SITE_URL}`)
+                router.replace(`${getBaseUrl()}`)
             }
             setChecking(false)
         })()

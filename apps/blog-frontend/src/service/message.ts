@@ -1,8 +1,9 @@
+import { getBaseUrl } from "@/lib/base-url";
 import { request } from "./request"
 import { IMessageItem } from "@/types/message"
 
 export async function sendMessage(content: string) {
-  const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message`, {
+  const res = await request(`${getBaseUrl()}/api/message`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -14,7 +15,7 @@ export async function sendMessage(content: string) {
 
 export async function getMessages(page: number, pageSize: number = 10): Promise<IMessageItem[]> {
   try {
-    const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message?page=${page}&pageSize=${pageSize}`)
+    const res = await request(`${getBaseUrl()}/api/message?page=${page}&pageSize=${pageSize}`)
     const data = await res.json()
     return data.data || []
   } catch {
@@ -23,13 +24,13 @@ export async function getMessages(page: number, pageSize: number = 10): Promise<
 }
 
 export async function countMessages(): Promise<number> {
-  const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message/count`)
+  const res = await request(`${getBaseUrl()}/api/message/count`)
   const data = await res.json()
   return data.data || 0
 }
 
 export async function deleteMessage(id: string) {
-  const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/message`, {
+  const res = await request(`${getBaseUrl()}/api/message`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

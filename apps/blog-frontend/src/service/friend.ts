@@ -1,10 +1,11 @@
+import { getBaseUrl } from "@/lib/base-url";
 import { request } from "./request"
 import { INotice } from "@/types/notice"
 import { IFriend } from "@/types/friend"
 
 export async function getFriendNotice(): Promise<INotice[]> {
   try {
-    const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend/notice`, { method: "GET" })
+    const res = await request(`${getBaseUrl()}/api/friend/notice`, { method: "GET" })
     const data = await res.json()
     return data.data || []
   } catch {
@@ -14,7 +15,7 @@ export async function getFriendNotice(): Promise<INotice[]> {
 
 export async function getFriendList(): Promise<IFriend[]> {
   try {
-    const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, { method: "GET" })
+    const res = await request(`${getBaseUrl()}/api/friend`, { method: "GET" })
     const data = await res.json()
     return data.data || []
   } catch {
@@ -23,7 +24,7 @@ export async function getFriendList(): Promise<IFriend[]> {
 }
 
 export async function applyFriend(payload: { name: string; label: string; url: string }) {
-  const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, {
+  const res = await request(`${getBaseUrl()}/api/friend`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
@@ -33,7 +34,7 @@ export async function applyFriend(payload: { name: string; label: string; url: s
 
 export async function getAllFriends(): Promise<IFriend[]> {
   try {
-    const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend?needAll=${true}`, { method: "GET" })
+    const res = await request(`${getBaseUrl()}/api/friend?needAll=${true}`, { method: "GET" })
     const data = await res.json()
     return data.data || []
   } catch {
@@ -42,7 +43,7 @@ export async function getAllFriends(): Promise<IFriend[]> {
 }
 
 export async function deleteFriend(id: string) {
-  const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, {
+  const res = await request(`${getBaseUrl()}/api/friend`, {
     method: "DELETE",
      headers: {
         "Content-Type": "application/json",
@@ -53,7 +54,7 @@ export async function deleteFriend(id: string) {
 }
 
 export async function updateFriendStatus(id: string, status: number) {
-  const res = await request(`${process.env.NEXT_PUBLIC_SITE_URL}/api/friend`, {
+  const res = await request(`${getBaseUrl()}/api/friend`, {
     method: "PUT",
      headers: {
         "Content-Type": "application/json",

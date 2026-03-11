@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/lib/base-url";
 const isServer = typeof window === 'undefined'
 
 export async function request(input: RequestInfo | URL, init?: RequestInit) {

@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: blog-mongodb
+    restart: always
+    volumes:
+      - ./mongodb_data:/data/db
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-blog}
+
+  backend:
+    build:
+      context: ./apps/blog-server
+      dockerfile: Dockerfile
+    container_name: blog-backend
+    restart: always
+    depends_on:
+      - mongodb
+    ports:
+      - "${BACKEND_PORT:-5050}:5050"
+    environment:
+      MONGODB_URI: "mongodb://mongodb:27017/${MONGO_DB:-blog}"
+      # Secrets
+      ACCESS_SECRET: ${ACCESS_SECRET}
+      REFRESH_SECRET: ${REFRESH_SECRET}
+      OWNER_SECRET: ${OWNER_SECRET}
+      # Mail
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+
+  frontend:
+    build:
+      context: ./apps/blog-frontend
+      dockerfile: Dockerfile
+      args:
+        # Build-time variable for client-side API URL
+        # Leave empty to use relative paths (recommended with Nginx)
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-}
+    container_name: blog-frontend
+    restart: always
+    depends_on:
+      - backend
+    # Frontend internal port is 3000, mapped to host via Nginx mostly.
+    # Exposing port for debugging if needed, but main access is via Nginx.
+    # ports:
+    #   - "${FRONTEND_DEBUG_PORT:-3000}:3000"
+    environment:
+      # Runtime variable for SSR to access backend internally
+      INTERNAL_API_URL: "http://backend:5050"
+      # Pass runtime variable just in case
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-}
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: blog-nginx
+    restart: always
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "${FRONTEND_HTTP_PORT:-80}:80"
+      - "${FRONTEND_HTTPS_PORT:-443}:443"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+      ENABLE_HTTPS: ${ENABLE_HTTPS:-false}
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro
+
+volumes:
+  mongodb_data:
