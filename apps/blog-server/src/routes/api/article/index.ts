@@ -172,7 +172,7 @@ const article: AppPluginAsync = async (fastify, opts): Promise<void> => {
                         digest,
                         article,
                         cover: cover || '',
-                        user_id,
+                        user_id: new ObjectId(user_id),
                         tag: tagIds
                     }
                 }

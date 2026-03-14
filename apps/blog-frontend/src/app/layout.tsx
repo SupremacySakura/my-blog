@@ -15,7 +15,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
   return (
     <>
-      <html lang="en" suppressHydrationWarning style={{ scrollbarWidth: "none" }}>
+      <html lang="zh-CN" suppressHydrationWarning style={{ scrollbarWidth: "none" }}>
         <head />
         <body>
           <ThemeProvider
