@@ -16,7 +16,7 @@ export async function getArticleUrl(id: string): Promise<string | undefined> {
   try {
     const res = await request(`${getBaseUrl()}/api/article/url?id=${id}`, { cache: "no-store" })
     const data = await res.json()
-    return data.data?.article
+    return data.data
   } catch {
     return undefined
   }

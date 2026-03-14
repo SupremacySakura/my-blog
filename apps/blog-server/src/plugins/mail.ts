@@ -25,6 +25,7 @@ export default fp(async (fastify) => {
       subject: '邮箱验证码',
       html: `<p>您的验证码是：<strong>${code}</strong></p>`
     }
-    return transporter.sendMail(mailOptions)
+    console.log(mailOptions)
+    return await transporter.sendMail(mailOptions)
   })
 })

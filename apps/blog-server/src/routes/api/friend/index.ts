@@ -54,7 +54,6 @@ const friend: AppPluginAsync = async (fastify, opts): Promise<void> => {
             } else {
                 res = (await getFriends()).filter(item => item.status === 1)
             }
-            console.log(res)
             return {
                 code: 200,
                 data: res,
@@ -93,14 +92,14 @@ const friend: AppPluginAsync = async (fastify, opts): Promise<void> => {
 
         // Get user info from token (set by verifyAccess)
         const user = (request as any).user
-        const uid = user.userId || user.uid || user._id // Adjust based on token payload structure
+        const uid: string = user.userId || user.uid || user._id // Adjust based on token payload structure
 
         try {
             const body = request.body
             const { name, label, url } = body
 
             const newFriend = {
-                user_id: uid,
+                user_id: new ObjectId(uid),
                 name,
                 label,
                 url,

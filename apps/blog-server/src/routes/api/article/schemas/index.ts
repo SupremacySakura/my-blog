@@ -62,7 +62,7 @@ const deleteTagDataSchema = z.object({
 })
 export const deleteTagResponseSchema = createResponseSchema(deleteTagDataSchema)
 
-export const getArticleUrlResponseSchema = createResponseSchema(articleDataSchema)
+export const getArticleUrlResponseSchema = createResponseSchema(z.string().describe('文章链接'))
 
 export const getArticleUrlQuerySchema = z.object({
     id: z.string().describe('唯一标识')

@@ -5,7 +5,7 @@ import { getArticleUrlQuerySchema, getArticleUrlResponseSchema } from '../schema
 
 const url: AppPluginAsync = async (fastify, opts): Promise<void> => {
 
-    // 获取文章飞书链接
+    // 获取文章链接
     fastify.get('/', {
         schema: {
             querystring: getArticleUrlQuerySchema,
@@ -18,7 +18,7 @@ const url: AppPluginAsync = async (fastify, opts): Promise<void> => {
         if (!id) {
             return {
                 code: 1,
-                data: {} as Article,
+                data: '',
                 message: "缺少 id 参数",
             }
         }
@@ -27,13 +27,13 @@ const url: AppPluginAsync = async (fastify, opts): Promise<void> => {
             const data = await db.collection<Article>('article').findOne({ _id: new ObjectId(id) }) || {} as Article
             return {
                 code: 0,
-                data,
+                data: data?.article || '',
                 message: '获取成功'
             }
         } catch (error) {
             return {
                 code: 500,
-                data: {} as Article,
+                data: '',
                 message: '服务器错误,获取失败',
                 error
             }

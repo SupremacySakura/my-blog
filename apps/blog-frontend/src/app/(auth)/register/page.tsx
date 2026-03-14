@@ -2,21 +2,39 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 export default function Page() {
     const router = useRouter()
     const [email, setEmail] = useState("")
+    const [cooldownSeconds, setCooldownSeconds] = useState(0)
+    const [isSendingCode, setIsSendingCode] = useState(false)
+    useEffect(() => {
+        if (cooldownSeconds <= 0) {
+            return
+        }
+        const timerId = window.setTimeout(() => {
+            setCooldownSeconds((seconds) => Math.max(0, seconds - 1))
+        }, 1000)
+        return () => window.clearTimeout(timerId)
+    }, [cooldownSeconds])
     const handleSendVerificationCode = async () => {
+        if (cooldownSeconds > 0 || isSendingCode) {
+            return
+        }
         if (!email) {
             return toast.error("请输入邮箱")
         }
         try {
+            setIsSendingCode(true)
             await (await import('@/service')).registerVerify(email)
             toast.success("发送成功")
+            setCooldownSeconds(60)
         } catch (error) {
             console.error(error)
             toast.error("发送失败")
+        } finally {
+            setIsSendingCode(false)
         }
     }
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,7 +53,7 @@ export default function Page() {
                 router.push('/login')
             } else {
                 // alert(data.message)
-                toast.error('注册失败:', data.message)
+                toast.error(`注册失败: ${data.message || "未知错误"}`)
             }
         } catch (error) {
             console.error(error)
@@ -104,10 +122,11 @@ export default function Page() {
                             />
                             <button
                                 type="button"
-                                className="min-w-[120px] bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all duration-300 dark:from-blue-700 dark:to-blue-800 dark:hover:from-blue-800 dark:hover:to-blue-900"
-                                onClick={() => { handleSendVerificationCode() }}
+                                disabled={cooldownSeconds > 0 || isSendingCode}
+                                className="min-w-[120px] bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all duration-300 dark:from-blue-700 dark:to-blue-800 dark:hover:from-blue-800 dark:hover:to-blue-900 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
+                                onClick={handleSendVerificationCode}
                             >
-                                发送验证码
+                                {cooldownSeconds > 0 ? `重新发送(${cooldownSeconds}s)` : (isSendingCode ? "发送中..." : "发送验证码")}
                             </button>
                         </div>
                     </div>

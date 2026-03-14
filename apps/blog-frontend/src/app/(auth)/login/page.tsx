@@ -16,7 +16,7 @@ import {
 
 export default function Page() {
   const [loading, setLoading] = useState(false)
-  const [loginType, setLoginType] = useState<string>("") // 保存选中值
+  const [loginType, setLoginType] = useState<string>("user") // 保存选中值
   const router = useRouter()
   const userStore = useUserStore()
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,7 +44,7 @@ export default function Page() {
         router.push("/")
       } else {
         // alert(data.message || "登录失败")
-        toast.error("登录失败:", data.message)
+        toast.error(`登录失败: ${data.message || "未知错误"}`)
       }
     } catch (err) {
       console.error("请求失败:", err)
